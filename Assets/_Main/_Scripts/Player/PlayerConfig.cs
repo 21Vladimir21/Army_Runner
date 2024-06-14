@@ -1,0 +1,17 @@
+using UnityEngine;
+using UnityEngine.Serialization;
+
+namespace _Main._Scripts.Player
+{
+    [CreateAssetMenu(fileName = "MainPlayerConfig", menuName = "PlayerConfigs", order = 0)]
+    public class PlayerConfig : ScriptableObject
+    {
+        [Range(0.1f, 10f)] public float speed;
+
+        [Range(2f, 10f)] public float maxLeftRightPosition;
+        [Range(1f, 10f)] public float maxXDragDelta;
+
+        [Range(0.5f, 10f)] public float xSensitivity;
+        [Range(0.1f, 10f)] public float xDampingRatio;
+    }
+}
