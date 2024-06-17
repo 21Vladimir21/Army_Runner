@@ -16,12 +16,10 @@ namespace _Main._Scripts.Player.StateMachine.States
 
         public void Enter()
         {
-            Debug.Log("IsIdlingState");
         }
 
         public void Exit()
         {
-            Debug.Log("ExitIsIdlingState");
         }
 
         public void Update()

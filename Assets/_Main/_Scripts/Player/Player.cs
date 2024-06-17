@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.Player.StateMachine;
 using _Main._Scripts.Soilders;
@@ -8,9 +9,14 @@ namespace _Main._Scripts.Player
     public class Player : MonoBehaviour
     {
         [field: SerializeField] public PlayerConfig Config { get; private set; }
+        [SerializeField] private List<Transform> crowdPoints;
+
+        [SerializeField] private BulletPool bulletPool;
+        
+
 
         private PlayerStateMachine _stateMachine;
-        private Crowd _crowd;
+        public Crowd Crowd { get; private set; }
         private bool _mouseInput;
 
         public Transform Transform => transform;
@@ -18,8 +24,8 @@ namespace _Main._Scripts.Player
 
         private void Start()
         {
+            Crowd = new Crowd(crowdPoints,Config);
             _stateMachine = new PlayerStateMachine(this);
-            _crowd = new Crowd(Transform);
         }
 
         private void Update()
@@ -32,9 +38,11 @@ namespace _Main._Scripts.Player
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out Soilder solder))
+            if (other.TryGetComponent(out Soldier soldier))
             {
-                _crowd.AddToCrowd(solder);
+                if (soldier.InCrowd) return;
+                soldier.InvitedToCrowd(bulletPool);
+                Crowd.AddToCrowd(soldier);
             }
         }
     }

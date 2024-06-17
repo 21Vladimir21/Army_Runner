@@ -1,3 +1,4 @@
+using _Main._Scripts.CrowdLogic;
 using TMPro;
 using UnityEngine;
 
@@ -13,8 +14,9 @@ namespace _Main._Scripts.Player.StateMachine.States
         private readonly float _xDamping;
 
         private readonly Player _player;
+        private readonly Crowd _crowd;
         private readonly IStateSwitcher _switcher;
-        
+
         private Vector3 _startDragPosition;
 
         public MovementState(IStateSwitcher switcher, Player player)
@@ -27,6 +29,7 @@ namespace _Main._Scripts.Player.StateMachine.States
             _sensitivity = player.Config.xSensitivity;
             _xDamping = player.Config.xDampingRatio;
             _player = player;
+            _crowd = player.Crowd;
         }
 
         public void Enter()
@@ -36,14 +39,16 @@ namespace _Main._Scripts.Player.StateMachine.States
 
         public void Exit()
         {
+      
         }
 
         public void Update()
         {
             if (_player.MouseInput == false)
                 _switcher.SwitchState<IdlingState>();
-            
+
             ClampedMove(_player.Transform, Time.deltaTime);
+            _crowd.UpdateSoldiers();
         }
 
         private void ClampedMove(Transform playerTransform, float deltaTime)
@@ -62,7 +67,7 @@ namespace _Main._Scripts.Player.StateMachine.States
         {
             var forwardDirection = Vector3.forward;
 
-            var moveDirection = (forwardDirection).normalized * _speedRatio;
+            var moveDirection = forwardDirection.normalized * _speedRatio;
             return moveDirection * deltaTime;
         }
 
