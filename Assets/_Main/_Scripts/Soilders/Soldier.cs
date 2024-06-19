@@ -10,9 +10,8 @@ namespace _Main._Scripts.Soilders
     public class Soldier : MonoBehaviour
     {
         [HideInInspector] public UnityEvent<Soldier> onDie = new();
-
         [SerializeField] private SoldierConfig config;
-
+        
         [SerializeField] private Animator animator;
         [SerializeField] private Collider collider;
         [SerializeField] private Transform shootPoint;
