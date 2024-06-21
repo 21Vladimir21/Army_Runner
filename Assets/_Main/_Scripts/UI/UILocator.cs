@@ -1,23 +1,39 @@
 using System;
 using System.Collections.Generic;
 using _Main._Scripts.Services;
-using UnityEngine;
 
 namespace _Main._Scripts.UI
 {
     public class UILocator : IService
     {
-        private readonly Dictionary<Type, IView> _uiViews = new();
+        private readonly Dictionary<Type, AbstractView> _uiViews = new();
 
-        private IView _currentView;
-        private IView _currentPopupView;
+        private AbstractView _currentView;
+        private AbstractView _currentPopupView;
 
-        private IView _lastClosedUI;
+        private AbstractView _lastClosedUI;
 
         public UILocator(UIViews uiViews)
         {
             foreach (var view in uiViews.Views)
                 _uiViews.Add(view.GetType(), view);
+        }
+
+        public TUI GetViewByType<TUI>() where TUI : AbstractView
+        {
+            if (_uiViews.TryGetValue(typeof(TUI), out var view))
+                return view as TUI;
+            return null;
+        }
+
+        #region Надобы переписать , но пока в это смысла нет
+
+        public void OpenLastUI(Action openedCallback = null, Action closedCallback = null)
+        {
+            _currentView?.Close(closedCallback);
+
+            _currentView = _lastClosedUI;
+            _lastClosedUI.Open(openedCallback);
         }
 
         public void OpenUI(Type type, Action openedCallback = null, Action closedCallback = null)
@@ -36,7 +52,7 @@ namespace _Main._Scripts.UI
         {
             if (_uiViews.TryGetValue(type, out var view))
             {
-                abstractView = (AbstractView)view;
+                abstractView = view;
                 return true;
             }
 
@@ -44,17 +60,6 @@ namespace _Main._Scripts.UI
             return false;
         }
 
-        public AbstractView GetViewByType(Type type)
-        {
-            return TryGetView(type, out var spawnedView) ? spawnedView : null;
-        }
-
-        public void OpenLastUI(Action openedCallback = null, Action closedCallback = null)
-        {
-            _currentView?.Close(closedCallback);
-
-            _currentView = _lastClosedUI;
-            _lastClosedUI.Open(openedCallback);
-        }
+        #endregion
     }
 }

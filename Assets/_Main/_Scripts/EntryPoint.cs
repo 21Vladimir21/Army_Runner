@@ -28,6 +28,7 @@ namespace _Main._Scripts
             var savesService = InitSaves();
             var uiLocator = new UILocator(views);
             
+            
             _levelStateMachine =
                 new LevelStateMachine(savesService.Saves, levelSpawner, mainConfig, reserveCells, gameCells,uiLocator,_camera);
         }
@@ -35,8 +36,9 @@ namespace _Main._Scripts
         private SavesService InitSaves()
         {
             var savesService = new SavesService();
-            ServiceLocator.Instance.TryAddService(ServiceType.Saves, savesService);
+            ServiceLocator.Instance.TryAddService(savesService);
             return savesService;
+            
         }
 
         private void Update()

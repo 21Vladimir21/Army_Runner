@@ -46,6 +46,11 @@ namespace _Main._Scripts.SavesLogic
             // }
         }
 
+        public void Test()
+        {
+            Debug.Log("TestSuccses");
+        }
+
         private void LoadLocalSaves(Action success)
         {
             _filePath = Saves.GetFilePath();

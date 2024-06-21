@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,26 +9,29 @@ namespace _Main._Scripts.Services
         public static ServiceLocator Instance => _instance ??= new ServiceLocator();
 
         private static ServiceLocator _instance;
-        private static readonly Dictionary<ServiceType,IService> Services = new();
+        private static readonly Dictionary<Type, IService> Services = new();
+
 
         public static void ClearInstance()
         {
             _instance = null;
         }
 
-        public bool TryAddService(ServiceType type, IService service)
+        public bool TryAddService(IService service)
         {
-            if (Services.TryAdd(type, service))
+            if (Services.TryAdd(service.GetType(), service))
                 return true;
-            Debug.Log($"Error, the service {type} already exists!");
+            Debug.Log($"Error, the service {service.GetType()} already exists!");
             return false;
         }
+        
 
-        public bool TryGetService(ServiceType type, out IService service)
+        public TService GetServiceByType<TService>() where TService : class, IService
         {
-            if (Services.TryGetValue(type, out service)) return true;
-            Debug.Log($"Service - {type} not created yet");
-            return false;
+            if (Services.TryGetValue(typeof(TService), out var service))
+                return service as TService;
+
+            return null;
         }
     }
 }

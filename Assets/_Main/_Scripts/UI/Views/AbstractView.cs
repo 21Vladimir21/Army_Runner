@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Main._Scripts.UI
 {
-    public abstract class AbstractView : MonoBehaviour , IView
+    public abstract class AbstractView : MonoBehaviour 
     {
         public void Close(Action callback = null)
         {

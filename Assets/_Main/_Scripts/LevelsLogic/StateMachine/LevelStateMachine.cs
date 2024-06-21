@@ -28,8 +28,8 @@ namespace _Main._Scripts.Level.StateMachine
             _levelSpawner = levelSpawner;
             _mainConfig = mainConfig;
             _uiLocator = uiLocator;
-            var preGameView = (PreGameView)_uiLocator.GetViewByType(typeof(PreGameView));
-            _states = new List<IState>()
+            var preGameView = _uiLocator.GetViewByType<PreGameView>();
+            _states = new List<IState>
             {
                 new MergeState(this,mainConfig.DragConfig,reserveCells,gameCells,preGameView,camera),
                 new InitState(this, levelSpawner, saves, mainConfig.LevelsConfig),
