@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using _Main._Scripts.Level.StateMachine;
 using _Main._Scripts.LevelsLogic;
 using _Main._Scripts.MergeLogic;
+using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services;
+using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.UI;
 using UnityEngine;
 
@@ -17,20 +19,21 @@ namespace _Main._Scripts
         [SerializeField] private List<CellToMerge> reserveCells;
         [SerializeField] private List<CellToMerge> gameCells;
 
-        [SerializeField] private UIViews views;
-        [SerializeField] private Camera _camera;
-        
+        [SerializeField] private UIViewsHolder views;
+        [SerializeField] private CameraService cameraService;
 
         private LevelStateMachine _levelStateMachine;
+        [SerializeField] private Player player;
 
         private void Awake()
         {
             var savesService = InitSaves();
             var uiLocator = new UILocator(views);
-            
-            
+
+
             _levelStateMachine =
-                new LevelStateMachine(savesService.Saves, levelSpawner, mainConfig, reserveCells, gameCells,uiLocator,_camera);
+                new LevelStateMachine(savesService.Saves, levelSpawner, mainConfig, reserveCells, gameCells, uiLocator,
+                    cameraService,player);
         }
 
         private SavesService InitSaves()
@@ -38,7 +41,6 @@ namespace _Main._Scripts
             var savesService = new SavesService();
             ServiceLocator.Instance.TryAddService(savesService);
             return savesService;
-            
         }
 
         private void Update()

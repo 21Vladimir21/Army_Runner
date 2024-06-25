@@ -1,11 +1,11 @@
-namespace _Main._Scripts.Player.StateMachine.States
+namespace _Main._Scripts.PlayerLogic.StateMachine.States
 {
     public class FinishShootState : IState
     {
         private readonly IStateSwitcher _switcher;
-        private readonly Player _player;
+        private readonly PlayerLogic.Player _player;
 
-        public FinishShootState(IStateSwitcher switcher, Player player)
+        public FinishShootState(IStateSwitcher switcher, PlayerLogic.Player player)
         {
             _switcher = switcher;
             _player = player;

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using _Main._Scripts.Player;
+using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.Soilders;
 using UnityEngine;
 

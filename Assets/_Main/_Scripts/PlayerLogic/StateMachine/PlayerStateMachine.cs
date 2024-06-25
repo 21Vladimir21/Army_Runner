@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using _Main._Scripts.Player.StateMachine.States;
+using _Main._Scripts.PlayerLogic.StateMachine.States;
 
-namespace _Main._Scripts.Player.StateMachine
+namespace _Main._Scripts.PlayerLogic.StateMachine
 {
     public class PlayerStateMachine : IStateSwitcher
     {
         private List<IState> _states;
         private IState _currentState;
 
-        public PlayerStateMachine(Player player)
+        public PlayerStateMachine(PlayerLogic.Player player)
         {
             _states = new List<IState>()
             {

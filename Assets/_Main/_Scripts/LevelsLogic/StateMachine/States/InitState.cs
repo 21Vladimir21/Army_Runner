@@ -1,6 +1,6 @@
 using _Main._Scripts.Level.StateMachine.States;
-using _Main._Scripts.Player.StateMachine;
-using _Main._Scripts.Player.StateMachine.States;
+using _Main._Scripts.PlayerLogic.StateMachine;
+using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
 
 namespace _Main._Scripts.LevelsLogic.StateMachine.States

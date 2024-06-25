@@ -1,14 +1,11 @@
-using TMPro;
-using UnityEngine;
-
-namespace _Main._Scripts.Player.StateMachine.States
+namespace _Main._Scripts.PlayerLogic.StateMachine.States
 {
     public class IdlingState : IState
     {
         private IStateSwitcher _switcher;
-        private Player _player;
+        private PlayerLogic.Player _player;
 
-        public IdlingState(IStateSwitcher switcher, Player player)
+        public IdlingState(IStateSwitcher switcher, PlayerLogic.Player player)
         {
             _switcher = switcher;
             _player = player;

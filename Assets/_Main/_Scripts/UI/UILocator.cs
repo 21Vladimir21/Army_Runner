@@ -13,9 +13,9 @@ namespace _Main._Scripts.UI
 
         private AbstractView _lastClosedUI;
 
-        public UILocator(UIViews uiViews)
+        public UILocator(UIViewsHolder uiViewsHolder)
         {
-            foreach (var view in uiViews.Views)
+            foreach (var view in uiViewsHolder.Views)
                 _uiViews.Add(view.GetType(), view);
         }
 

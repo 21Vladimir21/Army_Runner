@@ -1,6 +1,6 @@
-using _Main._Scripts.Player.StateMachine.States;
+using _Main._Scripts.PlayerLogic.StateMachine.States;
 
-namespace _Main._Scripts.Player.StateMachine
+namespace _Main._Scripts.PlayerLogic.StateMachine
 {
     public interface IStateSwitcher
     {

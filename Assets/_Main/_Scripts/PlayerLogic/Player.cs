@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using _Main._Scripts.CrowdLogic;
-using _Main._Scripts.Player.StateMachine;
+using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.Soilders;
 using UnityEngine;
 
-namespace _Main._Scripts.Player
+namespace _Main._Scripts.PlayerLogic
 {
     public class Player : MonoBehaviour
     {

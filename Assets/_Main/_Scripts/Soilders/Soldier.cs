@@ -3,6 +3,7 @@ using _Main._Scripts.Obstacles;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace _Main._Scripts.Soilders
 {
@@ -11,9 +12,10 @@ namespace _Main._Scripts.Soilders
     {
         [HideInInspector] public UnityEvent<Soldier> onDie = new();
         [SerializeField] private SoldierConfig config;
-        
+
         [SerializeField] private Animator animator;
-        [SerializeField] private Collider collider;
+
+        [SerializeField] private Collider soldierCollider;
         [SerializeField] private Transform shootPoint;
 
 
@@ -31,7 +33,6 @@ namespace _Main._Scripts.Soilders
         }
 
 
-
         public void InvitedToCrowd(BulletPool bulletPool)
         {
             InCrowd = true;
@@ -41,7 +42,7 @@ namespace _Main._Scripts.Soilders
 
         private void Die()
         {
-            collider.enabled = false;
+            soldierCollider.enabled = false;
             onDie.Invoke(this);
         }
 
@@ -71,9 +72,9 @@ namespace _Main._Scripts.Soilders
                 EditorUtility.SetDirty(this);
             }
 
-            if (collider == null)
+            if (soldierCollider == null)
             {
-                collider = GetComponent<Collider>();
+                soldierCollider = GetComponent<Collider>();
                 EditorUtility.SetDirty(this);
             }
         }

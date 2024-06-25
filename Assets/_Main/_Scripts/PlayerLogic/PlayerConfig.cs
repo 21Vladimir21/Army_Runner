@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace _Main._Scripts.Player
+namespace _Main._Scripts.PlayerLogic
 {
     [CreateAssetMenu(fileName = "MainPlayerConfig", menuName = "GameConfigs/PlayerConfigs", order = 0)]
     public class PlayerConfig : ScriptableObject

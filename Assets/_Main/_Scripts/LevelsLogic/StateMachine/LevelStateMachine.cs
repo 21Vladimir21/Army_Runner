@@ -4,11 +4,12 @@ using _Main._Scripts.Level.StateMachine.States;
 using _Main._Scripts.LevelsLogic;
 using _Main._Scripts.LevelsLogic.StateMachine.States;
 using _Main._Scripts.MergeLogic;
-using _Main._Scripts.Player.StateMachine;
-using _Main._Scripts.Player.StateMachine.States;
+using _Main._Scripts.PlayerLogic;
+using _Main._Scripts.PlayerLogic.StateMachine;
+using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
+using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.UI;
-using UnityEngine;
 
 namespace _Main._Scripts.Level.StateMachine
 {
@@ -20,20 +21,24 @@ namespace _Main._Scripts.Level.StateMachine
         private readonly LevelSpawner _levelSpawner;
         private readonly MainConfig _mainConfig;
         private readonly UILocator _uiLocator;
+        private readonly CameraService _cameraService;
 
         public LevelStateMachine(Saves saves, LevelSpawner levelSpawner, MainConfig mainConfig,
-            List<CellToMerge> reserveCells, List<CellToMerge> gameCells,UILocator uiLocator,Camera camera)
+            List<CellToMerge> reserveCells, List<CellToMerge> gameCells, UILocator uiLocator,
+            CameraService cameraService,Player player)
         {
             _saves = saves;
             _levelSpawner = levelSpawner;
             _mainConfig = mainConfig;
             _uiLocator = uiLocator;
+            _cameraService = cameraService;
             var preGameView = _uiLocator.GetViewByType<PreGameView>();
+            var gameView = _uiLocator.GetViewByType<GameView>();
             _states = new List<IState>
             {
-                new MergeState(this,mainConfig.DragConfig,reserveCells,gameCells,preGameView,camera),
+                new MergeState(this, mainConfig.DragConfig, reserveCells, gameCells, preGameView, _cameraService),
+                new PlayState(this,gameView,_cameraService,player),
                 new InitState(this, levelSpawner, saves, mainConfig.LevelsConfig),
-                new PlayState(),
             };
 
             _currentState = _states[0];

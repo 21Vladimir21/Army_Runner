@@ -1,6 +1,4 @@
-using UnityEditor;
-
-namespace _Main._Scripts.Player.StateMachine.States
+namespace _Main._Scripts.PlayerLogic.StateMachine.States
 {
     public interface IState
     {
