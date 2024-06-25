@@ -24,14 +24,14 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         public void Enter()
         {
-            var level = SetCurrentLevel();
-            _levelSpawner.SpawnLevel(level);
+            // var level = SetCurrentLevel();
+            // _levelSpawner.SpawnLevel(level);
             _inited = true;
         }
 
         public void Exit()
         {
-            _inited = true;
+            _inited = false;
         }
 
         public void Update()

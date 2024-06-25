@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.Soilders;
+using _Main._Scripts.Soilders.Bullets;
 using UnityEngine;
 
 namespace _Main._Scripts.CrowdLogic
@@ -8,19 +9,22 @@ namespace _Main._Scripts.CrowdLogic
     public class Crowd
     {
         private readonly List<Soldier> _soldiers = new();
-        private List<Transform> _points = new();
+        private readonly List<Transform> _points;
+        private readonly BulletPool _bulletPool;
 
         private readonly float _soldierSpeed;
         private readonly float _maxPosition;
+        public int SoldiersCount => _soldiers.Count;
 
-        public Crowd(List<Transform> points, PlayerConfig config)
+        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig)
         {
             _points = points;
+            _bulletPool = new BulletPool(bulletPoolConfig);
             _maxPosition = config.soldiersMaxPosition;
             _soldierSpeed = config.soldierSpeed;
         }
-        
-        
+
+
         public void UpdateSoldiers()
         {
             MoveSoldiersTowardsPoints();
@@ -69,10 +73,17 @@ namespace _Main._Scripts.CrowdLogic
 
         #endregion
 
+        public void AddToCrowdAndSetPosition(Soldier soldier)
+        {
+            AddToCrowd(soldier);
+            var index = _soldiers.IndexOf(soldier);
+            soldier.transform.position = _points[index].position;
+        }
+
         public void AddToCrowd(Soldier soldier)
         {
+            soldier.InvitedToCrowd(_bulletPool);
             _soldiers.Add(soldier);
-
             soldier.onDie.AddListener(RemoveFromCrowd);
         }
 

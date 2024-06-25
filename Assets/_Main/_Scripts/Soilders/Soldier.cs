@@ -1,5 +1,6 @@
 using System.Collections;
 using _Main._Scripts.Obstacles;
+using _Main._Scripts.Soilders.Bullets;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,7 +12,7 @@ namespace _Main._Scripts.Soilders
     public class Soldier : MonoBehaviour
     {
         [HideInInspector] public UnityEvent<Soldier> onDie = new();
-        [SerializeField] private SoldierConfig config;
+        [field:SerializeField] public SoldierConfig Config { get; private set; }
 
         [SerializeField] private Animator animator;
 
@@ -37,7 +38,7 @@ namespace _Main._Scripts.Soilders
         {
             InCrowd = true;
             _bulletPool = bulletPool;
-            _timeOfLastShot = config.fireRate;
+            _timeOfLastShot = Config.fireRate;
         }
 
         private void Die()
@@ -49,7 +50,7 @@ namespace _Main._Scripts.Soilders
         public void UpdateShootingCooldown()
         {
             _timeOfLastShot += Time.deltaTime;
-            if (_timeOfLastShot >= config.fireRate)
+            if (_timeOfLastShot >= Config.fireRate)
             {
                 Shot();
                 _timeOfLastShot = 0f;
@@ -60,7 +61,7 @@ namespace _Main._Scripts.Soilders
         {
             var bullet = _bulletPool.GetBullet();
             bullet.transform.position = shootPoint.position;
-            bullet.Shot(config.bulletLifeTime, config.bulletSpeed);
+            bullet.Shot(Config.bulletLifeTime, Config.bulletSpeed);
         }
 
 #if UNITY_EDITOR

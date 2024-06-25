@@ -36,9 +36,9 @@ namespace _Main._Scripts.Level.StateMachine
             var gameView = _uiLocator.GetViewByType<GameView>();
             _states = new List<IState>
             {
-                new MergeState(this, mainConfig.DragConfig, reserveCells, gameCells, preGameView, _cameraService),
-                new PlayState(this,gameView,_cameraService,player),
                 new InitState(this, levelSpawner, saves, mainConfig.LevelsConfig),
+                new MergeState(this, mainConfig.DragConfig, reserveCells, gameCells, preGameView, _cameraService,saves),
+                new PlayState(this,gameView,_cameraService,_saves,player,mainConfig.Soldiers),
             };
 
             _currentState = _states[0];

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
+using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Soilders;
+using _Main._Scripts.Soilders.Bullets;
 using UnityEngine;
 
 namespace _Main._Scripts.PlayerLogic
@@ -9,22 +11,22 @@ namespace _Main._Scripts.PlayerLogic
     public class Player : MonoBehaviour
     {
         [field: SerializeField] public PlayerConfig Config { get; private set; }
+        [SerializeField] private BulletPoolConfig bulletPoolConfig;
+    
         [SerializeField] private List<Transform> crowdPoints;
-
-        [SerializeField] private BulletPool bulletPool;
-        
-
 
         private PlayerStateMachine _stateMachine;
         public Crowd Crowd { get; private set; }
         private bool _mouseInput;
+        private Saves _saves;
 
         public Transform Transform => transform;
         public bool MouseInput => _mouseInput;
 
-        private void Start()
+        public void Init(Saves saves)
         {
-            Crowd = new Crowd(crowdPoints,Config);
+            _saves = saves;
+            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig);
             _stateMachine = new PlayerStateMachine(this);
         }
 
@@ -41,8 +43,9 @@ namespace _Main._Scripts.PlayerLogic
             if (other.TryGetComponent(out Soldier soldier))
             {
                 if (soldier.InCrowd) return;
-                soldier.InvitedToCrowd(bulletPool);
                 Crowd.AddToCrowd(soldier);
+                _saves.ReserveSoldiers.Add(soldier.Config.SoldiersLevel);
+                _saves.InvokeSave(); //TODO: убрать нахуй отсюда эту хуету 
             }
         }
     }

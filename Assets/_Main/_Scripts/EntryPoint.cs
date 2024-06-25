@@ -29,8 +29,8 @@ namespace _Main._Scripts
         {
             var savesService = InitSaves();
             var uiLocator = new UILocator(views);
-
-
+            player.Init(savesService.Saves);
+            
             _levelStateMachine =
                 new LevelStateMachine(savesService.Saves, levelSpawner, mainConfig, reserveCells, gameCells, uiLocator,
                     cameraService,player);

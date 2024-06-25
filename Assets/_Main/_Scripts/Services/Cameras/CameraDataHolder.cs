@@ -11,17 +11,8 @@ namespace _Main._Scripts.Services.Cameras
         [field: SerializeField] public CinemachineVirtualCamera VirtualCamera { get; private set; }
         [field: SerializeField] public CameraType Type { get; private set; }
 
-        public void Enable(Action openCallback = null)
-        {
-            gameObject.SetActive(true);
-            openCallback?.Invoke();
-        }
-
-        public void Disable(Action closeCallback = null)
-        {
-            gameObject.SetActive(false);
-            closeCallback?.Invoke();
-        }
+        public void Enable() => gameObject.SetActive(true);
+        public void Disable() => gameObject.SetActive(false);
 
         private void OnValidate()
         {

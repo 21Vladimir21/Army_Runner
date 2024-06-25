@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using _Main._Scripts.MergeLogic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,10 +14,15 @@ namespace _Main._Scripts.SavesLogic
         [field: SerializeField] public int CurrentLevel { get; private set; }
         [field: SerializeField] public int CurrentLevelText { get; private set; }
 
-
         [field: SerializeField] public bool SoundEnabled { get; set; } = true;
-
         [field: SerializeField] public bool AdEnabled { get; set; } = true;
+        [field: SerializeField] public List<SoldiersLevels> InGameSoldiers= new();
+
+        [field: SerializeField] public List<SoldiersLevels> ReserveSoldiers = new()
+        {
+            SoldiersLevels.Level1, SoldiersLevels.Level1,SoldiersLevels.Level3, SoldiersLevels.Level1, SoldiersLevels.Level2,
+        };
+
 
         private string _filePath;
 

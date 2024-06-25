@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Main._Scripts.Soilders
 {
-    [CreateAssetMenu(fileName = "SoldierConfig", menuName = "GameConfigs/SoldiersSettings", order = 0)]
+    [CreateAssetMenu(fileName = "SoldierConfig", menuName = "GameConfigs/SoldiersSettings/SoldierConfig", order = 0)]
     public class SoldierConfig : ScriptableObject
     {
         [field: SerializeField] public SoldiersLevels SoldiersLevel { get; private set; }

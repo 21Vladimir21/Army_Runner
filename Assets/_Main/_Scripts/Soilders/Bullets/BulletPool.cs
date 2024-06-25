@@ -1,18 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace _Main._Scripts.Soilders
+namespace _Main._Scripts.Soilders.Bullets
 {
-    public class BulletPool : MonoBehaviour
+    public class BulletPool
     {
-        [SerializeField] private Bullet bulletPrefab;
-        [SerializeField] private int startObjectCount;
+         private Bullet _bulletPrefab;
+         private int _startBulletCount;
 
         private List<Bullet> _bullets = new();
 
-        private void Start()
+        public BulletPool(BulletPoolConfig config)
         {
-            for (int i = 0; i < startObjectCount; i++)
+            _bulletPrefab = config.BulletPrefab;
+            _startBulletCount = config.StartBulletCount;
+            for (int i = 0; i < _startBulletCount; i++)
             {
                 var bullet = AddBullet();
                 bullet.gameObject.SetActive(false);
@@ -36,12 +38,12 @@ namespace _Main._Scripts.Soilders
         private void ReturnBullet(GameObject bullet)
         {
             bullet.SetActive(false);
-            bullet.transform.position = transform.position;
+            bullet.transform.position = Vector3.zero;
         }
 
         private Bullet AddBullet()
         {
-            var bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+            var bullet = Object.Instantiate(_bulletPrefab, Vector3.zero, Quaternion.identity);
             bullet.OnLifeTimeEnded.AddListener(ReturnBullet);
             _bullets.Add(bullet);
 

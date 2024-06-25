@@ -22,6 +22,12 @@ namespace _Main._Scripts.MergeLogic
             IsBusy = false;
         }
 
+        public void ResetCurrentObjectPosition()
+        {
+            IsBusy = true;
+            currentObject.transform.position = transform.position;
+        }
+
         public void DestroyObject()
         {
             Destroy(currentObject.gameObject);

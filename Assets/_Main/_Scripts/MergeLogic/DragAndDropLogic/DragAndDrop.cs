@@ -99,17 +99,30 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
 
         private void ResetDrag()
         {
-            if (_selectedCell != null && !_selectedCell.IsBusy)
+            if (_selectedCell != null && _selectedCell.IsBusy == false)
             {
                 _selectedCell.AddObject(_startDragCell.currentObject);
                 _startDragCell.RemoveObject();
-                _draggedObject.position = _selectedCell.transform.position;
+                _selectedCell.ResetCurrentObjectPosition();
+                Debug.Log($"Положил в пустую ячейку");
             }
-            else if (_selectedCell != null && _selectedCell.IsBusy) OnMouseUp.Invoke();
+            else if (_selectedCell != null && _selectedCell.IsBusy)
+            {
+                OnMouseUp.Invoke();
+                Debug.Log($"Попробовал слить");
+            }
 
-            else if (_draggedObject != null) _draggedObject.position = _startDragCell.transform.position;
+            else if (_draggedObject != null)
+            {
+                _startDragCell.ResetCurrentObjectPosition();
+                Debug.Log($"Поставил на место с которого взял");
+            }
 
-            if (_startDragCell != null) _startDragCell.OnDestroyObject.RemoveListener(ResetDrag);
+            if (_startDragCell != null)
+            {
+                _startDragCell.OnDestroyObject.RemoveListener(ResetDrag);
+                Debug.Log($"Убрал подписку");
+            }
 
             ClearDragState();
         }
