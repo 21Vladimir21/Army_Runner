@@ -1,4 +1,5 @@
 using _Main._Scripts.CrowdLogic;
+using _Main._Scripts.LevelsLogic.StateMachine.States;
 using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
@@ -47,10 +48,12 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         public void Exit()
         {
+            _gameView.Close();
         }
 
         public void Update()
         {
+            if (_player.Crowd.SoldiersCount <=0) _stateSwitcher.SwitchState<GameOverState>();
         }
     }
 }

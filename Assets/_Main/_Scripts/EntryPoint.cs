@@ -23,7 +23,9 @@ namespace _Main._Scripts
         [SerializeField] private CameraService cameraService;
 
         private LevelStateMachine _levelStateMachine;
+        
         [SerializeField] private Player player;
+        
 
         private void Awake()
         {

@@ -23,11 +23,21 @@ namespace _Main._Scripts.PlayerLogic
         public Transform Transform => transform;
         public bool MouseInput => _mouseInput;
 
+
+        private Vector3 _startPoint;
+
         public void Init(Saves saves)
         {
             _saves = saves;
             Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig);
             _stateMachine = new PlayerStateMachine(this);
+            _startPoint = transform.position;
+        }
+
+        public void GameOver()
+        {
+            transform.position = _startPoint;
+            _mouseInput = false;
         }
 
         private void Update()

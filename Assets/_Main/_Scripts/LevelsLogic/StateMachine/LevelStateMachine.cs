@@ -34,11 +34,13 @@ namespace _Main._Scripts.Level.StateMachine
             _cameraService = cameraService;
             var preGameView = _uiLocator.GetViewByType<PreGameView>();
             var gameView = _uiLocator.GetViewByType<GameView>();
+            var gameOverView = _uiLocator.GetViewByType<GameOverView>();
             _states = new List<IState>
             {
                 new InitState(this, levelSpawner, saves, mainConfig.LevelsConfig),
                 new MergeState(this, mainConfig.DragConfig, reserveCells, gameCells, preGameView, _cameraService,saves),
                 new PlayState(this,gameView,_cameraService,_saves,player,mainConfig.Soldiers),
+                new GameOverState(this,gameOverView,player),
             };
 
             _currentState = _states[0];

@@ -6,7 +6,6 @@ using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services.Cameras;
-using _Main._Scripts.Soilders;
 using _Main._Scripts.UI;
 using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
@@ -16,7 +15,6 @@ namespace _Main._Scripts.Level.StateMachine.States
     public class MergeState : IState
     {
         private readonly IStateSwitcher _stateSwitcher;
-        private readonly DragConfig _dragConfig;
         private readonly List<CellToMerge> _reserveCells;
         private readonly List<CellToMerge> _gameCells;
         private readonly PreGameView _preGameView;
@@ -33,7 +31,6 @@ namespace _Main._Scripts.Level.StateMachine.States
             List<CellToMerge> gameCells, PreGameView preGameView, CameraService cameraService, Saves saves)
         {
             _stateSwitcher = stateSwitcher;
-            _dragConfig = dragConfig;
             _reserveCells = reserveCells;
             _gameCells = gameCells;
             _preGameView = preGameView;
@@ -49,6 +46,8 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         public void Enter()
         {
+            ClearCell(_reserveCells);
+            ClearCell(_gameCells);
             LoadSoldiersFromSave();
 
             _preGameView.StartGameButton.onClick.AddListener(SwitchToPlayState);
@@ -121,6 +120,14 @@ namespace _Main._Scripts.Level.StateMachine.States
             saveList.AddRange(soldierForAdd);
         }
 
+        private void ClearCell(List<CellToMerge> cells)
+        {
+            foreach (var cell in cells)
+            {
+                if (cell.IsBusy) cell.DestroyObject();
+            }
+        }
+
         private DraggableObject SpawnNextObjectLevel(SoldiersLevels level) => SpawnSoldier(level + 1);
 
         private DraggableObject SpawnSoldier(SoldiersLevels level)
@@ -138,6 +145,7 @@ namespace _Main._Scripts.Level.StateMachine.States
                     TryMergeObjects();
                     _cell = null;
                 }
+
                 _startDragCell = null;
             }
         }
