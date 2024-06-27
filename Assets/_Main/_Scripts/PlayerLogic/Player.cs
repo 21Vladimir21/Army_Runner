@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Main._Scripts.Boosts;
 using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.SavesLogic;
@@ -12,7 +13,7 @@ namespace _Main._Scripts.PlayerLogic
     {
         [field: SerializeField] public PlayerConfig Config { get; private set; }
         [SerializeField] private BulletPoolConfig bulletPoolConfig;
-    
+
         [SerializeField] private List<Transform> crowdPoints;
 
         private PlayerStateMachine _stateMachine;
@@ -29,7 +30,7 @@ namespace _Main._Scripts.PlayerLogic
         public void Init(Saves saves)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig);
+            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, 1);
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }
@@ -57,6 +58,9 @@ namespace _Main._Scripts.PlayerLogic
                 _saves.ReserveSoldiers.Add(soldier.Config.SoldiersLevel);
                 _saves.InvokeSave(); //TODO: убрать нахуй отсюда эту хуету 
             }
+
+            if (other.TryGetComponent(out DamageBoost damageBoost)) 
+                Crowd.UpdateDamageRatio(damageBoost.DamageRatio);
         }
     }
 }

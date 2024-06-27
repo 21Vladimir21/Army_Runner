@@ -12,13 +12,16 @@ namespace _Main._Scripts.Soilders
     public class Soldier : MonoBehaviour
     {
         [HideInInspector] public UnityEvent<Soldier> onDie = new();
-        [field:SerializeField] public SoldierConfig Config { get; private set; }
+        [field: SerializeField] public SoldierConfig Config { get; private set; }
 
         [SerializeField] private Animator animator;
 
         [SerializeField] private Collider soldierCollider;
         [SerializeField] private Transform shootPoint;
 
+        private float _bulletSpeed;
+        private int _damage;
+        private float _bulletLifeTime;
 
         private BulletPool _bulletPool;
         private float _timeOfLastShot;
@@ -33,18 +36,15 @@ namespace _Main._Scripts.Soilders
             }
         }
 
-
-        public void InvitedToCrowd(BulletPool bulletPool)
+        public void InvitedToCrowd(BulletPool bulletPool, float damageRatio)
         {
             InCrowd = true;
             _bulletPool = bulletPool;
             _timeOfLastShot = Config.fireRate;
-        }
-
-        private void Die()
-        {
-            soldierCollider.enabled = false;
-            onDie.Invoke(this);
+            
+            _bulletLifeTime = Config.bulletLifeTime;
+            _bulletSpeed = Config.bulletSpeed;
+            _damage = (int)(Config.bulletDamage * damageRatio);
         }
 
         public void UpdateShootingCooldown()
@@ -57,11 +57,22 @@ namespace _Main._Scripts.Soilders
             }
         }
 
+        public void UpdateDamageRatio(float damageRatio)
+        {
+            _damage = (int)(Config.bulletDamage * damageRatio);
+        }
+
+        private void Die()
+        {
+            soldierCollider.enabled = false;
+            onDie.Invoke(this);
+        }
+
         private void Shot()
         {
             var bullet = _bulletPool.GetBullet();
             bullet.transform.position = shootPoint.position;
-            bullet.Shot(Config.bulletLifeTime, Config.bulletSpeed);
+            bullet.Shot(_bulletLifeTime, _bulletSpeed, _damage);
         }
 
 #if UNITY_EDITOR

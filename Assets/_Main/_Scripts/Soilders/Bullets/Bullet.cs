@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using _Main._Scripts.Obstacles;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,18 +11,31 @@ namespace _Main._Scripts.Soilders
         private float _lifeTime;
         private float _bulletSpeed;
         private bool _canMove;
+        private int _damage;
         private Coroutine _deactivateRoutine;
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent(out Obstacle obstacle))
+            {
+                if (obstacle.TryApplyDamage(_damage))
+                {
+                    DeactivateBullet();
+                    StopCoroutine(_deactivateRoutine);
+                }
+            }
+        }
 
         private void Update()
         {
             if (_canMove) MoveBullet();
         }
 
-        public void Shot(float lifeTime, float bulletSpeed)
+        public void Shot(float lifeTime, float speed,int damage)
         {
             _lifeTime = lifeTime;
-            _bulletSpeed = bulletSpeed;
+            _bulletSpeed = speed;
+            _damage = damage;
             _deactivateRoutine = StartCoroutine(DeactivateRoutine());
             _canMove = true;
         }
@@ -30,6 +43,11 @@ namespace _Main._Scripts.Soilders
         private IEnumerator DeactivateRoutine()
         {
             yield return new WaitForSeconds(_lifeTime);
+            DeactivateBullet();
+        }
+
+        private void DeactivateBullet()
+        {
             OnLifeTimeEnded.Invoke(gameObject);
             _canMove = false;
         }

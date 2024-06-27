@@ -14,14 +14,17 @@ namespace _Main._Scripts.CrowdLogic
 
         private readonly float _soldierSpeed;
         private readonly float _maxPosition;
+
+        private float _damageRatio;
         public int SoldiersCount => _soldiers.Count;
 
-        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig)
+        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig, float damageRatio)
         {
             _points = points;
             _bulletPool = new BulletPool(bulletPoolConfig);
             _maxPosition = config.soldiersMaxPosition;
             _soldierSpeed = config.soldierSpeed;
+            _damageRatio = damageRatio;
         }
 
 
@@ -30,6 +33,12 @@ namespace _Main._Scripts.CrowdLogic
             MoveSoldiersTowardsPoints();
             ClampSoldiersPositionX();
             UpdateShootingCooldownForAllSoldiers();
+        }
+
+        public void UpdateDamageRatio(float damageRatio)
+        {
+            _damageRatio += damageRatio;
+            foreach (var soldier in _soldiers) soldier.UpdateDamageRatio(_damageRatio);
         }
 
         private void UpdateShootingCooldownForAllSoldiers()
@@ -82,7 +91,7 @@ namespace _Main._Scripts.CrowdLogic
 
         public void AddToCrowd(Soldier soldier)
         {
-            soldier.InvitedToCrowd(_bulletPool);
+            soldier.InvitedToCrowd(_bulletPool,_damageRatio);
             _soldiers.Add(soldier);
             soldier.onDie.AddListener(RemoveFromCrowd);
         }

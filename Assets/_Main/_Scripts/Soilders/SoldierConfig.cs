@@ -10,9 +10,9 @@ namespace _Main._Scripts.Soilders
 
         [Range(0.1f, 10f)] public float fireRate;
 
-        [Header("Bullet settings")] [Range(3f, 20f)]
-        public float bulletLifeTime;
-
+        [Header("Bullet settings")]
+        [Range(3f, 20f)] public float bulletLifeTime;
         [Range(0.1f, 10f)] public float bulletSpeed;
+        [Range(1f, 1000)] public int bulletDamage;
     }
 }
