@@ -31,11 +31,12 @@ namespace _Main._Scripts.Soilders
             if (_canMove) MoveBullet();
         }
 
-        public void Shot(float lifeTime, float speed,int damage)
+        public void Shot(float lifeTime, float speed, int damage, float bulletScale)
         {
             _lifeTime = lifeTime;
             _bulletSpeed = speed;
             _damage = damage;
+            transform.localScale = Vector3.one * bulletScale;
             _deactivateRoutine = StartCoroutine(DeactivateRoutine());
             _canMove = true;
         }
@@ -49,6 +50,7 @@ namespace _Main._Scripts.Soilders
         private void DeactivateBullet()
         {
             OnLifeTimeEnded.Invoke(gameObject);
+            transform.localScale = Vector3.one;
             _canMove = false;
         }
 

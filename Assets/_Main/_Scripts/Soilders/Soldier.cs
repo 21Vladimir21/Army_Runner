@@ -21,6 +21,7 @@ namespace _Main._Scripts.Soilders
 
         private float _bulletSpeed;
         private int _damage;
+        private float _bulletScaleRatio =1f;
         private float _bulletLifeTime;
 
         private BulletPool _bulletPool;
@@ -36,15 +37,17 @@ namespace _Main._Scripts.Soilders
             }
         }
 
-        public void InvitedToCrowd(BulletPool bulletPool, float damageRatio)
+        public void InvitedToCrowd(BulletPool bulletPool, float damageRatio,float speedRatio,float scaleRatio)
         {
             InCrowd = true;
             _bulletPool = bulletPool;
             _timeOfLastShot = Config.fireRate;
-            
+
             _bulletLifeTime = Config.bulletLifeTime;
-            _bulletSpeed = Config.bulletSpeed;
             _damage = (int)(Config.bulletDamage * damageRatio);
+            _bulletSpeed = Config.bulletSpeed * speedRatio;
+            _bulletScaleRatio += scaleRatio;
+            
         }
 
         public void UpdateShootingCooldown()
@@ -57,10 +60,9 @@ namespace _Main._Scripts.Soilders
             }
         }
 
-        public void UpdateDamageRatio(float damageRatio)
-        {
-            _damage = (int)(Config.bulletDamage * damageRatio);
-        }
+        public void UpdateBulletDamageRatio(float damageRatio) => _damage = (int)(Config.bulletDamage * damageRatio);
+        public void UpdateBulletSpeedRatio(float speedRatio) => _bulletSpeed = Config.bulletSpeed * speedRatio;
+        public void UpdateBulletScaleRatio(float scaleRatio) => _bulletScaleRatio += scaleRatio;
 
         private void Die()
         {
@@ -72,7 +74,7 @@ namespace _Main._Scripts.Soilders
         {
             var bullet = _bulletPool.GetBullet();
             bullet.transform.position = shootPoint.position;
-            bullet.Shot(_bulletLifeTime, _bulletSpeed, _damage);
+            bullet.Shot(_bulletLifeTime, _bulletSpeed, _damage,_bulletScaleRatio);
         }
 
 #if UNITY_EDITOR

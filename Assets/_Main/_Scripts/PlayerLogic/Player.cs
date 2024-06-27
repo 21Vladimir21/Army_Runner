@@ -30,7 +30,7 @@ namespace _Main._Scripts.PlayerLogic
         public void Init(Saves saves)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, 1);
+            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, 1,1);//TODO:Сделать загрузку данных прокачки толпы
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }
@@ -60,7 +60,11 @@ namespace _Main._Scripts.PlayerLogic
             }
 
             if (other.TryGetComponent(out DamageBoost damageBoost)) 
-                Crowd.UpdateDamageRatio(damageBoost.DamageRatio);
+                Crowd.UpdateBulletDamageRatio(damageBoost.DamageRatio);
+            if (other.TryGetComponent(out BulletSpeedBoost speedBoost)) 
+                Crowd.UpdateBulletSpeedRatio(speedBoost.SpeedRatio);
+            if (other.TryGetComponent(out BulletScaleBoost scaleBoost)) 
+                Crowd.UpdateBulletScaleRatio(scaleBoost.ScaleRatio);
         }
     }
 }

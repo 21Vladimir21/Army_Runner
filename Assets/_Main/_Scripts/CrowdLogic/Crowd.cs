@@ -15,16 +15,20 @@ namespace _Main._Scripts.CrowdLogic
         private readonly float _soldierSpeed;
         private readonly float _maxPosition;
 
-        private float _damageRatio;
+        private float _bulletDamageRatio;
+        private float _bulletSpeedRatio;
+        private float _bulletScaleRatio = 1f;
         public int SoldiersCount => _soldiers.Count;
 
-        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig, float damageRatio)
+        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig,
+            float bulletDamageRatio, float bulletSpeedRatio)
         {
             _points = points;
             _bulletPool = new BulletPool(bulletPoolConfig);
             _maxPosition = config.soldiersMaxPosition;
             _soldierSpeed = config.soldierSpeed;
-            _damageRatio = damageRatio;
+            _bulletDamageRatio = bulletDamageRatio;
+            _bulletSpeedRatio = bulletSpeedRatio;
         }
 
 
@@ -35,10 +39,22 @@ namespace _Main._Scripts.CrowdLogic
             UpdateShootingCooldownForAllSoldiers();
         }
 
-        public void UpdateDamageRatio(float damageRatio)
+        public void UpdateBulletDamageRatio(float damageRatio)
         {
-            _damageRatio += damageRatio;
-            foreach (var soldier in _soldiers) soldier.UpdateDamageRatio(_damageRatio);
+            _bulletDamageRatio += damageRatio;
+            foreach (var soldier in _soldiers) soldier.UpdateBulletDamageRatio(_bulletDamageRatio);
+        }
+
+        public void UpdateBulletSpeedRatio(float speedRatio)
+        {
+            _bulletSpeedRatio += speedRatio;
+            foreach (var soldier in _soldiers) soldier.UpdateBulletSpeedRatio(_bulletSpeedRatio);
+        }
+
+        public void UpdateBulletScaleRatio(float scaleRatio)
+        {
+            _bulletScaleRatio += scaleRatio;
+            foreach (var soldier in _soldiers) soldier.UpdateBulletScaleRatio(_bulletScaleRatio);
         }
 
         private void UpdateShootingCooldownForAllSoldiers()
@@ -91,7 +107,7 @@ namespace _Main._Scripts.CrowdLogic
 
         public void AddToCrowd(Soldier soldier)
         {
-            soldier.InvitedToCrowd(_bulletPool,_damageRatio);
+            soldier.InvitedToCrowd(_bulletPool, _bulletDamageRatio, _bulletSpeedRatio, _bulletScaleRatio);
             _soldiers.Add(soldier);
             soldier.onDie.AddListener(RemoveFromCrowd);
         }
