@@ -4,6 +4,7 @@ namespace _Main._Scripts.Services.Cameras
     {
         UI,
         Game,
-        PreGame
+        PreGame,
+        FinishCamera
     }
 }

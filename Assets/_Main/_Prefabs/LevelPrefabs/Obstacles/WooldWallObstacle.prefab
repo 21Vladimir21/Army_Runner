@@ -116,7 +116,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6686643610096722897}
-  - {fileID: 343335706319454178}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3482769923692054656
@@ -133,6 +132,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 10
   healthText: {fileID: 6671653696121699110}
+  obstacle: {fileID: 6686643610096722897}
+  boost: {fileID: 0}
 --- !u!65 &6861732076668307870
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -213,7 +214,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7177680841722038235}
-  m_Father: {fileID: 4954635801745758772}
+  m_Father: {fileID: 6686643610096722897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -427,7 +428,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6686643610096722897}
   m_Layer: 0
-  m_Name: WoodenWall
+  m_Name: Obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -447,5 +448,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7264170088761527958}
+  - {fileID: 343335706319454178}
   m_Father: {fileID: 4954635801745758772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -1,4 +1,3 @@
-using System.Collections;
 using _Main._Scripts.Obstacles;
 using _Main._Scripts.Soilders.Bullets;
 using UnityEditor;
@@ -13,19 +12,24 @@ namespace _Main._Scripts.Soilders
     {
         [HideInInspector] public UnityEvent<Soldier> onDie = new();
         [field: SerializeField] public SoldierConfig Config { get; private set; }
+        [field: SerializeField] public Transform RotatableSoldier { get; private set; }
 
         [SerializeField] private Animator animator;
 
         [SerializeField] private Collider soldierCollider;
         [SerializeField] private Transform shootPoint;
+        [SerializeField] private Transform[] doubleShootPoints;
+
 
         private float _bulletSpeed;
         private int _damage;
-        private float _bulletScaleRatio =1f;
+        private float _bulletScaleRatio = 1f;
         private float _bulletLifeTime;
+        private float _fireRate;
 
         private BulletPool _bulletPool;
         private float _timeOfLastShot;
+        private bool _isDoubleShoot;
 
         public bool InCrowd { get; private set; }
 
@@ -37,23 +41,24 @@ namespace _Main._Scripts.Soilders
             }
         }
 
-        public void InvitedToCrowd(BulletPool bulletPool, float damageRatio,float speedRatio,float scaleRatio)
+        public void InvitedToCrowd(BulletPool bulletPool, float damageRatio, float speedRatio, float scaleRatio,
+            float fireRateRatio)
         {
             InCrowd = true;
             _bulletPool = bulletPool;
-            _timeOfLastShot = Config.fireRate;
 
             _bulletLifeTime = Config.bulletLifeTime;
+            _fireRate = Config.fireRate * fireRateRatio;
+            _timeOfLastShot = _fireRate;
             _damage = (int)(Config.bulletDamage * damageRatio);
             _bulletSpeed = Config.bulletSpeed * speedRatio;
             _bulletScaleRatio += scaleRatio;
-            
         }
 
         public void UpdateShootingCooldown()
         {
             _timeOfLastShot += Time.deltaTime;
-            if (_timeOfLastShot >= Config.fireRate)
+            if (_timeOfLastShot >= _fireRate)
             {
                 Shot();
                 _timeOfLastShot = 0f;
@@ -63,6 +68,8 @@ namespace _Main._Scripts.Soilders
         public void UpdateBulletDamageRatio(float damageRatio) => _damage = (int)(Config.bulletDamage * damageRatio);
         public void UpdateBulletSpeedRatio(float speedRatio) => _bulletSpeed = Config.bulletSpeed * speedRatio;
         public void UpdateBulletScaleRatio(float scaleRatio) => _bulletScaleRatio += scaleRatio;
+        public void UpdateFireRateRatio(float fireRateRatio) => _fireRate = Config.fireRate * fireRateRatio;
+        public void ActivateDoubleShot() => _isDoubleShoot = true;
 
         private void Die()
         {
@@ -72,9 +79,21 @@ namespace _Main._Scripts.Soilders
 
         private void Shot()
         {
+            if (_isDoubleShoot)
+            {
+                foreach (var point in doubleShootPoints) 
+                    PrepareBullet(point);
+                return;
+            }
+            PrepareBullet(shootPoint);
+        }
+
+        private void PrepareBullet(Transform point)
+        {
             var bullet = _bulletPool.GetBullet();
-            bullet.transform.position = shootPoint.position;
-            bullet.Shot(_bulletLifeTime, _bulletSpeed, _damage,_bulletScaleRatio);
+            bullet.transform.position = point.position;
+            bullet.transform.rotation = point.rotation;
+            bullet.Shot(_bulletLifeTime, _bulletSpeed, _damage, _bulletScaleRatio);
         }
 
 #if UNITY_EDITOR

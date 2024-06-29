@@ -56,7 +56,7 @@ namespace _Main._Scripts.Soilders
 
         private void MoveBullet()
         {
-            var forwardDirection = Vector3.forward;
+            var forwardDirection = transform.forward;
             var moveDirection = forwardDirection.normalized * _bulletSpeed;
             transform.position += moveDirection * Time.deltaTime;
         }

@@ -42,6 +42,7 @@ namespace _Main._Scripts
         {
             var savesService = new SavesService();
             ServiceLocator.Instance.TryAddService(savesService);
+            savesService.InitSaves();
             return savesService;
         }
 

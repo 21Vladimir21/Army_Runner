@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using _Main._Scripts.MergeLogic;
+using Palmmedia.ReportGenerator.Core.Common;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -16,12 +17,25 @@ namespace _Main._Scripts.SavesLogic
 
         [field: SerializeField] public bool SoundEnabled { get; set; } = true;
         [field: SerializeField] public bool AdEnabled { get; set; } = true;
-        [field: SerializeField] public List<SoldiersLevels> InGameSoldiers= new();
 
-        [field: SerializeField] public List<SoldiersLevels> ReserveSoldiers = new()
+        [field: SerializeField]
+        public List<Soldier> InGameSoldiers { get; set; } = new()
         {
-            SoldiersLevels.Level1, SoldiersLevels.Level1,SoldiersLevels.Level3, SoldiersLevels.Level1, SoldiersLevels.Level2,
+            new Soldier(SoldiersLevels.Level2, 1),
+            new Soldier(SoldiersLevels.Level2, 2),
         };
+
+        [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new();
+
+
+        // [NonSerialized] public Dictionary<SoldiersLevels, int> InGameSoldiers = new();
+        //
+        // [NonSerialized] public Dictionary<SoldiersLevels, int> ReserveSoldiers = new()
+        // {
+        //     { SoldiersLevels.Level1, 0 },
+        //     { SoldiersLevels.Level3, 1 },
+        //     { SoldiersLevels.Level2, 2 },
+        // };
 
 
         private string _filePath;
@@ -64,7 +78,10 @@ namespace _Main._Scripts.SavesLogic
 
         private void SetCloudSaveData()
         {
-            var json = JsonUtility.ToJson(this, true);
+            // var json = JsonUtility.ToJson(this, true);
+            JsonSerializer.ToJsonString(this);
+
+            // JsonConverter  = (this, true);
             // Cloud.SetValue(SaveKey, json, true, () => Debug.Log("Save success \n" + json),
             // (log) => Debug.Log("Save error \n" + log));
         }
@@ -133,5 +150,18 @@ namespace _Main._Scripts.SavesLogic
         public bool CanSpendMoney(int amount) => amount > 0 && amount <= Money;
 
         #endregion
+
+        [Serializable]
+        public struct Soldier
+        {
+            public SoldiersLevels Level;
+            public int Index;
+
+            public Soldier(SoldiersLevels level, int index)
+            {
+                Level = level;
+                Index = index;
+            }
+        }
     }
 }

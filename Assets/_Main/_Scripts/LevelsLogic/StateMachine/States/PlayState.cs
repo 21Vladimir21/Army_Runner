@@ -39,7 +39,7 @@ namespace _Main._Scripts.Level.StateMachine.States
             _player.gameObject.SetActive(true);
             foreach (var soldiersLevel in _saves.InGameSoldiers)
             {
-                var soldier = Object.Instantiate(_soldiers.GetSoldierFromLevel(soldiersLevel));
+                var soldier = Object.Instantiate(_soldiers.GetSoldierFromLevel(soldiersLevel.Level));
                 _player.Crowd.AddToCrowdAndSetPosition(soldier);
             }
             _saves.InvokeSave();

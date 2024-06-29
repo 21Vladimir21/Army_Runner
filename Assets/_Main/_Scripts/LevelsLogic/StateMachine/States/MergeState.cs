@@ -3,12 +3,13 @@ using System.Linq;
 using _Main._Scripts.MergeLogic;
 using _Main._Scripts.MergeLogic.DragAndDropLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
-using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.UI;
+using Unity.VisualScripting;
 using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
+using IState = _Main._Scripts.PlayerLogic.StateMachine.States.IState;
 
 namespace _Main._Scripts.Level.StateMachine.States
 {
@@ -99,25 +100,27 @@ namespace _Main._Scripts.Level.StateMachine.States
             MainSaveSoldiers(_reserveCells, _saves.ReserveSoldiers);
         }
 
-        private void MainLoadSoldiers(List<CellToMerge> cells, List<SoldiersLevels> saveList)
+        private void MainLoadSoldiers(List<CellToMerge> cells, List<Saves.Soldier> listFromSave)
         {
-            for (int i = 0; i <= cells.Count; i++)
+            foreach (var soldier in listFromSave)
             {
-                if (saveList.Count <= i) break;
-                var soldier = SpawnSoldier(saveList[i]);
-                cells[i].AddObject(soldier);
+                var instSoldier = SpawnSoldier(soldier.Level);
+                cells[soldier.Index].AddObject(instSoldier);
             }
         }
 
-        private void MainSaveSoldiers(List<CellToMerge> cells, List<SoldiersLevels> saveList)
+        private void MainSaveSoldiers(List<CellToMerge> cells, List<Saves.Soldier> listFromSave)
         {
-            var soldierForAdd = new List<SoldiersLevels>();
-            foreach (var cell in cells)
-                if (cell.IsBusy)
-                    soldierForAdd.Add(cell.currentObject.Level);
+            var soldierForAdd = new List<Saves.Soldier>();
 
-            saveList.Clear();
-            saveList.AddRange(soldierForAdd);
+            for (int i = 0; i < cells.Count; i++)
+            {
+                if (cells[i].IsBusy)
+                    soldierForAdd.Add(new Saves.Soldier(cells[i].currentObject.Level, i));
+            }
+
+            listFromSave.Clear();
+            listFromSave.AddRange(soldierForAdd);
         }
 
         private void ClearCell(List<CellToMerge> cells)

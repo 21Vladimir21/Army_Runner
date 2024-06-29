@@ -30,7 +30,8 @@ namespace _Main._Scripts.PlayerLogic
         public void Init(Saves saves)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, 1,1);//TODO:Сделать загрузку данных прокачки толпы
+            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, 1,
+                1, 1); //TODO:Сделать загрузку данных прокачки толпы
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }
@@ -54,17 +55,13 @@ namespace _Main._Scripts.PlayerLogic
             if (other.TryGetComponent(out Soldier soldier))
             {
                 if (soldier.InCrowd) return;
-                Crowd.AddToCrowd(soldier);
-                _saves.ReserveSoldiers.Add(soldier.Config.SoldiersLevel);
+               var index =  Crowd.AddToCrowd(soldier);
+                _saves.ReserveSoldiers.Add(new Saves.Soldier(soldier.Config.SoldiersLevel,index));
                 _saves.InvokeSave(); //TODO: убрать нахуй отсюда эту хуету 
             }
 
-            if (other.TryGetComponent(out DamageBoost damageBoost)) 
-                Crowd.UpdateBulletDamageRatio(damageBoost.DamageRatio);
-            if (other.TryGetComponent(out BulletSpeedBoost speedBoost)) 
-                Crowd.UpdateBulletSpeedRatio(speedBoost.SpeedRatio);
-            if (other.TryGetComponent(out BulletScaleBoost scaleBoost)) 
-                Crowd.UpdateBulletScaleRatio(scaleBoost.ScaleRatio);
+            if (other.TryGetComponent(out Boost boost))
+                Crowd.UpdateBulletBoostRatio(boost);
         }
     }
 }
