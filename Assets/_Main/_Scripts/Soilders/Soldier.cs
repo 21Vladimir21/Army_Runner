@@ -12,12 +12,13 @@ namespace _Main._Scripts.Soilders
     {
         [HideInInspector] public UnityEvent<Soldier> onDie = new();
         [field: SerializeField] public SoldierConfig Config { get; private set; }
-        [field: SerializeField] public Transform RotatableSoldier { get; private set; }
+        [field: SerializeField] private Transform rotatableSoldier;
 
         [SerializeField] private Animator animator;
 
         [SerializeField] private Collider soldierCollider;
         [SerializeField] private Transform shootPoint;
+        [SerializeField] private Transform finishShootPoint;
         [SerializeField] private Transform[] doubleShootPoints;
 
 
@@ -32,6 +33,7 @@ namespace _Main._Scripts.Soilders
         private bool _isDoubleShoot;
 
         public bool InCrowd { get; private set; }
+        public bool IsFinishShooting;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -65,6 +67,15 @@ namespace _Main._Scripts.Soilders
             }
         }
 
+        public void SetLookDirection(Vector3 point)
+        {
+            var direction = (point - transform.position).normalized;
+            if (direction == Vector3.zero) return;
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            rotatableSoldier.localRotation = targetRotation;
+        }
+
         public void UpdateBulletDamageRatio(float damageRatio) => _damage = (int)(Config.bulletDamage * damageRatio);
         public void UpdateBulletSpeedRatio(float speedRatio) => _bulletSpeed = Config.bulletSpeed * speedRatio;
         public void UpdateBulletScaleRatio(float scaleRatio) => _bulletScaleRatio += scaleRatio;
@@ -81,11 +92,12 @@ namespace _Main._Scripts.Soilders
         {
             if (_isDoubleShoot)
             {
-                foreach (var point in doubleShootPoints) 
+                foreach (var point in doubleShootPoints)
                     PrepareBullet(point);
                 return;
             }
-            PrepareBullet(shootPoint);
+
+            PrepareBullet(IsFinishShooting ? finishShootPoint : shootPoint);
         }
 
         private void PrepareBullet(Transform point)

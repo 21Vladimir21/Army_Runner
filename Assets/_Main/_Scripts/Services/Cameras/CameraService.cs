@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Cinemachine;
 using UnityEngine;
 
 namespace _Main._Scripts.Services.Cameras
@@ -12,11 +11,7 @@ namespace _Main._Scripts.Services.Cameras
 
 
         private CameraDataHolder _currentCamera;
-
-        private void Awake()
-        {
-            // DontDestroyOnLoad(this);
-        }
+        
 
         public void SwitchToFromType(CameraType type, Action blendCompletedCallBack = null, Action closeCallBack = null)
         {

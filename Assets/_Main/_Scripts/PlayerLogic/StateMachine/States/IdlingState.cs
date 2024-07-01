@@ -3,9 +3,9 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
     public class IdlingState : IState
     {
         private IStateSwitcher _switcher;
-        private PlayerLogic.Player _player;
+        private Player _player;
 
-        public IdlingState(IStateSwitcher switcher, PlayerLogic.Player player)
+        public IdlingState(IStateSwitcher switcher, Player player)
         {
             _switcher = switcher;
             _player = player;

@@ -1,14 +1,17 @@
+using _Main._Scripts.LevelsLogic.StateMachine.States;
+
 namespace _Main._Scripts.PlayerLogic.StateMachine.States
 {
-    public class FinishShootState : IState
+    public class PlayerGameOverState : IState
     {
         private readonly IStateSwitcher _switcher;
-        private readonly PlayerLogic.Player _player;
+        private readonly Player _player;
 
-        public FinishShootState(IStateSwitcher switcher, PlayerLogic.Player player)
+        public PlayerGameOverState(IStateSwitcher switcher,Player player)
         {
             _switcher = switcher;
             _player = player;
+            _player.OnRestart.AddListener(Restart);
         }
 
         public void Enter()
@@ -23,14 +26,9 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
         {
         }
 
-        private void Shoot()
+        private void Restart()
         {
-            
-        }
-        
-        private void ChooseTarget()
-        {
-            
+            _switcher.SwitchState<WaitingState>();
         }
     }
 }

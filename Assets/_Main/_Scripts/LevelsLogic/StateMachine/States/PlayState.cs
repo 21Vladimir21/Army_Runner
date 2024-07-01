@@ -1,4 +1,5 @@
 using _Main._Scripts.CrowdLogic;
+using _Main._Scripts.LevelsLogic;
 using _Main._Scripts.LevelsLogic.StateMachine.States;
 using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
@@ -19,9 +20,10 @@ namespace _Main._Scripts.Level.StateMachine.States
         private readonly Saves _saves;
         private readonly Player _player;
         private readonly Soldiers _soldiers;
+        private readonly LevelService _levelService;
 
         public PlayState(IStateSwitcher stateSwitcher, GameView gameView, CameraService cameraService, Saves saves,
-            Player player, Soldiers soldiers)
+            Player player, Soldiers soldiers, LevelService levelService)
         {
             _stateSwitcher = stateSwitcher;
             _gameView = gameView;
@@ -29,12 +31,14 @@ namespace _Main._Scripts.Level.StateMachine.States
             _saves = saves;
             _player = player;
             _soldiers = soldiers;
+            _levelService = levelService;
         }
 
         public void Enter()
         {
             _gameView.Open();
             _cameraService.SwitchToFromType(CameraType.Game);
+            _player.OnStart.Invoke();
 
             _player.gameObject.SetActive(true);
             foreach (var soldiersLevel in _saves.InGameSoldiers)
@@ -42,8 +46,9 @@ namespace _Main._Scripts.Level.StateMachine.States
                 var soldier = Object.Instantiate(_soldiers.GetSoldierFromLevel(soldiersLevel.Level));
                 _player.Crowd.AddToCrowdAndSetPosition(soldier);
             }
-            _saves.InvokeSave();
 
+            _saves.InvokeSave();
+            _levelService.CurrentLevel.Finish.OnFinished.AddListener(Finished);
         }
 
         public void Exit()
@@ -53,7 +58,12 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         public void Update()
         {
-            if (_player.Crowd.SoldiersCount <=0) _stateSwitcher.SwitchState<GameOverState>();
+            if (_player.Crowd.SoldiersCount <= 0) _stateSwitcher.SwitchState<GameOverState>();
+        }
+
+        private void Finished()
+        {
+            _stateSwitcher.SwitchState<FinishState>();
         }
     }
 }

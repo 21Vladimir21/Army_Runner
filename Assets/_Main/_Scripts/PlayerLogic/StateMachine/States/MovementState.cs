@@ -12,13 +12,13 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
         private readonly float _sensitivity;
         private readonly float _xDamping;
 
-        private readonly PlayerLogic.Player _player;
+        private readonly Player _player;
         private readonly Crowd _crowd;
         private readonly IStateSwitcher _switcher;
 
         private Vector3 _startDragPosition;
 
-        public MovementState(IStateSwitcher switcher, PlayerLogic.Player player)
+        public MovementState(IStateSwitcher switcher, Player player)
         {
             _switcher = switcher;
             _speedRatio = player.Config.speed;

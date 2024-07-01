@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using _Main._Scripts.LevelsLogic.StateMachine.States;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
 
 namespace _Main._Scripts.PlayerLogic.StateMachine
@@ -9,12 +10,14 @@ namespace _Main._Scripts.PlayerLogic.StateMachine
         private List<IState> _states;
         private IState _currentState;
 
-        public PlayerStateMachine(PlayerLogic.Player player)
+        public PlayerStateMachine(Player player)
         {
             _states = new List<IState>()
             {
+                new WaitingState(this,player),
                 new IdlingState(this, player),
-                new MovementState(this, player)
+                new MovementState(this, player),
+                new PlayerGameOverState(this,player),
             };
 
             _currentState = _states[0];

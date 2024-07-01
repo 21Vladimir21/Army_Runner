@@ -8,12 +8,13 @@ using _Main._Scripts.Services;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Main._Scripts
 {
     public class EntryPoint : MonoBehaviour
     {
-        [SerializeField] private LevelSpawner levelSpawner;
+        [FormerlySerializedAs("levelSpawner")] [SerializeField] private LevelService levelService;
         [SerializeField] private MainConfig mainConfig;
 
         [SerializeField] private List<CellToMerge> reserveCells;
@@ -32,9 +33,10 @@ namespace _Main._Scripts
             var savesService = InitSaves();
             var uiLocator = new UILocator(views);
             player.Init(savesService.Saves);
+            ServiceLocator.Instance.TryAddService(levelService);
             
             _levelStateMachine =
-                new LevelStateMachine(savesService.Saves, levelSpawner, mainConfig, reserveCells, gameCells, uiLocator,
+                new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
                     cameraService,player);
         }
 

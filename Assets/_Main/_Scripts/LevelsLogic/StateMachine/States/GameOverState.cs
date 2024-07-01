@@ -2,8 +2,6 @@ using _Main._Scripts.Level.StateMachine.States;
 using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
-using _Main._Scripts.SavesLogic;
-using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.UI;
 
 namespace _Main._Scripts.LevelsLogic.StateMachine.States
@@ -43,6 +41,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private void RestartGame()
         {
             _stateSwitcher.SwitchState<MergeState>();
+            _player.Restart();
         }
     }
 }

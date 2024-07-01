@@ -1,14 +1,13 @@
-using System;
+using _Main._Scripts.Soilders.Bullets;
 using DG.Tweening;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Main._Scripts.Obstacles
 {
     [RequireComponent(typeof(Collider))]
-    public class Obstacle : MonoBehaviour
+    public class Obstacle : MonoBehaviour,IDamageable
     {
         [SerializeField] private int maxHealth;
         [SerializeField] private TMP_Text healthText;

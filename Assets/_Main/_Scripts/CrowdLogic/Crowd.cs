@@ -9,7 +9,7 @@ namespace _Main._Scripts.CrowdLogic
 {
     public class Crowd
     {
-        private readonly List<Soldier> _soldiers = new();
+        public List<Soldier> Soldiers { get; private set; } = new();
         private readonly List<Transform> _points;
         private readonly BulletPool _bulletPool;
 
@@ -20,7 +20,7 @@ namespace _Main._Scripts.CrowdLogic
         private float _bulletSpeedRatio;
         private float _bulletScaleRatio = 1f;
         private float _fireRateRatio;
-        public int SoldiersCount => _soldiers.Count;
+        public int SoldiersCount => Soldiers.Count;
 
         public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig,
             float bulletDamageRatio, float bulletSpeedRatio, float fireRateRatio)
@@ -48,29 +48,29 @@ namespace _Main._Scripts.CrowdLogic
             {
                 case BoostType.Damage:
                     _bulletDamageRatio += boost.Value;
-                    foreach (var soldier in _soldiers) soldier.UpdateBulletDamageRatio(_bulletDamageRatio);
+                    foreach (var soldier in Soldiers) soldier.UpdateBulletDamageRatio(_bulletDamageRatio);
                     break;
                 case BoostType.BulletScale:
                     _bulletScaleRatio += boost.Value;
-                    foreach (var soldier in _soldiers) soldier.UpdateBulletScaleRatio(_bulletScaleRatio);
+                    foreach (var soldier in Soldiers) soldier.UpdateBulletScaleRatio(_bulletScaleRatio);
                     break;
                 case BoostType.BulletSpeed:
                     _bulletSpeedRatio += boost.Value;
-                    foreach (var soldier in _soldiers) soldier.UpdateBulletSpeedRatio(_bulletSpeedRatio);
+                    foreach (var soldier in Soldiers) soldier.UpdateBulletSpeedRatio(_bulletSpeedRatio);
                     break;
                 case BoostType.FireRate:
                     _fireRateRatio -= boost.Value;
-                    foreach (var soldier in _soldiers) soldier.UpdateFireRateRatio(_fireRateRatio);
+                    foreach (var soldier in Soldiers) soldier.UpdateFireRateRatio(_fireRateRatio);
                     break;
                 case BoostType.DoubleBullet:
-                    foreach (var soldier in _soldiers) soldier.ActivateDoubleShot();
+                    foreach (var soldier in Soldiers) soldier.ActivateDoubleShot();
                     break;
             }
         }
 
-        private void UpdateShootingCooldownForAllSoldiers()
+        public void UpdateShootingCooldownForAllSoldiers()
         {
-            foreach (var soldier in _soldiers)
+            foreach (var soldier in Soldiers)
                 soldier.UpdateShootingCooldown();
         }
 
@@ -80,54 +80,53 @@ namespace _Main._Scripts.CrowdLogic
 
         private void MoveSoldiersTowardsPoints()
         {
-            for (int i = 0; i < _soldiers.Count; i++)
+            for (int i = 0; i < Soldiers.Count; i++)
             {
-                var direction = (_points[i].position - _soldiers[i].transform.position).normalized;
-                RotateSoldiers(direction, _soldiers[i].RotatableSoldier);
+                Soldiers[i].SetLookDirection(_points[i].position);
 
-                _soldiers[i].transform.position = Vector3.Lerp(_soldiers[i].transform.position, _points[i].position,
+                Soldiers[i].transform.position = Vector3.Lerp(Soldiers[i].transform.position, _points[i].position,
                     Time.deltaTime * _soldierSpeed);
             }
         }
 
         private void ClampSoldiersPositionX()
         {
-            foreach (var soldier in _soldiers)
+            foreach (var soldier in Soldiers)
             {
                 var clamp = Mathf.Clamp(soldier.transform.position.x, -_maxPosition, _maxPosition);
                 soldier.transform.position = new Vector3(clamp, soldier.transform.position.y,
                     soldier.transform.position.z);
             }
         }
-
-        private void RotateSoldiers(Vector3 direction, Transform soldier)
-        {
-            if (direction == Vector3.zero) return;
-
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            soldier.localRotation = targetRotation;
-        }
-
+        
         #endregion
 
         public void AddToCrowdAndSetPosition(Soldier soldier)
         {
             AddToCrowd(soldier);
-            var index = _soldiers.IndexOf(soldier);
+            var index = Soldiers.IndexOf(soldier);
             soldier.transform.position = _points[index].position;
         }
 
         public int AddToCrowd(Soldier soldier)
         {
             soldier.InvitedToCrowd(_bulletPool, _bulletDamageRatio, _bulletSpeedRatio, _bulletScaleRatio,_fireRateRatio);
-            _soldiers.Add(soldier);
+            Soldiers.Add(soldier);
             soldier.onDie.AddListener(RemoveFromCrowd);
-            return _soldiers.IndexOf(soldier);
+            return Soldiers.IndexOf(soldier);
+        }
+
+        public void ResetCrowd()
+        {
+            foreach (var soldier in Soldiers) 
+                Object.Destroy(soldier.gameObject);
+            
+            Soldiers.Clear();
         }
 
         private void RemoveFromCrowd(Soldier soldier)
         {
-            _soldiers.Remove(soldier);
+            Soldiers.Remove(soldier);
         }
     }
 }

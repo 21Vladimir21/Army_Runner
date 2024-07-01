@@ -1,5 +1,7 @@
 using System.Collections;
+using _Main._Scripts.LevelsLogic.FinishLogic.Enemies;
 using _Main._Scripts.Obstacles;
+using _Main._Scripts.Soilders.Bullets;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -16,9 +18,9 @@ namespace _Main._Scripts.Soilders
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out Obstacle obstacle))
+            if (other.TryGetComponent(out IDamageable damageable))
             {
-                if (obstacle.TryApplyDamage(_damage))
+                if (damageable.TryApplyDamage(_damage))
                 {
                     DeactivateBullet();
                     StopCoroutine(_deactivateRoutine);

@@ -44,7 +44,7 @@ GameObject:
   m_Component:
   - component: {fileID: 502489306462839709}
   m_Layer: 0
-  m_Name: ShootPoint (1)
+  m_Name: DoubleShootPoint
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -663,13 +663,15 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   <Config>k__BackingField: {fileID: 11400000, guid: fcf0a4ea50e85e148a827b1d74fc1178, type: 2}
-  <RotatableSoldier>k__BackingField: {fileID: 6545928314279767981}
+  rotatableSoldier: {fileID: 6545928314279767981}
   animator: {fileID: 4144691710523704264}
   soldierCollider: {fileID: 1662751299645986649}
   shootPoint: {fileID: 6248305936632795787}
+  finishShootPoint: {fileID: 7381567062513761988}
   doubleShootPoints:
   - {fileID: 502489306462839709}
   - {fileID: 1069071135556545092}
+  IsFinishShooting: 0
 --- !u!1 &4367731449715501826
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +766,37 @@ Transform:
   m_Children:
   - {fileID: 5138058030706752452}
   m_Father: {fileID: 7543623243760024293}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5125865893278266624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7381567062513761988}
+  m_Layer: 0
+  m_Name: FinishShootPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7381567062513761988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5125865893278266624}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.00000003774895, y: 1.110223e-16, z: -1.11022296e-16, w: 1}
+  m_LocalPosition: {x: 0.345, y: 1.2899996, z: 0.5420002}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6545928314279767981}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5450120164850394924
 GameObject:
@@ -1231,6 +1264,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 211204519410971347}
+  - {fileID: 7381567062513761988}
   m_Father: {fileID: 2954764575033222304}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7831541331054271210
@@ -1275,7 +1309,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1069071135556545092}
   m_Layer: 0
-  m_Name: ShootPoint (2)
+  m_Name: DoubleShootPoint(1)
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

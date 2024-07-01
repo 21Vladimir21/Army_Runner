@@ -27,15 +27,7 @@ namespace _Main._Scripts.SavesLogic
 
         [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new();
 
-
-        // [NonSerialized] public Dictionary<SoldiersLevels, int> InGameSoldiers = new();
-        //
-        // [NonSerialized] public Dictionary<SoldiersLevels, int> ReserveSoldiers = new()
-        // {
-        //     { SoldiersLevels.Level1, 0 },
-        //     { SoldiersLevels.Level3, 1 },
-        //     { SoldiersLevels.Level2, 2 },
-        // };
+        
 
 
         private string _filePath;
@@ -79,7 +71,6 @@ namespace _Main._Scripts.SavesLogic
         private void SetCloudSaveData()
         {
             // var json = JsonUtility.ToJson(this, true);
-            JsonSerializer.ToJsonString(this);
 
             // JsonConverter  = (this, true);
             // Cloud.SetValue(SaveKey, json, true, () => Debug.Log("Save success \n" + json),

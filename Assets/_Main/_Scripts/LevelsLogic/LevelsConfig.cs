@@ -6,6 +6,6 @@ namespace _Main._Scripts.LevelsLogic
     [CreateAssetMenu(fileName = "LevelsConfig", menuName = "GameConfigs/LevelConfigs", order = 0)]
     public class LevelsConfig : ScriptableObject
     {
-        [field: SerializeField] public List<LevelExample> Levels { get; private set; }
+        [field: SerializeField] public List<Level> Levels { get; private set; }
     }
 }
