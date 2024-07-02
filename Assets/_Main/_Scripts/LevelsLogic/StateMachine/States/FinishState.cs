@@ -23,6 +23,8 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         private int _enemyCount;
         private int _diedEnemiesCount;
+
+        private bool _canShoot ;
         private Finish _finish;
 
         public FinishState(IStateSwitcher stateSwitcher, FinishView finishView, CameraService cameraService,
@@ -42,8 +44,9 @@ namespace _Main._Scripts.Level.StateMachine.States
         public void Enter()
         {
             _cameraService.SwitchToFromType(CameraType.FinishCamera);
+            _finishView.Open();
             _finish = _levelService.CurrentLevel.Finish;
-            _finish.OnGameOver.AddListener(GameOver);
+            _finish.FinishDeathZone.OnEnemyTouchZone.AddListener(GameOver);
             _enemyCount = _finish.Enemies.Count;
 
             foreach (var enemy in _finish.Enemies)
@@ -52,16 +55,22 @@ namespace _Main._Scripts.Level.StateMachine.States
             _finish.SetSoldiersNewPosition(_player.Crowd.Soldiers);
             _finish.StartEnemiesAttach();
             _player.FinishedShooting();
+            _canShoot = true;
         }
 
         public void Exit()
         {
+            _finish.StopEnemiesAttach();
+            _finishView.Close();
         }
 
         public void Update()
         {
-            _player.Crowd.UpdateShootingCooldownForAllSoldiers();
-            SetTargetsForSoldiers();
+            if (_canShoot)
+            {
+                _player.Crowd.UpdateShootingCooldownForAllSoldiers();
+                SetTargetsForSoldiers();
+            }
         }
 
         private void SetTargetsForSoldiers()
@@ -88,11 +97,15 @@ namespace _Main._Scripts.Level.StateMachine.States
         {
             _diedEnemiesCount++;
             if (_diedEnemiesCount >= _enemyCount)
+            {
                 _finishView.NextLevelButton.gameObject.SetActive(true);
+                _canShoot = false;
+            }
         }
 
         private void NextLevel()
         {
+            _saves.SetNextLevel();
             _stateSwitcher.SwitchState<InitState>();
         }
 

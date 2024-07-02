@@ -11,11 +11,12 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic
     public class Finish : MonoBehaviour
     {
         [field: SerializeField] public List<Enemy> Enemies { get; private set; }
+        [field: SerializeField] public FinishDeathZone FinishDeathZone { get; private set; }
         [SerializeField] private Transform[] points;
-        
+
+
         private const float MoveToPointDuration = 1f;
         public UnityEvent OnFinished { get; private set; } = new();
-        public UnityEvent OnGameOver { get; private set; } = new();
 
         private void OnTriggerEnter(Collider other)
         {
@@ -26,6 +27,11 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic
         public void StartEnemiesAttach()
         {
             foreach (var enemy in Enemies) enemy.StartAttach();
+        }
+
+        public void StopEnemiesAttach()
+        {
+            foreach (var enemy in Enemies) enemy.StopAttach();
         }
 
         public void SetSoldiersNewPosition(List<Soldier> soldiers)

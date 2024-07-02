@@ -39,6 +39,8 @@ namespace _Main._Scripts.Level.StateMachine.States
             _gameView.Open();
             _cameraService.SwitchToFromType(CameraType.Game);
             _player.OnStart.Invoke();
+            _player.Crowd.ResetBoostsRatios(1,1,1);//TODO:Сделать загрузку данных прокачки толпы и тут тоже
+
 
             _player.gameObject.SetActive(true);
             foreach (var soldiersLevel in _saves.InGameSoldiers)
@@ -54,6 +56,7 @@ namespace _Main._Scripts.Level.StateMachine.States
         public void Exit()
         {
             _gameView.Close();
+            
         }
 
         public void Update()

@@ -48,15 +48,15 @@ namespace _Main._Scripts.PlayerLogic
         public void Init(Saves saves)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, 1,
-                1, 1); //TODO:Сделать загрузку данных прокачки толпы
+            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, 1, 1, 1);
+            //TODO:Сделать загрузку данных прокачки толпы
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }
 
         public void ResetPlayer(Transform playerStartPoint)
         {
-            transform.position = playerStartPoint.position;
+            transform.position = playerStartPoint.position; 
             Crowd.ResetCrowd();
 
         }

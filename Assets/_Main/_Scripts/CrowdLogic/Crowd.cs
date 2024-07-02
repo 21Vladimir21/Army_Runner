@@ -20,6 +20,8 @@ namespace _Main._Scripts.CrowdLogic
         private float _bulletSpeedRatio;
         private float _bulletScaleRatio = 1f;
         private float _fireRateRatio;
+
+        private List<GameObject> _diedSoldiers = new();
         public int SoldiersCount => Soldiers.Count;
 
         public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig,
@@ -29,6 +31,12 @@ namespace _Main._Scripts.CrowdLogic
             _bulletPool = new BulletPool(bulletPoolConfig);
             _maxPosition = config.soldiersMaxPosition;
             _soldierSpeed = config.soldierSpeed;
+
+            ResetBoostsRatios(bulletDamageRatio, bulletSpeedRatio, fireRateRatio);
+        }
+
+        public void ResetBoostsRatios(float bulletDamageRatio, float bulletSpeedRatio, float fireRateRatio)
+        {
             _bulletDamageRatio = bulletDamageRatio;
             _bulletSpeedRatio = bulletSpeedRatio;
             _fireRateRatio = fireRateRatio;
@@ -98,7 +106,7 @@ namespace _Main._Scripts.CrowdLogic
                     soldier.transform.position.z);
             }
         }
-        
+
         #endregion
 
         public void AddToCrowdAndSetPosition(Soldier soldier)
@@ -110,7 +118,8 @@ namespace _Main._Scripts.CrowdLogic
 
         public int AddToCrowd(Soldier soldier)
         {
-            soldier.InvitedToCrowd(_bulletPool, _bulletDamageRatio, _bulletSpeedRatio, _bulletScaleRatio,_fireRateRatio);
+            soldier.InvitedToCrowd(_bulletPool, _bulletDamageRatio, _bulletSpeedRatio, _bulletScaleRatio,
+                _fireRateRatio);
             Soldiers.Add(soldier);
             soldier.onDie.AddListener(RemoveFromCrowd);
             return Soldiers.IndexOf(soldier);
@@ -118,15 +127,19 @@ namespace _Main._Scripts.CrowdLogic
 
         public void ResetCrowd()
         {
-            foreach (var soldier in Soldiers) 
+            foreach (var soldier in Soldiers)
                 Object.Destroy(soldier.gameObject);
-            
             Soldiers.Clear();
+
+            foreach (var soldier in _diedSoldiers)
+                Object.Destroy(soldier);
+            _diedSoldiers.Clear();
         }
 
         private void RemoveFromCrowd(Soldier soldier)
         {
             Soldiers.Remove(soldier);
+            _diedSoldiers.Add(soldier.gameObject);
         }
     }
 }

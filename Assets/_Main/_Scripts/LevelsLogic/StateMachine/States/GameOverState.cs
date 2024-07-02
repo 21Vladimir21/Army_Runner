@@ -1,4 +1,3 @@
-using _Main._Scripts.Level.StateMachine.States;
 using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
@@ -40,7 +39,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void RestartGame()
         {
-            _stateSwitcher.SwitchState<MergeState>();
+            _stateSwitcher.SwitchState<InitState>();
             _player.Restart();
         }
     }

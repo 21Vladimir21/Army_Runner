@@ -102,8 +102,8 @@ namespace _Main._Scripts.SavesLogic
         {
             CurrentLevel++;
             CurrentLevelText++;
-            if (CurrentLevel % 55 == 0)
-                CurrentLevel = 25;
+            // if (CurrentLevel % 55 == 0)
+            //     CurrentLevel = 25;
 
             InvokeSave();
         }

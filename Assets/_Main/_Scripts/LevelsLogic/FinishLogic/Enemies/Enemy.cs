@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 {
-    public class Enemy : MonoBehaviour ,IDamageable
+    public class Enemy : MonoBehaviour, IDamageable
     {
         [SerializeField] private int health;
         [SerializeField] private float speed;
@@ -24,6 +24,12 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
         public void StartAttach()
         {
             _canMove = true;
+            //TODO: enemy Animation
+        }
+
+        public void StopAttach()
+        {
+            _canMove = false;
             //TODO: enemy Animation
         }
 

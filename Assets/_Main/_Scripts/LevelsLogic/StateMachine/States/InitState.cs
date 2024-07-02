@@ -46,7 +46,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private Level SetCurrentLevel()
         {
             int level = _saves.CurrentLevel;
-            return _levelConfig.Levels[level];
+            return _levelConfig.Levels[level].Level;
         }
     }
 }
