@@ -39,8 +39,8 @@ namespace _Main._Scripts.Level.StateMachine
             _states = new List<IState>
             {
                 new InitState(this, levelService, saves,player),
-                new MergeState(this, mainConfig.DragConfig, reserveCells, gameCells, preGameView, _cameraService,saves),
-                new PlayState(this,gameView,_cameraService,_saves,player,mainConfig.Soldiers,levelService),
+                new MergeState(this, mainConfig.DragConfig,mainConfig.UpgradeConfig, reserveCells, gameCells, preGameView, _cameraService,saves),
+                new PlayState(this,gameView,_cameraService,_saves,player,mainConfig.Soldiers,mainConfig.UpgradeConfig,levelService),
                 new GameOverState(this,gameOverView,player),
                 new FinishState(this,finishView,cameraService,saves,levelService,player)
             };

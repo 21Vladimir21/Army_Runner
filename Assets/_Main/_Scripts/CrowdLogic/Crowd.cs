@@ -18,31 +18,29 @@ namespace _Main._Scripts.CrowdLogic
         private readonly float _soldierSpeed;
         private readonly float _maxPosition;
 
-        private float _bulletDamageRatio;
-        private float _bulletSpeedRatio;
-        private float _bulletScaleRatio = 1f;
-        private float _fireRateRatio;
+        private float _bulletDamagePercentage ;
+        private float _bulletSpeedPercentage ;
+        private float _bulletScalePercentage = 100;
+        private float _fireRatePercentage ;
 
         private List<GameObject> _diedSoldiers = new();
         public int SoldiersCount => Soldiers.Count;
 
-        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig, Soldiers soldiers,
-            float bulletDamageRatio, float bulletSpeedRatio, float fireRateRatio)
+        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig, Soldiers soldiers)
         {
             _points = points;
             _soldiers = soldiers;
             _bulletPool = new BulletPool(bulletPoolConfig);
             _maxPosition = config.soldiersMaxPosition;
             _soldierSpeed = config.soldierSpeed;
-
-            ResetBoostsRatios(bulletDamageRatio, bulletSpeedRatio, fireRateRatio);
         }
 
-        public void ResetBoostsRatios(float bulletDamageRatio, float bulletSpeedRatio, float fireRateRatio)
+        public void ResetBoostsPercentages(float bulletDamagePercentage, float bulletSpeedPercentage,
+            float fireRatePercentage)
         {
-            _bulletDamageRatio = bulletDamageRatio;
-            _bulletSpeedRatio = bulletSpeedRatio;
-            _fireRateRatio = fireRateRatio;
+            _bulletDamagePercentage =  bulletDamagePercentage;
+            _bulletSpeedPercentage =  bulletSpeedPercentage;
+            _fireRatePercentage =  fireRatePercentage;
         }
 
 
@@ -53,25 +51,25 @@ namespace _Main._Scripts.CrowdLogic
             UpdateShootingCooldownForAllSoldiers();
         }
 
-        public void UpdateBulletBoostRatio(Boost boost)
+        public void UpdateBulletBoostPercentages(Boost boost)
         {
             switch (boost.Type)
             {
                 case BoostType.Damage:
-                    _bulletDamageRatio += boost.Value;
-                    foreach (var soldier in Soldiers) soldier.UpdateBulletDamageRatio(_bulletDamageRatio);
+                    _bulletDamagePercentage += boost.Value;
+                    foreach (var soldier in Soldiers) soldier.UpdateBulletDamagePercentage(_bulletDamagePercentage);
                     break;
                 case BoostType.BulletScale:
-                    _bulletScaleRatio += boost.Value;
-                    foreach (var soldier in Soldiers) soldier.UpdateBulletScaleRatio(_bulletScaleRatio);
+                    _bulletScalePercentage += boost.Value;
+                    foreach (var soldier in Soldiers) soldier.UpdateBulletScalePercentage(_bulletScalePercentage);
                     break;
                 case BoostType.BulletSpeed:
-                    _bulletSpeedRatio += boost.Value;
-                    foreach (var soldier in Soldiers) soldier.UpdateBulletSpeedRatio(_bulletSpeedRatio);
+                    _bulletSpeedPercentage += boost.Value;
+                    foreach (var soldier in Soldiers) soldier.UpdateBulletSpeedPercentage(_bulletSpeedPercentage);
                     break;
                 case BoostType.FireRate:
-                    _fireRateRatio -= boost.Value;
-                    foreach (var soldier in Soldiers) soldier.UpdateFireRateRatio(_fireRateRatio);
+                    _fireRatePercentage -= boost.Value;
+                    foreach (var soldier in Soldiers) soldier.UpdateFireRatePercentage(_fireRatePercentage);
                     break;
                 case BoostType.DoubleBullet:
                     foreach (var soldier in Soldiers) soldier.ActivateDoubleShot();
@@ -121,14 +119,14 @@ namespace _Main._Scripts.CrowdLogic
 
         public int AddToCrowd(Soldier soldier, bool setAtPosition = false, int atPosition = 0)
         {
-            soldier.InvitedToCrowd(_bulletPool, _bulletDamageRatio, _bulletSpeedRatio, _bulletScaleRatio,
-                _fireRateRatio);
-            
+            soldier.InvitedToCrowd(_bulletPool, _bulletDamagePercentage, _bulletSpeedPercentage, _bulletScalePercentage,
+                _fireRatePercentage);
+
             if (setAtPosition)
                 Soldiers.Insert(atPosition, soldier);
             else
                 Soldiers.Add(soldier);
-            
+
             soldier.onDie.AddListener(RemoveFromCrowd);
             return Soldiers.IndexOf(soldier);
         }

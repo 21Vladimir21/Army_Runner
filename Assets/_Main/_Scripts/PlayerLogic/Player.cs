@@ -42,14 +42,13 @@ namespace _Main._Scripts.PlayerLogic
             }
 
             if (other.TryGetComponent(out Boost boost))
-                Crowd.UpdateBulletBoostRatio(boost);
+                Crowd.UpdateBulletBoostPercentages(boost);
         }
 
         public void Init(Saves saves,Soldiers soldiers)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, soldiers,1, 1, 1);
-            //TODO:Сделать загрузку данных прокачки толпы
+            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, soldiers);
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }

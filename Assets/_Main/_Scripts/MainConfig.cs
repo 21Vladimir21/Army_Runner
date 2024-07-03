@@ -1,6 +1,7 @@
 using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.LevelsLogic;
 using _Main._Scripts.MergeLogic.DragAndDropLogic;
+using _Main._Scripts.UpgradeLogic;
 using UnityEngine;
 
 namespace _Main._Scripts
@@ -11,5 +12,6 @@ namespace _Main._Scripts
         [field: SerializeField] public DragConfig DragConfig { get; private set; }
         [field: SerializeField] public LevelsConfig LevelsConfig { get; private set; }
         [field: SerializeField] public Soldiers Soldiers { get; private set; }
+        [field: SerializeField] public UpgradeConfig UpgradeConfig { get; private set; }
     }
 }

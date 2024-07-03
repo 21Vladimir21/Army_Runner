@@ -11,7 +11,7 @@ namespace _Main._Scripts.SavesLogic
     [Serializable]
     public class Saves
     {
-        [SerializeField] private int _money;
+        [SerializeField] private int _money = 1000;
         [field: SerializeField] public int CurrentLevel { get; private set; }
         [field: SerializeField] public int CurrentLevelText { get; private set; }
 
@@ -27,8 +27,14 @@ namespace _Main._Scripts.SavesLogic
 
         [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new();
 
-        
 
+        [field: SerializeField] public int BulletDamageLevel;
+        [field: SerializeField] public int BulletSpeedLevel;
+        [field: SerializeField] public int FireRateLevel;
+
+        [field: SerializeField] public float BulletDamagePercentage = 100;
+        [field: SerializeField] public float BulletSpeedPercentage = 100;
+        [field: SerializeField] public float FireRatePercentage = 100;
 
         private string _filePath;
 
@@ -139,6 +145,10 @@ namespace _Main._Scripts.SavesLogic
         }
 
         public bool CanSpendMoney(int amount) => amount > 0 && amount <= Money;
+
+        #endregion
+
+        #region PlayerUpgrade
 
         #endregion
 

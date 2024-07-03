@@ -25,7 +25,7 @@ namespace _Main._Scripts.Soilders
 
         private float _bulletSpeed;
         private int _damage;
-        private float _bulletScaleRatio = 1f;
+        private float _bulletScalePercentage = 100;
         private float _bulletLifeTime;
         private float _fireRate;
 
@@ -41,22 +41,28 @@ namespace _Main._Scripts.Soilders
         private void OnTriggerEnter(Collider other)
         {
             if (other.GetComponent<Obstacle>())
-                if (_canApplyDamage) Die();
+                if (_canApplyDamage)
+                    Die();
         }
 
-        public void InvitedToCrowd(BulletPool bulletPool, float damageRatio, float speedRatio, float scaleRatio,
-            float fireRateRatio)
+        public void InvitedToCrowd(BulletPool bulletPool, float damagePercentage, float speedPercentage,
+            float scalePercentage,
+            float fireRatePercentage)
         {
             InCrowd = true;
             _bulletPool = bulletPool;
-
             _bulletLifeTime = Config.bulletLifeTime;
-            _fireRate = Config.fireRate * fireRateRatio;
-            _timeOfLastShot = _fireRate;
-            _damage = (int)(Config.bulletDamage * damageRatio);
-            _bulletSpeed = Config.bulletSpeed * speedRatio;
-            _bulletScaleRatio += scaleRatio;
 
+            _fireRate = Config.fireRate;
+            _damage = Config.bulletDamage;
+            _bulletSpeed = Config.bulletSpeed;
+
+            UpdateFireRatePercentage(fireRatePercentage);
+            UpdateBulletDamagePercentage(damagePercentage);
+            UpdateBulletSpeedPercentage(speedPercentage);
+            UpdateBulletScalePercentage(scalePercentage);
+
+            _timeOfLastShot = _fireRate;
             StartCoroutine(ApplyDamageCooldown());
         }
 
@@ -79,10 +85,18 @@ namespace _Main._Scripts.Soilders
             rotatableSoldier.localRotation = targetRotation;
         }
 
-        public void UpdateBulletDamageRatio(float damageRatio) => _damage = (int)(Config.bulletDamage * damageRatio);
-        public void UpdateBulletSpeedRatio(float speedRatio) => _bulletSpeed = Config.bulletSpeed * speedRatio;
-        public void UpdateBulletScaleRatio(float scaleRatio) => _bulletScaleRatio += scaleRatio;
-        public void UpdateFireRateRatio(float fireRateRatio) => _fireRate = Config.fireRate * fireRateRatio;
+        public void UpdateBulletDamagePercentage(float damageBoostPercentage) =>
+            _damage = (int)(_damage * damageBoostPercentage / 100);
+
+        public void UpdateBulletSpeedPercentage(float speedBoostPercentage) =>
+            _bulletSpeed = _bulletSpeed / 100 * speedBoostPercentage;
+
+        public void UpdateFireRatePercentage(float fireRateBoostPercentage) =>
+            _fireRate *=  fireRateBoostPercentage / 100;
+
+        public void UpdateBulletScalePercentage(float scalePercentage) =>
+            _bulletScalePercentage = _bulletScalePercentage / 100 * scalePercentage;
+
         public void ActivateDoubleShot() => _isDoubleShoot = true;
 
         private void Die()
@@ -108,7 +122,7 @@ namespace _Main._Scripts.Soilders
             var bullet = _bulletPool.GetBullet();
             bullet.transform.position = point.position;
             bullet.transform.rotation = point.rotation;
-            bullet.Shot(_bulletLifeTime, _bulletSpeed, _damage, _bulletScaleRatio);
+            bullet.Shot(_bulletLifeTime, _bulletSpeed, _damage, _bulletScalePercentage);
         }
 
         private IEnumerator ApplyDamageCooldown()
