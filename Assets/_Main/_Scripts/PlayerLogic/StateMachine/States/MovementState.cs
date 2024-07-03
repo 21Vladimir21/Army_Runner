@@ -1,4 +1,5 @@
 using _Main._Scripts.CrowdLogic;
+using _Main._Scripts.Soilders;
 using UnityEngine;
 
 namespace _Main._Scripts.PlayerLogic.StateMachine.States
@@ -34,6 +35,8 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
         public void Enter()
         {
             _startDragPosition = Input.mousePosition;
+            _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.IsRunning);
+
         }
 
         public void Exit()

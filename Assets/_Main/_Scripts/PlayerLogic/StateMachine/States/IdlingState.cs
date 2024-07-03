@@ -1,3 +1,5 @@
+using _Main._Scripts.Soilders;
+
 namespace _Main._Scripts.PlayerLogic.StateMachine.States
 {
     public class IdlingState : IState
@@ -13,6 +15,7 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
 
         public void Enter()
         {
+            _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Idling);
         }
 
         public void Exit()

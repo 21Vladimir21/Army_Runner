@@ -92,16 +92,23 @@ namespace _Main._Scripts.Soilders
             _bulletSpeed = _bulletSpeed / 100 * speedBoostPercentage;
 
         public void UpdateFireRatePercentage(float fireRateBoostPercentage) =>
-            _fireRate *=  fireRateBoostPercentage / 100;
+            _fireRate *= fireRateBoostPercentage / 100;
 
         public void UpdateBulletScalePercentage(float scalePercentage) =>
             _bulletScalePercentage = _bulletScalePercentage / 100 * scalePercentage;
 
         public void ActivateDoubleShot() => _isDoubleShoot = true;
 
+        public void SetAnimation(SoldierAnimationTriggers trigger)
+        {
+            animator.SetTrigger(SoldierAnimationTriggers.Reset.ToString());
+            animator.SetTrigger(trigger.ToString());
+        }
+
         private void Die()
         {
             soldierCollider.enabled = false;
+            SetAnimation(SoldierAnimationTriggers.Dying);
             onDie.Invoke(this);
         }
 
@@ -147,5 +154,14 @@ namespace _Main._Scripts.Soilders
             }
         }
 #endif
+    }
+
+    public enum SoldierAnimationTriggers
+    {
+        Idling,
+        IsRunning,
+        Dying,
+        FinishShooting,
+        Reset
     }
 }

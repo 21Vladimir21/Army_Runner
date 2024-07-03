@@ -22,6 +22,7 @@ namespace _Main._Scripts.CrowdLogic
         private float _bulletSpeedPercentage ;
         private float _bulletScalePercentage = 100;
         private float _fireRatePercentage ;
+        private SoldierAnimationTriggers _currentTrigger;
 
         private List<GameObject> _diedSoldiers = new();
         public int SoldiersCount => Soldiers.Count;
@@ -83,6 +84,13 @@ namespace _Main._Scripts.CrowdLogic
                 soldier.UpdateShootingCooldown();
         }
 
+        public void SetAnimationForAllSoldiers(SoldierAnimationTriggers trigger)
+        {
+            _currentTrigger = trigger;
+            foreach (var soldier in Soldiers) 
+                soldier.SetAnimation(trigger);
+        }
+
         //TODO: ВЫнести в отдельный класс
 
         #region Movement
@@ -128,6 +136,7 @@ namespace _Main._Scripts.CrowdLogic
                 Soldiers.Add(soldier);
 
             soldier.onDie.AddListener(RemoveFromCrowd);
+            // soldier.SetAnimation(_currentTrigger);
             return Soldiers.IndexOf(soldier);
         }
 

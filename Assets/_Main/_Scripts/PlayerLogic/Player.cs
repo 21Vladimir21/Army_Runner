@@ -45,7 +45,7 @@ namespace _Main._Scripts.PlayerLogic
                 Crowd.UpdateBulletBoostPercentages(boost);
         }
 
-        public void Init(Saves saves,Soldiers soldiers)
+        public void Init(Saves saves, Soldiers soldiers)
         {
             _saves = saves;
             Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, soldiers);
@@ -55,9 +55,8 @@ namespace _Main._Scripts.PlayerLogic
 
         public void ResetPlayer(Transform playerStartPoint)
         {
-            transform.position = playerStartPoint.position; 
+            transform.position = playerStartPoint.position;
             Crowd.ResetCrowd();
-
         }
 
         public void GameOver()
@@ -69,11 +68,14 @@ namespace _Main._Scripts.PlayerLogic
 
         public void Restart() => OnRestart.Invoke();
 
-        public void FinishedShooting()
+        public void FinishedShooting() // TODO:Однозначно надо сделать это отдельным состоянием 
         {
             _stateMachine.SwitchState<WaitingState>();
-            foreach (var soldier in Crowd.Soldiers) 
+            foreach (var soldier in Crowd.Soldiers)
+            {
                 soldier.IsFinishShooting = true;
+                soldier.SetAnimation(SoldierAnimationTriggers.FinishShooting);
+            }
         }
 
         private void Update()
