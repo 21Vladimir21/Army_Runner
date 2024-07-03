@@ -14,7 +14,6 @@ namespace _Main._Scripts
 {
     public class EntryPoint : MonoBehaviour
     {
-        [FormerlySerializedAs("levelSpawner")] [SerializeField] private LevelService levelService;
         [SerializeField] private MainConfig mainConfig;
 
         [SerializeField] private List<CellToMerge> reserveCells;
@@ -23,20 +22,26 @@ namespace _Main._Scripts
         [SerializeField] private UIViewsHolder views;
         [SerializeField] private CameraService cameraService;
 
-        private LevelStateMachine _levelStateMachine;
-        
         [SerializeField] private Player player;
+        [SerializeField] private Transform levelSpawnPoint;
+        
+        private LevelStateMachine _levelStateMachine;
+        private LevelService _levelService;
+        
         
 
         private void Awake()
         {
             var savesService = InitSaves();
+            
+            _levelService = new LevelService(levelSpawnPoint, mainConfig.LevelsConfig);
+            ServiceLocator.Instance.TryAddService(_levelService);
+            
             var uiLocator = new UILocator(views);
             player.Init(savesService.Saves,mainConfig.Soldiers);
-            ServiceLocator.Instance.TryAddService(levelService);
             
             _levelStateMachine =
-                new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
+                new LevelStateMachine(savesService.Saves, _levelService, mainConfig, reserveCells, gameCells, uiLocator,
                     cameraService,player);
         }
 

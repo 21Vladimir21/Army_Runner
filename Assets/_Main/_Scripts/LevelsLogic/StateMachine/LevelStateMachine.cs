@@ -38,7 +38,7 @@ namespace _Main._Scripts.Level.StateMachine
             var finishView = _uiLocator.GetViewByType<FinishView>();
             _states = new List<IState>
             {
-                new InitState(this, levelService, saves, mainConfig.LevelsConfig,player),
+                new InitState(this, levelService, saves,player),
                 new MergeState(this, mainConfig.DragConfig, reserveCells, gameCells, preGameView, _cameraService,saves),
                 new PlayState(this,gameView,_cameraService,_saves,player,mainConfig.Soldiers,levelService),
                 new GameOverState(this,gameOverView,player),

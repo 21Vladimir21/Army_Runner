@@ -9,19 +9,16 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
     public class InitState : IState
     {
         private readonly IStateSwitcher _stateSwitcher;
-        private LevelService _levelService;
-        private Saves _saves;
-        private LevelsConfig _levelConfig;
+        private readonly LevelService _levelService;
+        private readonly Saves _saves;
         private readonly Player _player;
         private bool _inited;
 
-        public InitState(IStateSwitcher stateSwitcher, LevelService levelService, Saves saves, LevelsConfig levelConfig,
-            Player player)
+        public InitState(IStateSwitcher stateSwitcher, LevelService levelService, Saves saves, Player player)
         {
             _stateSwitcher = stateSwitcher;
             _levelService = levelService;
             _saves = saves;
-            _levelConfig = levelConfig;
             _player = player;
         }
 
@@ -43,10 +40,6 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             if (_inited) _stateSwitcher.SwitchState<MergeState>();
         }
 
-        private Level SetCurrentLevel()
-        {
-            int level = _saves.CurrentLevel;
-            return _levelConfig.Levels[level].Level;
-        }
+        private int SetCurrentLevel() => _saves.CurrentLevel;
     }
 }

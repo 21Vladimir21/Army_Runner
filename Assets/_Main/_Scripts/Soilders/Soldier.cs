@@ -1,3 +1,4 @@
+using System.Collections;
 using _Main._Scripts.Obstacles;
 using _Main._Scripts.Soilders.Bullets;
 using UnityEditor;
@@ -32,15 +33,15 @@ namespace _Main._Scripts.Soilders
         private float _timeOfLastShot;
         private bool _isDoubleShoot;
 
+        private bool _canApplyDamage;
+
         public bool InCrowd { get; private set; }
         public bool IsFinishShooting;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out Obstacle obstacle))
-            {
-                Die();
-            }
+            if (other.GetComponent<Obstacle>())
+                if (_canApplyDamage) Die();
         }
 
         public void InvitedToCrowd(BulletPool bulletPool, float damageRatio, float speedRatio, float scaleRatio,
@@ -55,6 +56,8 @@ namespace _Main._Scripts.Soilders
             _damage = (int)(Config.bulletDamage * damageRatio);
             _bulletSpeed = Config.bulletSpeed * speedRatio;
             _bulletScaleRatio += scaleRatio;
+
+            StartCoroutine(ApplyDamageCooldown());
         }
 
         public void UpdateShootingCooldown()
@@ -106,6 +109,12 @@ namespace _Main._Scripts.Soilders
             bullet.transform.position = point.position;
             bullet.transform.rotation = point.rotation;
             bullet.Shot(_bulletLifeTime, _bulletSpeed, _damage, _bulletScaleRatio);
+        }
+
+        private IEnumerator ApplyDamageCooldown()
+        {
+            yield return new WaitForSeconds(0.5f);
+            _canApplyDamage = true;
         }
 
 #if UNITY_EDITOR

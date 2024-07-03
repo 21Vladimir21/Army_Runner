@@ -24,12 +24,11 @@ namespace _Main._Scripts.Level.StateMachine.States
         private int _enemyCount;
         private int _diedEnemiesCount;
 
-        private bool _canShoot ;
+        private bool _canShoot;
         private Finish _finish;
 
         public FinishState(IStateSwitcher stateSwitcher, FinishView finishView, CameraService cameraService,
-            Saves saves,
-            LevelService levelService, Player player)
+            Saves saves, LevelService levelService, Player player)
         {
             _stateSwitcher = stateSwitcher;
             _finishView = finishView;
@@ -105,6 +104,7 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         private void NextLevel()
         {
+            _saves.AddMoney(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
             _saves.SetNextLevel();
             _stateSwitcher.SwitchState<InitState>();
         }

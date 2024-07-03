@@ -16,7 +16,10 @@ namespace _Main._Scripts.UI
         public UILocator(UIViewsHolder uiViewsHolder)
         {
             foreach (var view in uiViewsHolder.Views)
+            {
                 _uiViews.Add(view.GetType(), view);
+                view.Init();
+            }
         }
 
         public TUI GetViewByType<TUI>() where TUI : AbstractView

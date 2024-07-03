@@ -1,10 +1,13 @@
 using System;
+using _Main._Scripts.SavesLogic;
+using _Main._Scripts.Services;
 using UnityEngine;
 
 namespace _Main._Scripts.UI
 {
-    public abstract class AbstractView : MonoBehaviour 
+    public abstract class AbstractView : MonoBehaviour
     {
+        protected Saves Saves;
         public void Close(Action callback = null)
         {
             gameObject.SetActive(false);
@@ -17,8 +20,10 @@ namespace _Main._Scripts.UI
             callback?.Invoke();
         }
 
-        public void Init()
+        public virtual void Init()
         {
+            var savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
+            Saves = savesService.Saves;
         }
     }
 }
