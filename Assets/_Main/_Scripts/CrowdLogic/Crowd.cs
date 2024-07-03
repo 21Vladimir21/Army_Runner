@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Main._Scripts.Boosts;
+using _Main._Scripts.MergeLogic;
 using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.Soilders;
 using _Main._Scripts.Soilders.Bullets;
@@ -11,6 +12,7 @@ namespace _Main._Scripts.CrowdLogic
     {
         public List<Soldier> Soldiers { get; private set; } = new();
         private readonly List<Transform> _points;
+        private readonly Soldiers _soldiers;
         private readonly BulletPool _bulletPool;
 
         private readonly float _soldierSpeed;
@@ -24,10 +26,11 @@ namespace _Main._Scripts.CrowdLogic
         private List<GameObject> _diedSoldiers = new();
         public int SoldiersCount => Soldiers.Count;
 
-        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig,
+        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig, Soldiers soldiers,
             float bulletDamageRatio, float bulletSpeedRatio, float fireRateRatio)
         {
             _points = points;
+            _soldiers = soldiers;
             _bulletPool = new BulletPool(bulletPoolConfig);
             _maxPosition = config.soldiersMaxPosition;
             _soldierSpeed = config.soldierSpeed;
@@ -116,11 +119,16 @@ namespace _Main._Scripts.CrowdLogic
             soldier.transform.position = _points[index].position;
         }
 
-        public int AddToCrowd(Soldier soldier)
+        public int AddToCrowd(Soldier soldier, bool setAtPosition = false, int atPosition = 0)
         {
             soldier.InvitedToCrowd(_bulletPool, _bulletDamageRatio, _bulletSpeedRatio, _bulletScaleRatio,
                 _fireRateRatio);
-            Soldiers.Add(soldier);
+            
+            if (setAtPosition)
+                Soldiers.Insert(atPosition, soldier);
+            else
+                Soldiers.Add(soldier);
+            
             soldier.onDie.AddListener(RemoveFromCrowd);
             return Soldiers.IndexOf(soldier);
         }
@@ -138,8 +146,26 @@ namespace _Main._Scripts.CrowdLogic
 
         private void RemoveFromCrowd(Soldier soldier)
         {
+            var configSoldiersLevel = soldier.Config.SoldiersLevel;
+            if (configSoldiersLevel <= SoldiersLevels.Level1)
+            {
+                Soldiers.Remove(soldier);
+                _diedSoldiers.Add(soldier.gameObject);
+                return;
+            }
+
+            DownGradeSoldier(soldier, configSoldiersLevel);
+        }
+
+        private void DownGradeSoldier(Soldier soldier, SoldiersLevels configSoldiersLevel)
+        {
+            var newSoldier = Object.Instantiate(_soldiers.GetSoldierFromLevel(configSoldiersLevel - 1)
+                , soldier.transform.position, soldier.transform.rotation);
+
+            var index = Soldiers.IndexOf(soldier);
             Soldiers.Remove(soldier);
-            _diedSoldiers.Add(soldier.gameObject);
+            Object.Destroy(soldier.gameObject); //TODO: Добавить пул солдат 
+            AddToCrowd(newSoldier, true, index);
         }
     }
 }

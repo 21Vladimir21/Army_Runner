@@ -45,10 +45,10 @@ namespace _Main._Scripts.PlayerLogic
                 Crowd.UpdateBulletBoostRatio(boost);
         }
 
-        public void Init(Saves saves)
+        public void Init(Saves saves,Soldiers soldiers)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, 1, 1, 1);
+            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, soldiers,1, 1, 1);
             //TODO:Сделать загрузку данных прокачки толпы
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;

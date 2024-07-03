@@ -32,7 +32,7 @@ namespace _Main._Scripts
         {
             var savesService = InitSaves();
             var uiLocator = new UILocator(views);
-            player.Init(savesService.Saves);
+            player.Init(savesService.Saves,mainConfig.Soldiers);
             ServiceLocator.Instance.TryAddService(levelService);
             
             _levelStateMachine =
@@ -44,7 +44,7 @@ namespace _Main._Scripts
         {
             var savesService = new SavesService();
             ServiceLocator.Instance.TryAddService(savesService);
-            savesService.InitSaves();
+            // savesService.InitSaves();
             return savesService;
         }
 
