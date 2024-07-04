@@ -63,7 +63,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2954764575033222304}
+  m_Father: {fileID: 5476492611501395645}
   m_LocalEulerAnglesHint: {x: 0, y: 15, z: 0}
 --- !u!1 &1051508502047115779
 GameObject:
@@ -463,10 +463,45 @@ Transform:
   m_GameObject: {fileID: 3239970249191641216}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.345, y: 1.2899997, z: 0.542}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.20700002, y: 0.7739998, z: 0.32520008}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
+  m_Father: {fileID: 2954764575033222304}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3477056669767974979
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5476492611501395645}
+  m_Layer: 0
+  m_Name: Soldier
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5476492611501395645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3477056669767974979}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 6545928314279767981}
+  - {fileID: 6876493759098873061}
+  - {fileID: 502489306462839709}
+  - {fileID: 1069071135556545092}
   m_Father: {fileID: 2954764575033222304}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3606060842317167521
@@ -577,6 +612,7 @@ GameObject:
   - component: {fileID: 4144691710523704264}
   - component: {fileID: 1662751299645986649}
   - component: {fileID: 5446179123684058743}
+  - component: {fileID: -5029808464101077641}
   m_Layer: 0
   m_Name: SoliderLevel3
   m_TagString: Untagged
@@ -594,14 +630,11 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.408, y: 0, z: -8.29546}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 6545928314279767981}
-  - {fileID: 6876493759098873061}
   - {fileID: 6248305936632795787}
-  - {fileID: 502489306462839709}
-  - {fileID: 1069071135556545092}
+  - {fileID: 5476492611501395645}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4144691710523704264
@@ -663,16 +696,44 @@ MonoBehaviour:
   onDie:
     m_PersistentCalls:
       m_Calls: []
+  onTouchSoldier:
+    m_PersistentCalls:
+      m_Calls: []
   <Config>k__BackingField: {fileID: 11400000, guid: fcf0a4ea50e85e148a827b1d74fc1178, type: 2}
-  rotatableSoldier: {fileID: 6545928314279767981}
+  rotatableSoldier: {fileID: 5476492611501395645}
   animator: {fileID: 4144691710523704264}
   soldierCollider: {fileID: 1662751299645986649}
   shootPoint: {fileID: 6248305936632795787}
-  finishShootPoint: {fileID: 7381567062513761988}
   doubleShootPoints:
   - {fileID: 502489306462839709}
   - {fileID: 1069071135556545092}
-  IsFinishShooting: 0
+--- !u!54 &-5029808464101077641
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4114943713220407024}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &4367731449715501826
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,12 +1045,12 @@ Transform:
   m_GameObject: {fileID: 6402994688249532565}
   serializedVersion: 2
   m_LocalRotation: {x: -0.00000003774895, y: -1.110223e-16, z: 1.11022296e-16, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7717498514074855303}
-  m_Father: {fileID: 2954764575033222304}
+  m_Father: {fileID: 5476492611501395645}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &4300450295088294938
 SkinnedMeshRenderer:
@@ -1260,13 +1321,13 @@ Transform:
   m_GameObject: {fileID: 6878030159913755221}
   serializedVersion: 2
   m_LocalRotation: {x: -0.00000003774895, y: -1.110223e-16, z: 1.11022296e-16, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 211204519410971347}
   - {fileID: 7381567062513761988}
-  m_Father: {fileID: 2954764575033222304}
+  m_Father: {fileID: 5476492611501395645}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7831541331054271210
 GameObject:
@@ -1329,7 +1390,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2954764575033222304}
+  m_Father: {fileID: 5476492611501395645}
   m_LocalEulerAnglesHint: {x: 0, y: -15, z: 0}
 --- !u!1 &7869771360678534989
 GameObject:

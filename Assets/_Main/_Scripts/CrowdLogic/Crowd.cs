@@ -2,35 +2,41 @@ using System.Collections.Generic;
 using _Main._Scripts.Boosts;
 using _Main._Scripts.MergeLogic;
 using _Main._Scripts.PlayerLogic;
+using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Soilders;
 using _Main._Scripts.Soilders.Bullets;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Main._Scripts.CrowdLogic
 {
     public class Crowd
     {
-        public List<Soldier> Soldiers { get;} = new();
+        public UnityEvent<Soldier> OnTouchSoldier = new();
+        public List<Soldier> Soldiers { get; } = new();
         private readonly List<Transform> _points;
         private readonly Soldiers _soldiers;
+        private readonly Saves _saves;
         private readonly BulletPool _bulletPool;
 
         private readonly float _soldierSpeed;
         private readonly float _maxPosition;
 
-        private float _bulletDamagePercentage ;
-        private float _bulletSpeedPercentage ;
+        private float _bulletDamagePercentage;
+        private float _bulletSpeedPercentage;
         private float _bulletScalePercentage = 100;
-        private float _fireRatePercentage ;
+        private float _fireRatePercentage;
         private SoldierAnimationTriggers _currentTrigger;
 
         private List<GameObject> _diedSoldiers = new();
         public int SoldiersCount => Soldiers.Count;
 
-        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig, Soldiers soldiers)
+        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig, Soldiers soldiers,
+            Saves saves)
         {
             _points = points;
             _soldiers = soldiers;
+            _saves = saves;
             _bulletPool = new BulletPool(bulletPoolConfig);
             _maxPosition = config.soldiersMaxPosition;
             _soldierSpeed = config.soldierSpeed;
@@ -39,9 +45,9 @@ namespace _Main._Scripts.CrowdLogic
         public void ResetBoostsPercentages(float bulletDamagePercentage, float bulletSpeedPercentage,
             float fireRatePercentage)
         {
-            _bulletDamagePercentage =  bulletDamagePercentage;
-            _bulletSpeedPercentage =  bulletSpeedPercentage;
-            _fireRatePercentage =  fireRatePercentage;
+            _bulletDamagePercentage = bulletDamagePercentage;
+            _bulletSpeedPercentage = bulletSpeedPercentage;
+            _fireRatePercentage = fireRatePercentage;
         }
 
 
@@ -87,8 +93,13 @@ namespace _Main._Scripts.CrowdLogic
         public void SetAnimationForAllSoldiers(SoldierAnimationTriggers trigger)
         {
             _currentTrigger = trigger;
-            foreach (var soldier in Soldiers) 
+            foreach (var soldier in Soldiers)
                 soldier.SetAnimation(trigger);
+        }
+
+        public void SetFinishShootingRotation()
+        {
+            foreach (var soldier in Soldiers) soldier.SetFinishRotation();
         }
 
         //TODO: ВЫнести в отдельный класс
@@ -125,19 +136,24 @@ namespace _Main._Scripts.CrowdLogic
             soldier.transform.position = _points[index].position;
         }
 
-        public int AddToCrowd(Soldier soldier, bool setAtPosition = false, int atPosition = 0)
-        {
-            soldier.InvitedToCrowd(_bulletPool, _bulletDamagePercentage, _bulletSpeedPercentage, _bulletScalePercentage,
-                _fireRatePercentage);
+        public void AddToCrowd(Soldier soldier) => AddToCrowd(soldier, false, 0);
 
-            if (setAtPosition)
-                Soldiers.Insert(atPosition, soldier);
-            else
-                Soldiers.Add(soldier);
+        private void AddToCrowd(Soldier soldier, bool setAtPosition = false, int atPosition = 0)
+        {
+            soldier.InvitedToCrowd(_bulletPool, _bulletDamagePercentage, _bulletSpeedPercentage,
+                _bulletScalePercentage, _fireRatePercentage);
+
+            if (setAtPosition) Soldiers.Insert(atPosition, soldier);
+            else Soldiers.Add(soldier);
 
             soldier.onDie.AddListener(RemoveFromCrowd);
+            soldier.onTouchSoldier.AddListener(AddToCrowd);
+            soldier.onTouchBoost.AddListener(UpdateBulletBoostPercentages);
             soldier.SetAnimation(_currentTrigger);
-            return Soldiers.IndexOf(soldier);
+
+            var index = Soldiers.IndexOf(soldier);
+            _saves.ReserveSoldiers.Add(new Saves.Soldier(soldier.Config.SoldiersLevel, index));
+            _saves.InvokeSave();
         }
 
         public void ResetCrowd()
@@ -174,5 +190,6 @@ namespace _Main._Scripts.CrowdLogic
             Object.Destroy(soldier.gameObject); //TODO: Добавить пул солдат 
             AddToCrowd(newSoldier, true, index);
         }
+        
     }
 }

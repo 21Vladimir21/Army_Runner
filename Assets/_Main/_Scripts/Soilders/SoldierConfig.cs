@@ -7,6 +7,8 @@ namespace _Main._Scripts.Soilders
     public class SoldierConfig : ScriptableObject
     {
         [field: SerializeField] public SoldiersLevels SoldiersLevel { get; private set; }
+        [field:Range(0, 360), SerializeField] public float YFinishRotation { get; private set; }
+        
 
         [Range(0.1f, 10f)] public float fireRate;
 

@@ -6,6 +6,7 @@ using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services.Cameras;
+using _Main._Scripts.Soilders;
 using _Main._Scripts.UI;
 using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
@@ -51,10 +52,14 @@ namespace _Main._Scripts.Level.StateMachine.States
             foreach (var enemy in _finish.Enemies)
                 enemy.OnDie.AddListener(TryEndLevel);
 
-            _finish.SetSoldiersNewPosition(_player.Crowd.Soldiers);
-            _finish.StartEnemiesAttach();
-            _player.FinishedShooting();
-            _canShoot = true;
+            _finish.SetSoldiersNewPosition(_player.Crowd.Soldiers, () =>
+            {
+                _canShoot = true;
+                _finish.StartEnemiesAttach();
+                _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.FinishShooting);
+                _player.Crowd.SetFinishShootingRotation();
+            });
+                _player.FinishedShooting();
         }
 
         public void Exit()
@@ -99,6 +104,7 @@ namespace _Main._Scripts.Level.StateMachine.States
             {
                 _finishView.NextLevelButton.gameObject.SetActive(true);
                 _canShoot = false;
+                _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Dance);
             }
         }
 

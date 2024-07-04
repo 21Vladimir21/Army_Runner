@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using _Main._Scripts.Boosts;
 using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.LevelsLogic.StateMachine.States;
+using _Main._Scripts.Obstacles;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
@@ -36,19 +37,20 @@ namespace _Main._Scripts.PlayerLogic
             if (other.TryGetComponent(out Soldier soldier))
             {
                 if (soldier.InCrowd) return;
-                var index = Crowd.AddToCrowd(soldier);
-                _saves.ReserveSoldiers.Add(new Saves.Soldier(soldier.Config.SoldiersLevel, index));
-                _saves.InvokeSave(); //TODO: убрать нахуй отсюда эту хуету 
+                Crowd.AddToCrowd(soldier);
             }
 
             if (other.TryGetComponent(out Boost boost))
                 Crowd.UpdateBulletBoostPercentages(boost);
+            if (other.TryGetComponent(out PickUpMoney pickUpMoney)) 
+                _saves.AddMoney(pickUpMoney.Count);
         }
+        
 
         public void Init(Saves saves, Soldiers soldiers)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, soldiers);
+            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, soldiers,saves);
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }
@@ -71,11 +73,7 @@ namespace _Main._Scripts.PlayerLogic
         public void FinishedShooting() // TODO:Однозначно надо сделать это отдельным состоянием 
         {
             _stateMachine.SwitchState<WaitingState>();
-            foreach (var soldier in Crowd.Soldiers)
-            {
-                soldier.IsFinishShooting = true;
-                soldier.SetAnimation(SoldierAnimationTriggers.FinishShooting);
-            }
+            
         }
 
         private void Update()

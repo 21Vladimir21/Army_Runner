@@ -1,4 +1,5 @@
 using System.Collections;
+using _Main._Scripts.Boosts;
 using _Main._Scripts.Obstacles;
 using _Main._Scripts.Soilders.Bullets;
 using UnityEditor;
@@ -12,6 +13,9 @@ namespace _Main._Scripts.Soilders
     public class Soldier : MonoBehaviour
     {
         [HideInInspector] public UnityEvent<Soldier> onDie = new();
+        [HideInInspector] public UnityEvent<Soldier> onTouchSoldier = new();
+        [HideInInspector] public UnityEvent<Boost> onTouchBoost = new();
+        [HideInInspector] public UnityEvent<int> onTouchMoney = new();
         [field: SerializeField] public SoldierConfig Config { get; private set; }
         [field: SerializeField] private Transform rotatableSoldier;
 
@@ -19,7 +23,6 @@ namespace _Main._Scripts.Soilders
 
         [SerializeField] private Collider soldierCollider;
         [SerializeField] private Transform shootPoint;
-        [SerializeField] private Transform finishShootPoint;
         [SerializeField] private Transform[] doubleShootPoints;
 
 
@@ -36,7 +39,6 @@ namespace _Main._Scripts.Soilders
         private bool _canApplyDamage;
 
         public bool InCrowd { get; private set; }
-        public bool IsFinishShooting;
         private SoldierAnimationTriggers _currentAnimation = SoldierAnimationTriggers.Idling;
 
         private void OnTriggerEnter(Collider other)
@@ -44,6 +46,17 @@ namespace _Main._Scripts.Soilders
             if (other.GetComponent<Obstacle>())
                 if (_canApplyDamage)
                     Die();
+
+            if (other.TryGetComponent(out Soldier soldier))
+            {
+                if (soldier.InCrowd) return;
+                onTouchSoldier.Invoke(soldier);
+            }
+            if (other.TryGetComponent(out Boost boost))
+                onTouchBoost.Invoke(boost);
+
+            if (other.TryGetComponent(out PickUpMoney pickUpMoney)) 
+                    onTouchMoney.Invoke(pickUpMoney.Count);
         }
 
         public void InvitedToCrowd(BulletPool bulletPool, float damagePercentage, float speedPercentage,
@@ -107,6 +120,9 @@ namespace _Main._Scripts.Soilders
             _currentAnimation = trigger;
         }
 
+        public void SetFinishRotation() =>
+            rotatableSoldier.localRotation = Quaternion.Euler(0, Config.YFinishRotation, 0);
+
         private void Die()
         {
             soldierCollider.enabled = false;
@@ -123,7 +139,7 @@ namespace _Main._Scripts.Soilders
                 return;
             }
 
-            PrepareBullet(IsFinishShooting ? finishShootPoint : shootPoint);
+            PrepareBullet(shootPoint);
         }
 
         private void PrepareBullet(Transform point)
@@ -160,9 +176,11 @@ namespace _Main._Scripts.Soilders
 
     public enum SoldierAnimationTriggers
     {
+        Reset,
         Idling,
         IsRunning,
         Dying,
-        FinishShooting
+        FinishShooting,
+        Dance,
     }
 }

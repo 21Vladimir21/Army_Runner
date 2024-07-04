@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using _Main._Scripts.LevelsLogic.FinishLogic.Enemies;
 using _Main._Scripts.PlayerLogic;
@@ -34,10 +36,18 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic
             foreach (var enemy in Enemies) enemy.StopAttach();
         }
 
-        public void SetSoldiersNewPosition(List<Soldier> soldiers)
+        public void SetSoldiersNewPosition(List<Soldier> soldiers,Action callback)
         {
+            StartCoroutine(SetPositionCallbackRoutine(callback));
             for (var i = 0; i < soldiers.Count; i++)
                 soldiers[i].transform.DOMove(points[i].position, MoveToPointDuration);
+            
+        }
+
+        private IEnumerator SetPositionCallbackRoutine(Action callback)
+        {
+            yield return new WaitForSeconds(MoveToPointDuration);
+            callback?.Invoke();
         }
     }
 }
