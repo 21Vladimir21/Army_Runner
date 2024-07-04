@@ -24,25 +24,29 @@ namespace _Main._Scripts
 
         [SerializeField] private Player player;
         [SerializeField] private Transform levelSpawnPoint;
-        
+
         private LevelStateMachine _levelStateMachine;
         private LevelService _levelService;
-        
-        
+
 
         private void Awake()
         {
-            var savesService = InitSaves();
-            
+            SavesService savesService;
+#if UNITY_EDITOR
+            savesService = InitSaves();
+#else
+            savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
+#endif
+
             _levelService = new LevelService(levelSpawnPoint, mainConfig.LevelsConfig);
             ServiceLocator.Instance.TryAddService(_levelService);
-            
+
             var uiLocator = new UILocator(views);
-            player.Init(savesService.Saves,mainConfig.Soldiers);
-            
+            player.Init(savesService.Saves, mainConfig.Soldiers);
+
             _levelStateMachine =
                 new LevelStateMachine(savesService.Saves, _levelService, mainConfig, reserveCells, gameCells, uiLocator,
-                    cameraService,player);
+                    cameraService, player);
         }
 
         private SavesService InitSaves()

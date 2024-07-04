@@ -13,7 +13,8 @@ namespace _Main._Scripts.Services.Cameras
 
         public void Enable() => gameObject.SetActive(true);
         public void Disable() => gameObject.SetActive(false);
-
+#if UNITY_EDITOR
+        
         private void OnValidate()
         {
             if (VirtualCamera)
@@ -21,5 +22,6 @@ namespace _Main._Scripts.Services.Cameras
             VirtualCamera = GetComponent<CinemachineVirtualCamera>();
             EditorUtility.SetDirty(this);
         }
+#endif
     }
 }

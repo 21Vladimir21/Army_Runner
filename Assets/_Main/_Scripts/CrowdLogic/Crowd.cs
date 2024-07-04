@@ -10,7 +10,7 @@ namespace _Main._Scripts.CrowdLogic
 {
     public class Crowd
     {
-        public List<Soldier> Soldiers { get; private set; } = new();
+        public List<Soldier> Soldiers { get;} = new();
         private readonly List<Transform> _points;
         private readonly Soldiers _soldiers;
         private readonly BulletPool _bulletPool;
@@ -136,7 +136,7 @@ namespace _Main._Scripts.CrowdLogic
                 Soldiers.Add(soldier);
 
             soldier.onDie.AddListener(RemoveFromCrowd);
-            // soldier.SetAnimation(_currentTrigger);
+            soldier.SetAnimation(_currentTrigger);
             return Soldiers.IndexOf(soldier);
         }
 

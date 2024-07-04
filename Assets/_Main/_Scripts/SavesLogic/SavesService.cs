@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using _Main._Scripts.Services;
+using Kimicu.YandexGames;
 using UnityEngine;
 
 namespace _Main._Scripts.SavesLogic
@@ -15,6 +16,7 @@ namespace _Main._Scripts.SavesLogic
 
         public void InitSaves()
         {
+            LoadSaveData();
             Saves.LoadSaves();
         }
 
@@ -30,25 +32,20 @@ namespace _Main._Scripts.SavesLogic
 
         private void LoadCloudSaves(Action success)
         {
-            // var json = Cloud.GetValue<string>(Saves.SaveKey);
-            //
-            // if (json == default)
-            // {
-            //     Saves = new Saves();
-            //     Saves.InvokeSave();
-            //     Debug.Log("Сохранения не найдены");
-            // }
-            // else
-            // {
-            //     var save = JsonUtility.FromJson<Saves>(json);
-            //     Saves = save;
-            //     Debug.Log("Игра загружена");
-            // }
-        }
-
-        public void Test()
-        {
-            Debug.Log("TestSuccses");
+            var json = Cloud.GetValue<string>(Saves.SaveKey);
+            
+            if (json == default)
+            {
+                Saves = new Saves();
+                Saves.InvokeSave();
+                Debug.Log("Сохранения не найдены");
+            }
+            else
+            {
+                var save = JsonUtility.FromJson<Saves>(json);
+                Saves = save;
+                Debug.Log("Игра загружена");
+            }
         }
 
         private void LoadLocalSaves(Action success)

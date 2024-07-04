@@ -37,6 +37,7 @@ namespace _Main._Scripts.Soilders
 
         public bool InCrowd { get; private set; }
         public bool IsFinishShooting;
+        private SoldierAnimationTriggers _currentAnimation = SoldierAnimationTriggers.Idling;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -82,7 +83,7 @@ namespace _Main._Scripts.Soilders
             if (direction == Vector3.zero) return;
 
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            rotatableSoldier.localRotation = targetRotation;
+            transform.localRotation = targetRotation;
         }
 
         public void UpdateBulletDamagePercentage(float damageBoostPercentage) =>
@@ -101,8 +102,9 @@ namespace _Main._Scripts.Soilders
 
         public void SetAnimation(SoldierAnimationTriggers trigger)
         {
-            animator.SetTrigger(SoldierAnimationTriggers.Reset.ToString());
+            if (_currentAnimation == trigger) return;
             animator.SetTrigger(trigger.ToString());
+            _currentAnimation = trigger;
         }
 
         private void Die()
@@ -161,7 +163,6 @@ namespace _Main._Scripts.Soilders
         Idling,
         IsRunning,
         Dying,
-        FinishShooting,
-        Reset
+        FinishShooting
     }
 }
