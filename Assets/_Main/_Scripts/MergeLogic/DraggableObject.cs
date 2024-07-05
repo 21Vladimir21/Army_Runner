@@ -1,8 +1,9 @@
+using _Main._Scripts.CrowdLogic;
 using UnityEngine;
 
 namespace _Main._Scripts.MergeLogic
 {
-    public class DraggableObject : MonoBehaviour
+    public class DraggableObject : MonoBehaviour,ISoldier
     {
         [field: SerializeField] public SoldiersLevels Level { get; private set; }
         

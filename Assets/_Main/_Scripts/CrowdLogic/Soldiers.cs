@@ -10,12 +10,23 @@ namespace _Main._Scripts.CrowdLogic
     public class Soldiers : ScriptableObject
     {
         [SerializeField] public List<Soldier> soldiersPrefabs;
+        [SerializeField] public List<DraggableObject> draggableObjectsPrefabs;
 
-        public Soldier GetSoldierFromLevel(SoldiersLevels level)
+        public T GetSoldierFromLevel<T>(SoldiersLevels level) where T : class, ISoldier
         {
-            foreach (var soldier in soldiersPrefabs)
-                if (soldier.Config.SoldiersLevel == level)
-                    return soldier;
+            var soldierType = typeof(T);
+            if (soldierType == typeof(Soldier))
+            {
+                foreach (var soldier in soldiersPrefabs)
+                    if (soldier.Config.SoldiersLevel == level)
+                        return soldier as T;
+            }
+            else if (soldierType == typeof(DraggableObject))
+            {
+                foreach (var soldier in draggableObjectsPrefabs)
+                    if (soldier.Level == level)
+                        return soldier as T;
+            }
 
             return null;
         }

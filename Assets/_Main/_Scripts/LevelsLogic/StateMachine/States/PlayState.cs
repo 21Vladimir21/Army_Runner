@@ -6,6 +6,7 @@ using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services.Cameras;
+using _Main._Scripts.Soilders;
 using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
 using UnityEngine;
@@ -48,7 +49,7 @@ namespace _Main._Scripts.Level.StateMachine.States
             _player.gameObject.SetActive(true);
             foreach (var soldiersLevel in _saves.InGameSoldiers)
             {
-                var soldier = Object.Instantiate(_soldiers.GetSoldierFromLevel(soldiersLevel.Level));
+                var soldier = Object.Instantiate(_soldiers.GetSoldierFromLevel<Soldier>(soldiersLevel.Level));
                 _player.Crowd.AddToCrowdAndSetPosition(soldier);
             }
 

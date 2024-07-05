@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.Level.StateMachine;
 using _Main._Scripts.LevelsLogic;
 using _Main._Scripts.MergeLogic;
@@ -6,9 +7,9 @@ using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services;
 using _Main._Scripts.Services.Cameras;
+using _Main._Scripts.Soilders.Bullets;
 using _Main._Scripts.UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Main._Scripts
 {
@@ -22,11 +23,13 @@ namespace _Main._Scripts
         [SerializeField] private UIViewsHolder views;
         [SerializeField] private CameraService cameraService;
 
-        [SerializeField] private Player player;
         [SerializeField] private Transform levelSpawnPoint;
+        [SerializeField] private Transform bulletPoolParent;
+        [SerializeField] private Transform soldiersPoolParent;
+        
+        [SerializeField] private Player player;
 
         private LevelStateMachine _levelStateMachine;
-        private LevelService _levelService;
 
 
         private void Awake()
@@ -38,22 +41,35 @@ namespace _Main._Scripts
             savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
 #endif
 
-            _levelService = new LevelService(levelSpawnPoint, mainConfig.LevelsConfig);
-            ServiceLocator.Instance.TryAddService(_levelService);
-
-            var uiLocator = new UILocator(views);
-            player.Init(savesService.Saves, mainConfig.Soldiers);
-
+            var levelService = InitLevelService();
+            var uiLocator = InitUILocator(savesService);
+            var bulletPool = new BulletPool(mainConfig.BulletPoolConfig, bulletPoolParent);
+            player.Init(savesService.Saves, mainConfig.Soldiers,bulletPool);
+            
             _levelStateMachine =
-                new LevelStateMachine(savesService.Saves, _levelService, mainConfig, reserveCells, gameCells, uiLocator,
+                new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
                     cameraService, player);
+
+            var pool = new SoldiersPool(mainConfig.SoldiersPoolConfig, soldiersPoolParent);
+        }
+
+        private LevelService InitLevelService()
+        {
+            var levelService = new LevelService(levelSpawnPoint, mainConfig.LevelsConfig);
+            ServiceLocator.Instance.TryAddService(levelService);
+            return levelService;
+        }
+
+        private UILocator InitUILocator(SavesService savesService)
+        {
+            var uiLocator = new UILocator(views);
+            return uiLocator;
         }
 
         private SavesService InitSaves()
         {
             var savesService = new SavesService();
             ServiceLocator.Instance.TryAddService(savesService);
-            // savesService.InitSaves();
             return savesService;
         }
 

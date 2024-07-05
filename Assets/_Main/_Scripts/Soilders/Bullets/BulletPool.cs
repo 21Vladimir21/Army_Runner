@@ -5,16 +5,17 @@ namespace _Main._Scripts.Soilders.Bullets
 {
     public class BulletPool
     {
-         private Bullet _bulletPrefab;
-         private int _startBulletCount;
+        private readonly Transform _bulletParent;
+        private readonly Bullet _bulletPrefab;
 
-        private List<Bullet> _bullets = new();
+        private readonly List<Bullet> _bullets = new();
 
-        public BulletPool(BulletPoolConfig config)
+        public BulletPool(BulletPoolConfig config,Transform bulletParent)
         {
+            _bulletParent = bulletParent;
             _bulletPrefab = config.BulletPrefab;
-            _startBulletCount = config.StartBulletCount;
-            for (int i = 0; i < _startBulletCount; i++)
+            var startBulletCount = config.StartBulletCount;
+            for (int i = 0; i < startBulletCount; i++)
             {
                 var bullet = AddBullet();
                 bullet.gameObject.SetActive(false);
@@ -44,8 +45,10 @@ namespace _Main._Scripts.Soilders.Bullets
         private Bullet AddBullet()
         {
             var bullet = Object.Instantiate(_bulletPrefab, Vector3.zero, Quaternion.identity);
+            bullet.transform.parent = _bulletParent;
             bullet.OnLifeTimeEnded.AddListener(ReturnBullet);
             _bullets.Add(bullet);
+            
 
             return bullet;
         }

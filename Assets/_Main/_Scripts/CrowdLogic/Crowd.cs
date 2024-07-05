@@ -6,13 +6,11 @@ using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Soilders;
 using _Main._Scripts.Soilders.Bullets;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace _Main._Scripts.CrowdLogic
 {
     public class Crowd
     {
-        public UnityEvent<Soldier> OnTouchSoldier = new();
         public List<Soldier> Soldiers { get; } = new();
         private readonly List<Transform> _points;
         private readonly Soldiers _soldiers;
@@ -28,19 +26,27 @@ namespace _Main._Scripts.CrowdLogic
         private float _fireRatePercentage;
         private SoldierAnimationTriggers _currentTrigger;
 
-        private List<GameObject> _diedSoldiers = new();
+        private readonly List<GameObject> _diedSoldiers = new();
         public int SoldiersCount => Soldiers.Count;
 
-        public Crowd(List<Transform> points, PlayerConfig config, BulletPoolConfig bulletPoolConfig, Soldiers soldiers,
+        public Crowd(List<Transform> points, PlayerConfig config, BulletPool bulletPool, Soldiers soldiers,
             Saves saves)
         {
             _points = points;
             _soldiers = soldiers;
             _saves = saves;
-            _bulletPool = new BulletPool(bulletPoolConfig);
+            _bulletPool = bulletPool;
             _maxPosition = config.soldiersMaxPosition;
             _soldierSpeed = config.soldierSpeed;
         }
+
+        public void UpdateSoldiers()
+        {
+            MoveSoldiersTowardsPoints();
+            ClampSoldiersPositionX();
+            UpdateShootingCooldownForAllSoldiers();
+        }
+
 
         public void ResetBoostsPercentages(float bulletDamagePercentage, float bulletSpeedPercentage,
             float fireRatePercentage)
@@ -50,12 +56,10 @@ namespace _Main._Scripts.CrowdLogic
             _fireRatePercentage = fireRatePercentage;
         }
 
-
-        public void UpdateSoldiers()
+        public void UpdateShootingCooldownForAllSoldiers()
         {
-            MoveSoldiersTowardsPoints();
-            ClampSoldiersPositionX();
-            UpdateShootingCooldownForAllSoldiers();
+            foreach (var soldier in Soldiers)
+                soldier.UpdateShootingCooldown();
         }
 
         public void UpdateBulletBoostPercentages(Boost boost)
@@ -84,12 +88,6 @@ namespace _Main._Scripts.CrowdLogic
             }
         }
 
-        public void UpdateShootingCooldownForAllSoldiers()
-        {
-            foreach (var soldier in Soldiers)
-                soldier.UpdateShootingCooldown();
-        }
-
         public void SetAnimationForAllSoldiers(SoldierAnimationTriggers trigger)
         {
             _currentTrigger = trigger;
@@ -97,15 +95,11 @@ namespace _Main._Scripts.CrowdLogic
                 soldier.SetAnimation(trigger);
         }
 
-        public void SetFinishShootingRotation()
-        {
-            foreach (var soldier in Soldiers) soldier.SetFinishRotation();
-        }
+        public void SetFinishShootingRotation() { foreach (var soldier in Soldiers) soldier.SetFinishRotation(); }
 
         //TODO: ВЫнести в отдельный класс
 
         #region Movement
-
         private void MoveSoldiersTowardsPoints()
         {
             for (int i = 0; i < Soldiers.Count; i++)
@@ -182,7 +176,7 @@ namespace _Main._Scripts.CrowdLogic
 
         private void DownGradeSoldier(Soldier soldier, SoldiersLevels configSoldiersLevel)
         {
-            var newSoldier = Object.Instantiate(_soldiers.GetSoldierFromLevel(configSoldiersLevel - 1)
+            var newSoldier = Object.Instantiate(_soldiers.GetSoldierFromLevel<Soldier>(configSoldiersLevel - 1)
                 , soldier.transform.position, soldier.transform.rotation);
 
             var index = Soldiers.IndexOf(soldier);

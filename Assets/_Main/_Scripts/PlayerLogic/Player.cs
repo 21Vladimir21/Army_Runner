@@ -16,7 +16,6 @@ namespace _Main._Scripts.PlayerLogic
     public class Player : MonoBehaviour
     {
         [field: SerializeField] public PlayerConfig Config { get; private set; }
-        [SerializeField] private BulletPoolConfig bulletPoolConfig;
 
         [SerializeField] private List<Transform> crowdPoints;
 
@@ -47,10 +46,10 @@ namespace _Main._Scripts.PlayerLogic
         }
         
 
-        public void Init(Saves saves, Soldiers soldiers)
+        public void Init(Saves saves, Soldiers soldiers,BulletPool bulletPool)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints, Config, bulletPoolConfig, soldiers,saves);
+            Crowd = new Crowd(crowdPoints, Config, bulletPool, soldiers,saves);
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }

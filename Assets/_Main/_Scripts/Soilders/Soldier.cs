@@ -1,16 +1,17 @@
 using System.Collections;
 using _Main._Scripts.Boosts;
+using _Main._Scripts.CrowdLogic;
+using _Main._Scripts.MergeLogic;
 using _Main._Scripts.Obstacles;
 using _Main._Scripts.Soilders.Bullets;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace _Main._Scripts.Soilders
 {
     [RequireComponent(typeof(Animator), typeof(Collider))]
-    public class Soldier : MonoBehaviour
+    public class Soldier : MonoBehaviour,ISoldier
     {
         [HideInInspector] public UnityEvent<Soldier> onDie = new();
         [HideInInspector] public UnityEvent<Soldier> onTouchSoldier = new();
@@ -39,6 +40,9 @@ namespace _Main._Scripts.Soilders
         private bool _canApplyDamage;
 
         public bool InCrowd { get; private set; }
+
+        public SoldiersLevels Level => Config.SoldiersLevel;
+
         private SoldierAnimationTriggers _currentAnimation = SoldierAnimationTriggers.Idling;
 
         private void OnTriggerEnter(Collider other)
