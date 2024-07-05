@@ -46,10 +46,10 @@ namespace _Main._Scripts.PlayerLogic
         }
         
 
-        public void Init(Saves saves, Soldiers soldiers,BulletPool bulletPool)
+        public void Init(Saves saves, Soldiers soldiers,BulletPool bulletPool,SoldiersPool soldiersPool)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints, Config, bulletPool, soldiers,saves);
+            Crowd = new Crowd(crowdPoints,Config, bulletPool, soldiersPool, soldiers,saves);
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }

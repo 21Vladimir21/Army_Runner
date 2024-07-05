@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace _Main._Scripts.MergeLogic
 {
     public class CellToMerge : MonoBehaviour
     {
-        [HideInInspector] public UnityEvent OnDestroyObject = new();
+        [HideInInspector] public UnityEvent OnReturnObject = new();
         [HideInInspector] public DraggableObject currentObject;
         [field:SerializeField]public bool IsBusy { get; private set; } 
 
@@ -28,10 +29,9 @@ namespace _Main._Scripts.MergeLogic
             currentObject.transform.position = transform.position;
         }
 
-        public void DestroyObject()
+        public void ReturnObject()
         {
-            Destroy(currentObject.gameObject);
-            OnDestroyObject.Invoke();
+            OnReturnObject.Invoke();
             RemoveObject();
         }
     }

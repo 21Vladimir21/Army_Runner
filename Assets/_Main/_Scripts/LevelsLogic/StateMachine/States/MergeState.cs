@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.Level.StateMachine.States;
 using _Main._Scripts.MergeLogic;
 using _Main._Scripts.MergeLogic.DragAndDropLogic;
@@ -11,52 +11,54 @@ using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 using IState = _Main._Scripts.PlayerLogic.StateMachine.States.IState;
-using Object = UnityEngine.Object;
 
 namespace _Main._Scripts.LevelsLogic.StateMachine.States
 {
     public class MergeState : IState
     {
         private readonly IStateSwitcher _stateSwitcher;
+        private readonly SoldiersPool _soldiersPool;
         private readonly List<CellToMerge> _reserveCells;
         private readonly List<CellToMerge> _gameCells;
         private readonly PreGameView _preGameView;
         private readonly CameraService _cameraService;
         private readonly Saves _saves;
 
-        private List<DraggableObject> _soldiersPrefabs;
 
         private DragAndDrop _dragAndDrop;
         private CellToMerge _startDragCell;
         private CellToMerge _cell;
 
-        public MergeState(IStateSwitcher stateSwitcher, DragConfig dragConfig, UpgradeConfig upgradeConfig,
-            List<CellToMerge> reserveCells, List<CellToMerge> gameCells,
-            PreGameView preGameView, CameraService cameraService, Saves saves)
+        public MergeState(IStateSwitcher stateSwitcher, MainConfig mainConfig, SoldiersPool soldiersPool,
+            List<CellToMerge> reserveCells,
+            List<CellToMerge> gameCells, PreGameView preGameView, CameraService cameraService, Saves saves)
         {
             _stateSwitcher = stateSwitcher;
+            _soldiersPool = soldiersPool;
             _reserveCells = reserveCells;
             _gameCells = gameCells;
             _preGameView = preGameView;
             _cameraService = cameraService;
             _saves = saves;
-            _soldiersPrefabs = dragConfig.SoldiersPrefabs;
 
-            _dragAndDrop = new DragAndDrop(dragConfig, _cameraService.Holder.MainCamera);
+            _dragAndDrop = new DragAndDrop(mainConfig.DragConfig, _cameraService.Holder.MainCamera);
             _dragAndDrop.OnUpObject.AddListener(SetCurrentDragObject);
             _dragAndDrop.OnSelectNewObject.AddListener(SetCurrentCell);
             _dragAndDrop.OnMouseUp.AddListener(ResetDragData);
 
-            _preGameView.DamageUpgradeButton.onClick.AddListener(() => UpgradePlayer(upgradeConfig.DamageUpgradeRatios,
-                ref _saves.BulletDamageLevel,ref _saves.BulletDamagePercentage,
-                () => _preGameView.UpdateBulletDamageLevelText(_saves.BulletDamageLevel)));
-            
+            _preGameView.DamageUpgradeButton.onClick.AddListener(() =>
+                UpgradePlayer(mainConfig.UpgradeConfig.DamageUpgradeRatios,
+                    ref _saves.BulletDamageLevel, ref _saves.BulletDamagePercentage,
+                    () => _preGameView.UpdateBulletDamageLevelText(_saves.BulletDamageLevel)));
+
             _preGameView.BulletSpeedUpgradeButton.onClick.AddListener(() =>
-                UpgradePlayer(upgradeConfig.SpeedUpgradeRatios, ref _saves.BulletSpeedLevel,ref _saves.BulletSpeedPercentage,
+                UpgradePlayer(mainConfig.UpgradeConfig.SpeedUpgradeRatios, ref _saves.BulletSpeedLevel,
+                    ref _saves.BulletSpeedPercentage,
                     () => _preGameView.UpdateBulletSpeedLevelText(_saves.BulletSpeedLevel)));
-            
+
             _preGameView.FireRateUpgradeButton.onClick.AddListener(() =>
-                UpgradePlayer(upgradeConfig.FireRateUpgradeRatios, ref _saves.FireRateLevel,ref _saves.FireRatePercentage,
+                UpgradePlayer(mainConfig.UpgradeConfig.FireRateUpgradeRatios, ref _saves.FireRateLevel,
+                    ref _saves.FireRatePercentage,
                     () => _preGameView.UpdateFireRateLevelText(_saves.FireRateLevel)));
         }
 
@@ -96,9 +98,11 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             if (_startDragCell.currentObject.Level != _cell.currentObject.Level) return;
             var level = _startDragCell.currentObject.Level;
 
-            _cell.DestroyObject();
-            _cell.AddObject(SpawnNextObjectLevel(level));
-            _startDragCell.DestroyObject();
+            _soldiersPool.ReturnSoldier(_cell.currentObject);
+            _soldiersPool.ReturnSoldier(_startDragCell.currentObject);
+            _cell.ReturnObject();
+            _startDragCell.ReturnObject();
+            _cell.AddObject(GetNextObjectLevel(level));
         }
 
         private void LoadSoldiersFromSave()
@@ -117,7 +121,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             foreach (var soldier in listFromSave)
             {
-                var instSoldier = SpawnSoldier(soldier.Level);
+                var instSoldier = GetSoldier(soldier.Level);
                 cells[soldier.Index].AddObject(instSoldier);
             }
         }
@@ -138,17 +142,16 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             foreach (var cell in cells)
                 if (cell.IsBusy)
-                    cell.DestroyObject();
+                {
+                    _soldiersPool.ReturnSoldier(cell.currentObject);
+                    cell.ReturnObject();
+                }
         }
 
-        private DraggableObject SpawnNextObjectLevel(SoldiersLevels level) => SpawnSoldier(level + 1);
+        private DraggableObject GetNextObjectLevel(SoldiersLevels level) => GetSoldier(level + 1);
 
-        private DraggableObject SpawnSoldier(SoldiersLevels level)
-        {
-            var soldierPrefab = _soldiersPrefabs.FirstOrDefault(x => x.Level == level);
-            var soldier = Object.Instantiate(soldierPrefab);
-            return soldier;
-        }
+        private DraggableObject GetSoldier(SoldiersLevels level) =>
+            _soldiersPool.GetSoldierFromLevel<DraggableObject>(level);
 
         private void ResetDragData()
         {
@@ -164,7 +167,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private void SetCurrentCell(CellToMerge cell) => _cell = cell;
         private void SetCurrentDragObject(CellToMerge startDragCell) => _startDragCell = startDragCell;
 
-        private void UpgradePlayer(IReadOnlyList<UpgradeData> upgradeData, ref int upgradeLevel,ref float upgradePercentage,
+        private void UpgradePlayer(IReadOnlyList<UpgradeData> upgradeData, ref int upgradeLevel,
+            ref float upgradePercentage,
             Action successCallback = null)
         {
             var cost = upgradeData[upgradeLevel].Cost;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.Level.StateMachine.States;
 using _Main._Scripts.LevelsLogic;
 using _Main._Scripts.LevelsLogic.StateMachine.States;
@@ -22,16 +23,18 @@ namespace _Main._Scripts.Level.StateMachine
         private readonly MainConfig _mainConfig;
         private readonly UILocator _uiLocator;
         private readonly CameraService _cameraService;
+        private readonly SoldiersPool _soldiersPool;
 
         public LevelStateMachine(Saves saves, LevelService levelService, MainConfig mainConfig,
             List<CellToMerge> reserveCells, List<CellToMerge> gameCells, UILocator uiLocator,
-            CameraService cameraService,Player player)
+            CameraService cameraService,SoldiersPool soldiersPool,Player player)
         {
             _saves = saves;
             _levelService = levelService;
             _mainConfig = mainConfig;
             _uiLocator = uiLocator;
             _cameraService = cameraService;
+            _soldiersPool = soldiersPool;
             var preGameView = _uiLocator.GetViewByType<PreGameView>();
             var gameView = _uiLocator.GetViewByType<GameView>();
             var gameOverView = _uiLocator.GetViewByType<GameOverView>();
@@ -39,8 +42,8 @@ namespace _Main._Scripts.Level.StateMachine
             _states = new List<IState>
             {
                 new InitState(this, levelService, saves,player),
-                new MergeState(this, mainConfig.DragConfig,mainConfig.UpgradeConfig, reserveCells, gameCells, preGameView, _cameraService,saves),
-                new PlayState(this,gameView,_cameraService,_saves,player,mainConfig.Soldiers,mainConfig.UpgradeConfig,levelService),
+                new MergeState(this, mainConfig,soldiersPool, reserveCells, gameCells, preGameView, _cameraService,saves),
+                new PlayState(this,gameView,soldiersPool,_cameraService,_saves,player,mainConfig.Soldiers,mainConfig.UpgradeConfig,levelService),
                 new GameOverState(this,gameOverView,player),
                 new FinishState(this,finishView,cameraService,saves,levelService,player)
             };

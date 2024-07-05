@@ -74,6 +74,7 @@ namespace _Main._Scripts.Soilders
             _fireRate = Config.fireRate;
             _damage = Config.bulletDamage;
             _bulletSpeed = Config.bulletSpeed;
+            soldierCollider.enabled = true;
 
             UpdateFireRatePercentage(fireRatePercentage);
             UpdateBulletDamagePercentage(damagePercentage);
@@ -119,6 +120,7 @@ namespace _Main._Scripts.Soilders
 
         public void SetAnimation(SoldierAnimationTriggers trigger)
         {
+            animator.ResetTrigger(_currentAnimation.ToString());
             if (_currentAnimation == trigger) return;
             animator.SetTrigger(trigger.ToString());
             _currentAnimation = trigger;

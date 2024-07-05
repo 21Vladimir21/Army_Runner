@@ -41,16 +41,16 @@ namespace _Main._Scripts
             savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
 #endif
 
+            var soldiersPool = new SoldiersPool(mainConfig.SoldiersPoolConfig, soldiersPoolParent);
             var levelService = InitLevelService();
             var uiLocator = InitUILocator(savesService);
             var bulletPool = new BulletPool(mainConfig.BulletPoolConfig, bulletPoolParent);
-            player.Init(savesService.Saves, mainConfig.Soldiers,bulletPool);
+            player.Init(savesService.Saves, mainConfig.Soldiers,bulletPool,soldiersPool);
             
             _levelStateMachine =
                 new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
-                    cameraService, player);
+                    cameraService,soldiersPool, player);
 
-            var pool = new SoldiersPool(mainConfig.SoldiersPoolConfig, soldiersPoolParent);
         }
 
         private LevelService InitLevelService()

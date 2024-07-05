@@ -24,7 +24,7 @@ namespace _Main._Scripts.SavesLogic
             new Soldier(SoldiersLevels.Level2, 2),
         };
 
-        [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new();
+        [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new(24);
 
 
         [field: SerializeField] public int BulletDamageLevel;

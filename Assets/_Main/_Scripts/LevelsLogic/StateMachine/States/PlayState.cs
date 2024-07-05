@@ -18,6 +18,7 @@ namespace _Main._Scripts.Level.StateMachine.States
     {
         private readonly IStateSwitcher _stateSwitcher;
         private readonly GameView _gameView;
+        private readonly SoldiersPool _soldiersPool;
         private readonly CameraService _cameraService;
         private readonly Saves _saves;
         private readonly Player _player;
@@ -25,11 +26,13 @@ namespace _Main._Scripts.Level.StateMachine.States
         private readonly UpgradeConfig _upgradeConfig;
         private readonly LevelService _levelService;
 
-        public PlayState(IStateSwitcher stateSwitcher, GameView gameView, CameraService cameraService, Saves saves,
-            Player player, Soldiers soldiers,UpgradeConfig upgradeConfig, LevelService levelService)
+        public PlayState(IStateSwitcher stateSwitcher, GameView gameView, SoldiersPool soldiersPool,
+            CameraService cameraService, Saves saves,
+            Player player, Soldiers soldiers, UpgradeConfig upgradeConfig, LevelService levelService)
         {
             _stateSwitcher = stateSwitcher;
             _gameView = gameView;
+            _soldiersPool = soldiersPool;
             _cameraService = cameraService;
             _saves = saves;
             _player = player;
@@ -45,11 +48,11 @@ namespace _Main._Scripts.Level.StateMachine.States
             _player.OnStart.Invoke();
 
             UpdateUpgrades();
-            
+
             _player.gameObject.SetActive(true);
             foreach (var soldiersLevel in _saves.InGameSoldiers)
             {
-                var soldier = Object.Instantiate(_soldiers.GetSoldierFromLevel<Soldier>(soldiersLevel.Level));
+                var soldier = _soldiersPool.GetSoldierFromLevel<Soldier>(soldiersLevel.Level);
                 _player.Crowd.AddToCrowdAndSetPosition(soldier);
             }
 
@@ -60,15 +63,14 @@ namespace _Main._Scripts.Level.StateMachine.States
         private void UpdateUpgrades()
         {
             var bulletDamageRatio = _saves.BulletDamagePercentage;
-            var bulletSpeedRatio=_saves.BulletSpeedPercentage;
-            var fireRateRatio=_saves.FireRatePercentage;
-            _player.Crowd.ResetBoostsPercentages(bulletDamageRatio,bulletSpeedRatio,fireRateRatio);
+            var bulletSpeedRatio = _saves.BulletSpeedPercentage;
+            var fireRateRatio = _saves.FireRatePercentage;
+            _player.Crowd.ResetBoostsPercentages(bulletDamageRatio, bulletSpeedRatio, fireRateRatio);
         }
 
         public void Exit()
         {
             _gameView.Close();
-            
         }
 
         public void Update()

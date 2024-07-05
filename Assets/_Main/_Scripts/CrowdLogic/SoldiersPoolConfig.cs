@@ -8,7 +8,7 @@ namespace _Main._Scripts.CrowdLogic
     [CreateAssetMenu(fileName = "SoldiersPoolConfig", menuName = "GameConfigs/SoldierPool", order = 0)]
     public class SoldiersPoolConfig : ScriptableObject
     {
-        [field: SerializeField] public Soldiers SoldierPrefabs { get; private set; }
+        [field: SerializeField] public Soldiers Soldiers { get; private set; }
         [field:SerializeField] public List<SoldierPoolData> SoldiersData{ get; private set; }
         [field:SerializeField] public List<SoldierPoolData> MergeSoldiersData{ get; private set; }
 

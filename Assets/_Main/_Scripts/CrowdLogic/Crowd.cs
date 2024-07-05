@@ -16,6 +16,7 @@ namespace _Main._Scripts.CrowdLogic
         private readonly Soldiers _soldiers;
         private readonly Saves _saves;
         private readonly BulletPool _bulletPool;
+        private readonly SoldiersPool _soldiersPool;
 
         private readonly float _soldierSpeed;
         private readonly float _maxPosition;
@@ -26,16 +27,19 @@ namespace _Main._Scripts.CrowdLogic
         private float _fireRatePercentage;
         private SoldierAnimationTriggers _currentTrigger;
 
-        private readonly List<GameObject> _diedSoldiers = new();
+        private readonly List<Soldier> _diedSoldiers = new();
         public int SoldiersCount => Soldiers.Count;
+        private int _maxSoldiers => _points.Count;
 
-        public Crowd(List<Transform> points, PlayerConfig config, BulletPool bulletPool, Soldiers soldiers,
+        public Crowd(List<Transform> points, PlayerConfig config, BulletPool bulletPool, SoldiersPool soldiersPool,
+            Soldiers soldiers,
             Saves saves)
         {
             _points = points;
             _soldiers = soldiers;
             _saves = saves;
             _bulletPool = bulletPool;
+            _soldiersPool = soldiersPool;
             _maxPosition = config.soldiersMaxPosition;
             _soldierSpeed = config.soldierSpeed;
         }
@@ -95,11 +99,15 @@ namespace _Main._Scripts.CrowdLogic
                 soldier.SetAnimation(trigger);
         }
 
-        public void SetFinishShootingRotation() { foreach (var soldier in Soldiers) soldier.SetFinishRotation(); }
+        public void SetFinishShootingRotation()
+        {
+            foreach (var soldier in Soldiers) soldier.SetFinishRotation();
+        }
 
         //TODO: ВЫнести в отдельный класс
 
         #region Movement
+
         private void MoveSoldiersTowardsPoints()
         {
             for (int i = 0; i < Soldiers.Count; i++)
@@ -125,12 +133,17 @@ namespace _Main._Scripts.CrowdLogic
 
         public void AddToCrowdAndSetPosition(Soldier soldier)
         {
-            AddToCrowd(soldier);
+            AddToCrowd(soldier, false, 0);
             var index = Soldiers.IndexOf(soldier);
             soldier.transform.position = _points[index].position;
         }
 
-        public void AddToCrowd(Soldier soldier) => AddToCrowd(soldier, false, 0);
+        public void AddToCrowd(Soldier soldier)
+        {
+            if (SoldiersCount>= _maxSoldiers) return;
+            AddToCrowd(soldier, false, 0);
+            SaveInReserve(soldier);
+        }
 
         private void AddToCrowd(Soldier soldier, bool setAtPosition = false, int atPosition = 0)
         {
@@ -144,20 +157,37 @@ namespace _Main._Scripts.CrowdLogic
             soldier.onTouchSoldier.AddListener(AddToCrowd);
             soldier.onTouchBoost.AddListener(UpdateBulletBoostPercentages);
             soldier.SetAnimation(_currentTrigger);
+        }
 
-            var index = Soldiers.IndexOf(soldier);
-            _saves.ReserveSoldiers.Add(new Saves.Soldier(soldier.Config.SoldiersLevel, index));
-            _saves.InvokeSave();
+        private void SaveInReserve(Soldier soldier)
+        {
+            var capacity = _saves.ReserveSoldiers.Capacity;
+            for (var i = 0; i < capacity; i++)
+            {
+                var indexFound = false;
+                foreach (var reserveSoldier in _saves.ReserveSoldiers)
+                {
+                    if (reserveSoldier.Index == i)
+                    {
+                        indexFound = true;
+                        break;
+                    }
+                }
+
+                if (indexFound) continue;
+                _saves.ReserveSoldiers.Add(new Saves.Soldier(soldier.Config.SoldiersLevel, i));
+                _saves.InvokeSave(); //TODO: Подумать куда запихнуть сохранение
+            }
         }
 
         public void ResetCrowd()
         {
             foreach (var soldier in Soldiers)
-                Object.Destroy(soldier.gameObject);
+                _soldiersPool.ReturnSoldier(soldier);
             Soldiers.Clear();
 
             foreach (var soldier in _diedSoldiers)
-                Object.Destroy(soldier);
+                _soldiersPool.ReturnSoldier(soldier);
             _diedSoldiers.Clear();
         }
 
@@ -167,7 +197,7 @@ namespace _Main._Scripts.CrowdLogic
             if (configSoldiersLevel <= SoldiersLevels.Level1)
             {
                 Soldiers.Remove(soldier);
-                _diedSoldiers.Add(soldier.gameObject);
+                _diedSoldiers.Add(soldier);
                 return;
             }
 
@@ -176,14 +206,15 @@ namespace _Main._Scripts.CrowdLogic
 
         private void DownGradeSoldier(Soldier soldier, SoldiersLevels configSoldiersLevel)
         {
-            var newSoldier = Object.Instantiate(_soldiers.GetSoldierFromLevel<Soldier>(configSoldiersLevel - 1)
-                , soldier.transform.position, soldier.transform.rotation);
+            var newSoldier = _soldiersPool.GetSoldierFromLevel<Soldier>(configSoldiersLevel - 1);
+
+            newSoldier.transform.position = soldier.transform.position;
+            newSoldier.transform.rotation = soldier.transform.rotation;
 
             var index = Soldiers.IndexOf(soldier);
             Soldiers.Remove(soldier);
-            Object.Destroy(soldier.gameObject); //TODO: Добавить пул солдат 
+            _soldiersPool.ReturnSoldier(soldier);
             AddToCrowd(newSoldier, true, index);
         }
-        
     }
 }
