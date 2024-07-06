@@ -59,8 +59,11 @@ namespace _Main._Scripts.Soilders
             if (other.TryGetComponent(out Boost boost))
                 onTouchBoost.Invoke(boost);
 
-            if (other.TryGetComponent(out PickUpMoney pickUpMoney)) 
+            if (other.TryGetComponent(out PickUpMoney pickUpMoney))
+            {
                     onTouchMoney.Invoke(pickUpMoney.Count);
+                    pickUpMoney.TakeMoney();
+            } 
         }
 
         public void InvitedToCrowd(BulletPool bulletPool, float damagePercentage, float speedPercentage,

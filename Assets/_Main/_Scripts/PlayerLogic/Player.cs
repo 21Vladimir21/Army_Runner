@@ -41,15 +41,18 @@ namespace _Main._Scripts.PlayerLogic
 
             if (other.TryGetComponent(out Boost boost))
                 Crowd.UpdateBulletBoostPercentages(boost);
-            if (other.TryGetComponent(out PickUpMoney pickUpMoney)) 
+            if (other.TryGetComponent(out PickUpMoney pickUpMoney))
+            {
                 _saves.AddMoney(pickUpMoney.Count);
+                pickUpMoney.TakeMoney();
+            }
         }
         
 
-        public void Init(Saves saves, Soldiers soldiers,BulletPool bulletPool,SoldiersPool soldiersPool)
+        public void Init(Saves saves,BulletPool bulletPool,SoldiersPool soldiersPool)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints,Config, bulletPool, soldiersPool, soldiers,saves);
+            Crowd = new Crowd(crowdPoints,Config, bulletPool, soldiersPool,saves);
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }

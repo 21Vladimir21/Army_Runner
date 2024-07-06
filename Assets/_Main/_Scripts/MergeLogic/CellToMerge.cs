@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace _Main._Scripts.MergeLogic
 {
@@ -23,8 +22,11 @@ namespace _Main._Scripts.MergeLogic
             IsBusy = false;
         }
 
-        public void ResetCurrentObjectPosition()
+        public void StartDragObject() => currentObject.UpSoldier();
+
+        public void ResetCurrentObject()
         {
+            currentObject.DownSoldier();
             IsBusy = true;
             currentObject.transform.position = transform.position;
         }

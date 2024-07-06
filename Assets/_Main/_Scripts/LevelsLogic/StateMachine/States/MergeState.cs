@@ -95,7 +95,11 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             if (_cell.IsBusy == false) return;
 
-            if (_startDragCell.currentObject.Level != _cell.currentObject.Level) return;
+            if (_startDragCell.currentObject.Level != _cell.currentObject.Level)
+            {
+                _startDragCell.ResetCurrentObject();
+                return;
+            }
             var level = _startDragCell.currentObject.Level;
 
             _soldiersPool.ReturnSoldier(_cell.currentObject);

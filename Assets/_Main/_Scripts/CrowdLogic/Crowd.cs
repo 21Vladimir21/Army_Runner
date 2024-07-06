@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Main._Scripts.Boosts;
 using _Main._Scripts.MergeLogic;
@@ -13,7 +14,6 @@ namespace _Main._Scripts.CrowdLogic
     {
         public List<Soldier> Soldiers { get; } = new();
         private readonly List<Transform> _points;
-        private readonly Soldiers _soldiers;
         private readonly Saves _saves;
         private readonly BulletPool _bulletPool;
         private readonly SoldiersPool _soldiersPool;
@@ -29,14 +29,12 @@ namespace _Main._Scripts.CrowdLogic
 
         private readonly List<Soldier> _diedSoldiers = new();
         public int SoldiersCount => Soldiers.Count;
-        private int _maxSoldiers => _points.Count;
+        private int MaxSoldiers => _points.Count;
 
         public Crowd(List<Transform> points, PlayerConfig config, BulletPool bulletPool, SoldiersPool soldiersPool,
-            Soldiers soldiers,
             Saves saves)
         {
             _points = points;
-            _soldiers = soldiers;
             _saves = saves;
             _bulletPool = bulletPool;
             _soldiersPool = soldiersPool;
@@ -89,6 +87,8 @@ namespace _Main._Scripts.CrowdLogic
                 case BoostType.DoubleBullet:
                     foreach (var soldier in Soldiers) soldier.ActivateDoubleShot();
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -140,7 +140,7 @@ namespace _Main._Scripts.CrowdLogic
 
         public void AddToCrowd(Soldier soldier)
         {
-            if (SoldiersCount>= _maxSoldiers) return;
+            if (SoldiersCount>= MaxSoldiers) return;
             AddToCrowd(soldier, false, 0);
             SaveInReserve(soldier);
         }

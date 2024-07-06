@@ -45,7 +45,7 @@ namespace _Main._Scripts
             var levelService = InitLevelService();
             var uiLocator = InitUILocator(savesService);
             var bulletPool = new BulletPool(mainConfig.BulletPoolConfig, bulletPoolParent);
-            player.Init(savesService.Saves, mainConfig.Soldiers,bulletPool,soldiersPool);
+            player.Init(savesService.Saves,bulletPool,soldiersPool);
             
             _levelStateMachine =
                 new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
