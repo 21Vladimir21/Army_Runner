@@ -107,6 +107,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _cell.ReturnObject();
             _startDragCell.ReturnObject();
             _cell.AddObject(GetNextObjectLevel(level));
+            _cell.PlaySpawnParticle();
         }
 
         private void LoadSoldiersFromSave()

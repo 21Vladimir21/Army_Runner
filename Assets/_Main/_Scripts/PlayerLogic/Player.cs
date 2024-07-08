@@ -40,7 +40,10 @@ namespace _Main._Scripts.PlayerLogic
             }
 
             if (other.TryGetComponent(out Boost boost))
+            {
                 Crowd.UpdateBulletBoostPercentages(boost);
+                boost.Take();
+            }
             if (other.TryGetComponent(out PickUpMoney pickUpMoney))
             {
                 _saves.AddMoney(pickUpMoney.Count);

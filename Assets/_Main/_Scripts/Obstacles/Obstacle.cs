@@ -3,7 +3,6 @@ using DG.Tweening;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Main._Scripts.Obstacles
 {
@@ -15,6 +14,8 @@ namespace _Main._Scripts.Obstacles
         [SerializeField] private Transform obstacle;
         [SerializeField] private Transform objectForDown;
         [SerializeField] private Collider triggerCollider;
+        [SerializeField] private ParticleSystem dustParticle;
+        
 
 
         private int _currentHealth;
@@ -31,9 +32,13 @@ namespace _Main._Scripts.Obstacles
             
             if (_currentHealth < damage) damage = _currentHealth;
             _currentHealth -= damage;
-            
-            
-            if (_currentHealth <= 0) DestroyAnimation();
+
+
+            if (_currentHealth <= 0)
+            {
+                dustParticle.Play();
+                DestroyAnimation();
+            }
             
             healthText.text = _currentHealth.ToString();
             return true;

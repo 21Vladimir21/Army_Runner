@@ -57,7 +57,7 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _canShoot = true;
                 _finish.StartEnemiesAttach();
                 _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.FinishShooting);
-                _player.Crowd.SetFinishShootingRotation();
+                _player.Crowd.SetFinishShootingSettings();
             });
                 _player.FinishedShooting();
         }

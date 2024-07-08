@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using _Main._Scripts.Boosts;
 using _Main._Scripts.MergeLogic;
@@ -6,6 +7,7 @@ using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Soilders;
 using _Main._Scripts.Soilders.Bullets;
+using Kimicu.YandexGames.Utils;
 using UnityEngine;
 
 namespace _Main._Scripts.CrowdLogic
@@ -30,6 +32,7 @@ namespace _Main._Scripts.CrowdLogic
         private readonly List<Soldier> _diedSoldiers = new();
         public int SoldiersCount => Soldiers.Count;
         private int MaxSoldiers => _points.Count;
+        private bool _doubleShotIsActive;
 
         public Crowd(List<Transform> points, PlayerConfig config, BulletPool bulletPool, SoldiersPool soldiersPool,
             Saves saves)
@@ -56,6 +59,7 @@ namespace _Main._Scripts.CrowdLogic
             _bulletDamagePercentage = bulletDamagePercentage;
             _bulletSpeedPercentage = bulletSpeedPercentage;
             _fireRatePercentage = fireRatePercentage;
+            _doubleShotIsActive = false;
         }
 
         public void UpdateShootingCooldownForAllSoldiers()
@@ -85,6 +89,7 @@ namespace _Main._Scripts.CrowdLogic
                     foreach (var soldier in Soldiers) soldier.UpdateFireRatePercentage(_fireRatePercentage);
                     break;
                 case BoostType.DoubleBullet:
+                    _doubleShotIsActive = true;
                     foreach (var soldier in Soldiers) soldier.ActivateDoubleShot();
                     break;
                 default:
@@ -99,9 +104,13 @@ namespace _Main._Scripts.CrowdLogic
                 soldier.SetAnimation(trigger);
         }
 
-        public void SetFinishShootingRotation()
+        public void SetFinishShootingSettings()
         {
-            foreach (var soldier in Soldiers) soldier.SetFinishRotation();
+            foreach (var soldier in Soldiers)
+            {
+                soldier.SetFinishRotation();
+                soldier.EnableFinishShooting();
+            }
         }
 
         //TODO: ВЫнести в отдельный класс
@@ -140,7 +149,7 @@ namespace _Main._Scripts.CrowdLogic
 
         public void AddToCrowd(Soldier soldier)
         {
-            if (SoldiersCount>= MaxSoldiers) return;
+            if (SoldiersCount >= MaxSoldiers) return;
             AddToCrowd(soldier, false, 0);
             SaveInReserve(soldier);
         }
@@ -148,7 +157,7 @@ namespace _Main._Scripts.CrowdLogic
         private void AddToCrowd(Soldier soldier, bool setAtPosition = false, int atPosition = 0)
         {
             soldier.InvitedToCrowd(_bulletPool, _bulletDamagePercentage, _bulletSpeedPercentage,
-                _bulletScalePercentage, _fireRatePercentage);
+                _bulletScalePercentage, _fireRatePercentage, _doubleShotIsActive);
 
             if (setAtPosition) Soldiers.Insert(atPosition, soldier);
             else Soldiers.Add(soldier);
@@ -176,14 +185,20 @@ namespace _Main._Scripts.CrowdLogic
 
                 if (indexFound) continue;
                 _saves.ReserveSoldiers.Add(new Saves.Soldier(soldier.Config.SoldiersLevel, i));
-                _saves.InvokeSave(); //TODO: Подумать куда запихнуть сохранение
+                break;
             }
+
+            _saves.InvokeSave(); //TODO: Подумать куда запихнуть сохранение
         }
 
         public void ResetCrowd()
         {
             foreach (var soldier in Soldiers)
+            {
+                soldier.onDie.RemoveListener(RemoveFromCrowd);
                 _soldiersPool.ReturnSoldier(soldier);
+            }
+
             Soldiers.Clear();
 
             foreach (var soldier in _diedSoldiers)
@@ -193,18 +208,21 @@ namespace _Main._Scripts.CrowdLogic
 
         private void RemoveFromCrowd(Soldier soldier)
         {
+            soldier.onDie.RemoveListener(RemoveFromCrowd);
             var configSoldiersLevel = soldier.Config.SoldiersLevel;
+
             if (configSoldiersLevel <= SoldiersLevels.Level1)
             {
                 Soldiers.Remove(soldier);
+                _soldiersPool.ReturnSoldier(soldier);
                 _diedSoldiers.Add(soldier);
                 return;
             }
 
-            DownGradeSoldier(soldier, configSoldiersLevel);
+            Coroutines.StartRoutine(DownGradeSoldier(soldier, configSoldiersLevel));
         }
 
-        private void DownGradeSoldier(Soldier soldier, SoldiersLevels configSoldiersLevel)
+        private IEnumerator DownGradeSoldier(Soldier soldier, SoldiersLevels configSoldiersLevel)
         {
             var newSoldier = _soldiersPool.GetSoldierFromLevel<Soldier>(configSoldiersLevel - 1);
 
@@ -213,8 +231,10 @@ namespace _Main._Scripts.CrowdLogic
 
             var index = Soldiers.IndexOf(soldier);
             Soldiers.Remove(soldier);
-            _soldiersPool.ReturnSoldier(soldier);
+
             AddToCrowd(newSoldier, true, index);
+            yield return new WaitForSeconds(1f);
+            _soldiersPool.ReturnSoldier(soldier);
         }
     }
 }

@@ -4,6 +4,7 @@ using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.MergeLogic;
 using _Main._Scripts.Obstacles;
 using _Main._Scripts.Soilders.Bullets;
+using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,7 +12,7 @@ using UnityEngine.Events;
 namespace _Main._Scripts.Soilders
 {
     [RequireComponent(typeof(Animator), typeof(Collider))]
-    public class Soldier : MonoBehaviour,ISoldier
+    public class Soldier : MonoBehaviour, ISoldier
     {
         [HideInInspector] public UnityEvent<Soldier> onDie = new();
         [HideInInspector] public UnityEvent<Soldier> onTouchSoldier = new();
@@ -25,6 +26,8 @@ namespace _Main._Scripts.Soilders
         [SerializeField] private Collider soldierCollider;
         [SerializeField] private Transform shootPoint;
         [SerializeField] private Transform[] doubleShootPoints;
+        [SerializeField] private ParticleSystem shootParticle;
+        [SerializeField] private ParticleSystem damageParticle;
 
 
         private float _bulletSpeed;
@@ -35,7 +38,7 @@ namespace _Main._Scripts.Soilders
 
         private BulletPool _bulletPool;
         private float _timeOfLastShot;
-        private bool _isDoubleShoot;
+        private bool _doubleShootIsActive;
 
         private bool _canApplyDamage;
 
@@ -44,33 +47,42 @@ namespace _Main._Scripts.Soilders
         public SoldiersLevels Level => Config.SoldiersLevel;
 
         private SoldierAnimationTriggers _currentAnimation = SoldierAnimationTriggers.Idling;
+        private bool _isFinishShooting;
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.GetComponent<Obstacle>())
                 if (_canApplyDamage)
+                {
+                    damageParticle.Play();
                     Die();
+                }
 
             if (other.TryGetComponent(out Soldier soldier))
             {
                 if (soldier.InCrowd) return;
                 onTouchSoldier.Invoke(soldier);
             }
+
             if (other.TryGetComponent(out Boost boost))
+            {
                 onTouchBoost.Invoke(boost);
+                boost.DOPlay();
+            }
 
             if (other.TryGetComponent(out PickUpMoney pickUpMoney))
             {
-                    onTouchMoney.Invoke(pickUpMoney.Count);
-                    pickUpMoney.TakeMoney();
-            } 
+                onTouchMoney.Invoke(pickUpMoney.Count);
+                pickUpMoney.TakeMoney();
+            }
         }
 
-        public void InvitedToCrowd(BulletPool bulletPool, float damagePercentage, float speedPercentage,
-            float scalePercentage,
-            float fireRatePercentage)
+        public void InvitedToCrowd(BulletPool bulletPool, float damagePercentage,
+            float speedPercentage, float scalePercentage, float fireRatePercentage, bool doubleShootIsActive)
         {
             InCrowd = true;
+            _isFinishShooting = false;
+            _canApplyDamage = false;
             _bulletPool = bulletPool;
             _bulletLifeTime = Config.bulletLifeTime;
 
@@ -83,10 +95,13 @@ namespace _Main._Scripts.Soilders
             UpdateBulletDamagePercentage(damagePercentage);
             UpdateBulletSpeedPercentage(speedPercentage);
             UpdateBulletScalePercentage(scalePercentage);
-
+            _doubleShootIsActive = doubleShootIsActive;
             _timeOfLastShot = _fireRate;
             StartCoroutine(ApplyDamageCooldown());
+            gameObject.layer = LayerMask.NameToLayer(SoldierLayers.NonInteract.ToString());
         }
+
+        private void OnDisable() => gameObject.layer = LayerMask.NameToLayer(SoldierLayers.Interact.ToString());
 
         public void UpdateShootingCooldown()
         {
@@ -94,7 +109,9 @@ namespace _Main._Scripts.Soilders
             if (_timeOfLastShot >= _fireRate)
             {
                 Shot();
+                shootParticle.Play();
                 _timeOfLastShot = 0f;
+                SetAnimation(SoldierAnimationTriggers.Shot,true);
             }
         }
 
@@ -119,18 +136,20 @@ namespace _Main._Scripts.Soilders
         public void UpdateBulletScalePercentage(float scalePercentage) =>
             _bulletScalePercentage = _bulletScalePercentage / 100 * scalePercentage;
 
-        public void ActivateDoubleShot() => _isDoubleShoot = true;
+        public void ActivateDoubleShot() => _doubleShootIsActive = true;
 
-        public void SetAnimation(SoldierAnimationTriggers trigger)
+        public void SetAnimation(SoldierAnimationTriggers trigger,bool setToForce = false)
         {
             animator.ResetTrigger(_currentAnimation.ToString());
-            if (_currentAnimation == trigger) return;
+            if (setToForce ==false &&_currentAnimation == trigger) return;
             animator.SetTrigger(trigger.ToString());
             _currentAnimation = trigger;
         }
 
         public void SetFinishRotation() =>
             rotatableSoldier.localRotation = Quaternion.Euler(0, Config.YFinishRotation, 0);
+
+        public void EnableFinishShooting() => _isFinishShooting = true;
 
         private void Die()
         {
@@ -141,7 +160,7 @@ namespace _Main._Scripts.Soilders
 
         private void Shot()
         {
-            if (_isDoubleShoot)
+            if (_doubleShootIsActive && _isFinishShooting == false)
             {
                 foreach (var point in doubleShootPoints)
                     PrepareBullet(point);
@@ -191,5 +210,13 @@ namespace _Main._Scripts.Soilders
         Dying,
         FinishShooting,
         Dance,
+        Shot,
+        ReturnToShotPosition
+    }
+
+    public enum SoldierLayers
+    {
+        Interact,
+        NonInteract
     }
 }
