@@ -111,7 +111,8 @@ namespace _Main._Scripts.Soilders
                 Shot();
                 shootParticle.Play();
                 _timeOfLastShot = 0f;
-                SetAnimation(SoldierAnimationTriggers.Shot,true);
+                if (_isFinishShooting)
+                    SetAnimation(SoldierAnimationTriggers.Shot, true);
             }
         }
 
@@ -138,10 +139,10 @@ namespace _Main._Scripts.Soilders
 
         public void ActivateDoubleShot() => _doubleShootIsActive = true;
 
-        public void SetAnimation(SoldierAnimationTriggers trigger,bool setToForce = false)
+        public void SetAnimation(SoldierAnimationTriggers trigger, bool setToForce = false)
         {
             animator.ResetTrigger(_currentAnimation.ToString());
-            if (setToForce ==false &&_currentAnimation == trigger) return;
+            if (setToForce == false && _currentAnimation == trigger) return;
             animator.SetTrigger(trigger.ToString());
             _currentAnimation = trigger;
         }
@@ -211,7 +212,6 @@ namespace _Main._Scripts.Soilders
         FinishShooting,
         Dance,
         Shot,
-        ReturnToShotPosition
     }
 
     public enum SoldierLayers
