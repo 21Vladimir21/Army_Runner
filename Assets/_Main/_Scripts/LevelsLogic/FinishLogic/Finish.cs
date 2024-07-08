@@ -28,12 +28,12 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic
 
         public void StartEnemiesAttach()
         {
-            foreach (var enemy in Enemies) enemy.StartAttach();
+            foreach (var enemy in Enemies) enemy.StartMove();
         }
 
         public void StopEnemiesAttach()
         {
-            foreach (var enemy in Enemies) enemy.StopAttach();
+            foreach (var enemy in Enemies) enemy.StopMove();
         }
 
         public void SetSoldiersNewPosition(List<Soldier> soldiers,Action callback)

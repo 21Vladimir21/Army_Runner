@@ -1,4 +1,3 @@
-using System;
 using _Main._Scripts.Soilders.Bullets;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,6 +6,7 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 {
     public class Enemy : MonoBehaviour, IDamageable
     {
+        [SerializeField] private Animator animator;
         [SerializeField] private int health;
         [SerializeField] private float speed;
 
@@ -16,30 +16,31 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
         private bool _canMove;
 
 
-        private void Start()
-        {
-            _currentHealth = health;
-        }
+        private void Start() => _currentHealth = health;
 
-        public void StartAttach()
+        public void StartMove()
         {
             _canMove = true;
-            //TODO: enemy Animation
+            animator.SetTrigger(EnemyAnimationKeys.Walk.ToString());
         }
 
-        public void StopAttach()
+        public void StopMove()
         {
             _canMove = false;
-            //TODO: enemy Animation
+            animator.SetTrigger(EnemyAnimationKeys.Idle.ToString());
+        }
+
+        public void Attach()
+        {
+            _canMove = false;
+            animator.SetTrigger(EnemyAnimationKeys.Attach.ToString());
         }
 
 
         private void Update()
         {
             if (_canMove)
-            {
                 Move();
-            }
         }
 
         public bool TryApplyDamage(int damage)
@@ -48,7 +49,6 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 
             if (_currentHealth < damage) damage = _currentHealth;
             _currentHealth -= damage;
-
 
             if (_currentHealth <= 0) Die();
 
@@ -64,9 +64,16 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 
         private void Die()
         {
-            gameObject.SetActive(false);
+            animator.SetTrigger(EnemyAnimationKeys.Die.ToString());
             OnDie.Invoke();
-            //TODO:Aнимация семрти и так далее
         }
+    }
+
+    public enum EnemyAnimationKeys
+    {
+        Idle,
+        Walk,
+        Attach,
+        Die
     }
 }

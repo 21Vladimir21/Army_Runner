@@ -10,8 +10,11 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic
         [HideInInspector]public UnityEvent OnEnemyTouchZone =  new();
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.GetComponent<Enemy>()) 
+            if (other.gameObject.TryGetComponent(out Enemy enemy))
+            {
+                enemy.Attach();
                 OnEnemyTouchZone.Invoke();
+            } 
         }
     }
 }
