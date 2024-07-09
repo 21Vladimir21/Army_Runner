@@ -1,5 +1,6 @@
 using _Main._Scripts.LevelsLogic;
 using _Main._Scripts.LevelsLogic.FinishLogic;
+using _Main._Scripts.LevelsLogic.FinishLogic.Enemies;
 using _Main._Scripts.LevelsLogic.StateMachine.States;
 using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
@@ -97,9 +98,11 @@ namespace _Main._Scripts.Level.StateMachine.States
             }
         }
 
-        private void TryEndLevel()
+        private void TryEndLevel(Enemy enemy)
         {
             _diedEnemiesCount++;
+            enemy.OnDie.RemoveListener(TryEndLevel);
+            _finish.Enemies.Remove(enemy);
             if (_diedEnemiesCount >= _enemyCount)
             {
                 _finishView.NextLevelButton.gameObject.SetActive(true);

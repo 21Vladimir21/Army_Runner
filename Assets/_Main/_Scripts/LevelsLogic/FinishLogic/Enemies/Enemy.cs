@@ -1,6 +1,8 @@
 using _Main._Scripts.Soilders.Bullets;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 {
@@ -9,23 +11,36 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
         [SerializeField] private Animator animator;
         [SerializeField] private int health;
         [SerializeField] private float speed;
+        [SerializeField] private Collider enemyCollider;
+        [SerializeField] private Slider progressBar;
+        [SerializeField] private TMP_Text healthText;
+        
+        
 
         private int _currentHealth;
-        public UnityEvent OnDie { get; private set; } = new();
+        public UnityEvent<Enemy> OnDie { get; private set; } = new();
 
         private bool _canMove;
 
 
-        private void Start() => _currentHealth = health;
+        private void Start()
+        {
+            _currentHealth = health;
+            UpdateProgressBar();
+            
+            
+        }
 
         public void StartMove()
         {
+            enemyCollider.enabled = true;
             _canMove = true;
             animator.SetTrigger(EnemyAnimationKeys.Walk.ToString());
         }
 
         public void StopMove()
         {
+            enemyCollider.enabled = false;
             _canMove = false;
             animator.SetTrigger(EnemyAnimationKeys.Idle.ToString());
         }
@@ -49,6 +64,7 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 
             if (_currentHealth < damage) damage = _currentHealth;
             _currentHealth -= damage;
+            UpdateProgressBar();
 
             if (_currentHealth <= 0) Die();
 
@@ -65,7 +81,16 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
         private void Die()
         {
             animator.SetTrigger(EnemyAnimationKeys.Die.ToString());
-            OnDie.Invoke();
+            StopMove();
+            OnDie.Invoke(this);
+        }
+
+        private void UpdateProgressBar()
+        {
+            var progressBarFillAmount = (float)_currentHealth / health;
+            progressBar.value = progressBarFillAmount;
+            healthText.text = $"{_currentHealth}/{health}";
+
         }
     }
 

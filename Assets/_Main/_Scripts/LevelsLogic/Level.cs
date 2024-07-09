@@ -7,7 +7,6 @@ namespace _Main._Scripts.LevelsLogic
     {
         [field:SerializeField] public Finish Finish { get; private set; }
         [field:SerializeField] public Transform PlayerSpawnPoint { get; private set; }
-        [field:SerializeField] public Transform[] FinishSoldierPoints { get; private set; }
         
         
         

@@ -1369,7 +1369,8 @@ GameObject:
   - component: {fileID: 3903429491472858212}
   - component: {fileID: 6958718634175140720}
   - component: {fileID: 8144421794787031264}
-  m_Layer: 7
+  - component: {fileID: 6645303814040371488}
+  m_Layer: 6
   m_Name: SoliderLevel1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1472,6 +1473,33 @@ MonoBehaviour:
   - {fileID: 2683362567238464397}
   shootParticle: {fileID: 2732038146556979063}
   damageParticle: {fileID: 7388080211734883436}
+--- !u!54 &6645303814040371488
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8021383437744198546}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &8431606413834055639
 GameObject:
   m_ObjectHideFlags: 0

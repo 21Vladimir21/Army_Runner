@@ -17,6 +17,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
     public class MergeState : IState
     {
         private readonly IStateSwitcher _stateSwitcher;
+        private readonly MainConfig _mainConfig;
         private readonly SoldiersPool _soldiersPool;
         private readonly List<CellToMerge> _reserveCells;
         private readonly List<CellToMerge> _gameCells;
@@ -34,6 +35,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             List<CellToMerge> gameCells, PreGameView preGameView, CameraService cameraService, Saves saves)
         {
             _stateSwitcher = stateSwitcher;
+            _mainConfig = mainConfig;
             _soldiersPool = soldiersPool;
             _reserveCells = reserveCells;
             _gameCells = gameCells;
@@ -46,20 +48,54 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _dragAndDrop.OnSelectNewObject.AddListener(SetCurrentCell);
             _dragAndDrop.OnMouseUp.AddListener(ResetDragData);
 
-            _preGameView.DamageUpgradeButton.onClick.AddListener(() =>
+            UpdateDamageView();
+
+            UpdateBulletSpeedView();
+
+            UpdateFireRateView();
+
+            _preGameView.DamageUpgradeCell.BuyButton.onClick.AddListener(() =>
                 UpgradePlayer(mainConfig.UpgradeConfig.DamageUpgradeRatios,
                     ref _saves.BulletDamageLevel, ref _saves.BulletDamagePercentage,
-                    () => _preGameView.UpdateBulletDamageLevelText(_saves.BulletDamageLevel)));
+                    UpdateDamageView));
 
-            _preGameView.BulletSpeedUpgradeButton.onClick.AddListener(() =>
+            _preGameView.BulletSpeedUpgradeCell.BuyButton.onClick.AddListener(() =>
                 UpgradePlayer(mainConfig.UpgradeConfig.SpeedUpgradeRatios, ref _saves.BulletSpeedLevel,
                     ref _saves.BulletSpeedPercentage,
-                    () => _preGameView.UpdateBulletSpeedLevelText(_saves.BulletSpeedLevel)));
+                    UpdateBulletSpeedView));
 
-            _preGameView.FireRateUpgradeButton.onClick.AddListener(() =>
+            _preGameView.FireRateUpgradeCell.BuyButton.onClick.AddListener(() =>
                 UpgradePlayer(mainConfig.UpgradeConfig.FireRateUpgradeRatios, ref _saves.FireRateLevel,
                     ref _saves.FireRatePercentage,
-                    () => _preGameView.UpdateFireRateLevelText(_saves.FireRateLevel)));
+                    UpdateFireRateView));
+        }
+
+        private void UpdateFireRateView()
+        {
+            var level = _saves.FireRateLevel;
+            _preGameView.FireRateUpgradeCell.UpdateCellTexts(level,
+                _mainConfig.UpgradeConfig.FireRateUpgradeRatios[level].Cost);
+            if (level + 1 >= _mainConfig.UpgradeConfig.FireRateUpgradeRatios.Count)
+                _preGameView.FireRateUpgradeCell.SetMaxLevel();
+        }
+
+        private void UpdateBulletSpeedView()
+        {
+            var level = _saves.BulletSpeedLevel;
+            _preGameView.BulletSpeedUpgradeCell.UpdateCellTexts(level,
+                _mainConfig.UpgradeConfig.SpeedUpgradeRatios[level].Cost);
+            if (level + 1 >= _mainConfig.UpgradeConfig.SpeedUpgradeRatios.Count)
+                _preGameView.BulletSpeedUpgradeCell.SetMaxLevel();
+        }
+
+        private void UpdateDamageView()
+        {
+            var level = _saves.BulletDamageLevel;
+            _preGameView.DamageUpgradeCell.UpdateCellTexts(level,
+                _mainConfig.UpgradeConfig.DamageUpgradeRatios[level].Cost);
+
+            if (level + 1 >= _mainConfig.UpgradeConfig.DamageUpgradeRatios.Count)
+                _preGameView.DamageUpgradeCell.SetMaxLevel();
         }
 
         public void Enter()
@@ -100,6 +136,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                 _startDragCell.ResetCurrentObject();
                 return;
             }
+
             var level = _startDragCell.currentObject.Level;
 
             _soldiersPool.ReturnSoldier(_cell.currentObject);

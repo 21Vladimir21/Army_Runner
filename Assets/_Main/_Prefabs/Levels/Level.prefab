@@ -262,7 +262,6 @@ MonoBehaviour:
   <Enemies>k__BackingField:
   - {fileID: 6233843772829964783}
   - {fileID: 5470594673096231414}
-  - {fileID: 3900652343477144724}
   <FinishDeathZone>k__BackingField: {fileID: 7617040771054602696}
   points:
   - {fileID: 7772657466496016186}
@@ -1555,7 +1554,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Finish>k__BackingField: {fileID: 1651945924640086712}
   <PlayerSpawnPoint>k__BackingField: {fileID: 8955759052286828622}
-  <FinishSoldierPoints>k__BackingField: []
 --- !u!1001 &48854081654591538
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2155,6 +2153,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyBlueFriend (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5421756444088327712, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8442467438360918549, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.72
@@ -2200,17 +2202,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
---- !u!114 &3900652343477144724 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1676083825977858378, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
-  m_PrefabInstance: {fileID: 2405841391804487134}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38b1768bae184762a36a7305a195934e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &6073922789062864843 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8442467438360918549, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
@@ -3811,7 +3802,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8442467438360918549, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 13.9
+      value: 16.63
       objectReference: {fileID: 0}
     - target: {fileID: 8442467438360918549, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_LocalRotation.w
