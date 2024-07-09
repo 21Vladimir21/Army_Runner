@@ -39,13 +39,16 @@ namespace _Main._Scripts.Level.StateMachine.States
             _levelService = levelService;
             _player = player;
 
-            _finishView.NextLevelButton.onClick.AddListener(NextLevel);
+            _finishView.NoThanksButton.onClick.AddListener(NextLevel);
+            _finishView.ADWheel.RewardCallback.AddListener(NextLevel);
+            
         }
 
         public void Enter()
         {
             _cameraService.SwitchToFromType(CameraType.FinishCamera);
             _finishView.Open();
+            _finishView.ADWheel.SetCurrentReward(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
             _finish = _levelService.CurrentLevel.Finish;
             _finish.FinishDeathZone.OnEnemyTouchZone.AddListener(GameOver);
             _enemyCount = _finish.Enemies.Count;
@@ -60,7 +63,7 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.FinishShooting);
                 _player.Crowd.SetFinishShootingSettings();
             });
-                _player.FinishedShooting();
+            _player.FinishedShooting();
         }
 
         public void Exit()
@@ -105,7 +108,8 @@ namespace _Main._Scripts.Level.StateMachine.States
             _finish.Enemies.Remove(enemy);
             if (_diedEnemiesCount >= _enemyCount)
             {
-                _finishView.NextLevelButton.gameObject.SetActive(true);
+                _finishView.WinPanel.SetActive(true);
+                _finishView.NoThanksButton.gameObject.SetActive(true);
                 _canShoot = false;
                 _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Dance);
             }
@@ -113,7 +117,7 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         private void NextLevel()
         {
-            _saves.AddMoney(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
+            //TODO: AD И убрать отсюда смену уровня, сделать ее сразу после успешного прохождения 
             _saves.SetNextLevel();
             _stateSwitcher.SwitchState<InitState>();
         }

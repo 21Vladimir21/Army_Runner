@@ -17,7 +17,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _stateSwitcher = stateSwitcher;
             _gameOverView = gameOverView;
             _player = player;
-            _gameOverView.StartGameButton.onClick.AddListener(RestartGame);
+            _gameOverView.BackButton.onClick.AddListener(RestartGame);
         }
 
         public void Enter()
