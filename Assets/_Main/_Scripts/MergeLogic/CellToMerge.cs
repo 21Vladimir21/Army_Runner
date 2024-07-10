@@ -7,9 +7,11 @@ namespace _Main._Scripts.MergeLogic
     public class CellToMerge : MonoBehaviour
     {
         [SerializeField] private ParticleSystem particle;
+        [SerializeField] private GameObject SelectOutLine;
 
         [HideInInspector] public UnityEvent OnReturnObject = new();
         [HideInInspector] public DraggableObject currentObject;
+
         public bool IsBusy { get; private set; }
 
         public void PlaySpawnParticle() => particle.Play();
@@ -25,21 +27,30 @@ namespace _Main._Scripts.MergeLogic
         {
             currentObject = null;
             IsBusy = false;
+            DeSelectCell(); 
         }
 
-        public void StartDragObject() => currentObject.UpSoldier();
+        public void SelectCell() => SelectOutLine.SetActive(true);
+        public void DeSelectCell() => SelectOutLine.SetActive(false);
+
+        public void StartDragObject()
+        {
+            currentObject.UpSoldier();
+        }
 
         public void ResetCurrentObject()
         {
             currentObject.DownSoldier();
             IsBusy = true;
             currentObject.transform.position = transform.position;
+            DeSelectCell();
         }
 
         public void ReturnObject()
         {
             OnReturnObject.Invoke();
             RemoveObject();
+            DeSelectCell();
         }
 #if UNITY_EDITOR
         private void OnValidate()

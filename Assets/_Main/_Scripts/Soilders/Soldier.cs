@@ -67,7 +67,7 @@ namespace _Main._Scripts.Soilders
             if (other.TryGetComponent(out Boost boost))
             {
                 onTouchBoost.Invoke(boost);
-                boost.DOPlay();
+                boost.Take();
             }
 
             if (other.TryGetComponent(out PickUpMoney pickUpMoney))
@@ -101,7 +101,12 @@ namespace _Main._Scripts.Soilders
             gameObject.layer = LayerMask.NameToLayer(SoldierLayers.NonInteract.ToString());
         }
 
-        private void OnDisable() => gameObject.layer = LayerMask.NameToLayer(SoldierLayers.Interact.ToString());
+        private void OnDisable()
+        {
+            rotatableSoldier.localRotation = Quaternion.Euler(Vector3.zero);
+            _bulletScalePercentage = 100;
+            gameObject.layer = LayerMask.NameToLayer(SoldierLayers.Interact.ToString());
+        }
 
         public void UpdateShootingCooldown()
         {

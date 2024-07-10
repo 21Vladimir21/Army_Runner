@@ -10,7 +10,7 @@ namespace _Main._Scripts.Soilders.Bullets
 
         private readonly List<Bullet> _bullets = new();
 
-        public BulletPool(BulletPoolConfig config,Transform bulletParent)
+        public BulletPool(BulletPoolConfig config, Transform bulletParent)
         {
             _bulletParent = bulletParent;
             _bulletPrefab = config.BulletPrefab;
@@ -36,6 +36,13 @@ namespace _Main._Scripts.Soilders.Bullets
             return AddBullet();
         }
 
+        public void ReturnAllBullets()
+        {
+            foreach (var bullet in _bullets)
+                if (bullet.gameObject.activeSelf)
+                    ReturnBullet(bullet.gameObject);
+        }
+
         private void ReturnBullet(GameObject bullet)
         {
             bullet.SetActive(false);
@@ -48,7 +55,7 @@ namespace _Main._Scripts.Soilders.Bullets
             bullet.transform.parent = _bulletParent;
             bullet.OnLifeTimeEnded.AddListener(ReturnBullet);
             _bullets.Add(bullet);
-            
+
 
             return bullet;
         }

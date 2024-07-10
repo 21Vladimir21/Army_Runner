@@ -46,12 +46,14 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         public void Enter()
         {
+            _diedEnemiesCount = 0;
             _cameraService.SwitchToFromType(CameraType.FinishCamera);
             _finishView.Open();
             _finishView.ADWheel.SetCurrentReward(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
             _finish = _levelService.CurrentLevel.Finish;
             _finish.FinishDeathZone.OnEnemyTouchZone.AddListener(GameOver);
             _enemyCount = _finish.Enemies.Count;
+            _finishView.UpdateEnemyCountText(_enemyCount);
 
             foreach (var enemy in _finish.Enemies)
                 enemy.OnDie.AddListener(TryEndLevel);
@@ -106,12 +108,13 @@ namespace _Main._Scripts.Level.StateMachine.States
             _diedEnemiesCount++;
             enemy.OnDie.RemoveListener(TryEndLevel);
             _finish.Enemies.Remove(enemy);
+            _finishView.UpdateEnemyCountText(_enemyCount - _diedEnemiesCount);
             if (_diedEnemiesCount >= _enemyCount)
             {
-                _finishView.WinPanel.SetActive(true);
                 _finishView.NoThanksButton.gameObject.SetActive(true);
                 _canShoot = false;
                 _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Dance);
+                _finishView.ShowWinPanel();
             }
         }
 

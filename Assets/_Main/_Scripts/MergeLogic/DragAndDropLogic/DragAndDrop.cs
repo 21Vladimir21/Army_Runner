@@ -69,6 +69,7 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
                 _startDragCell.StartDragObject();
                 _draggedObject = cell.currentObject.transform;
                 _startDragCell.OnReturnObject.AddListener(ResetDrag);
+                _startDragCell.SelectCell();
                 OnUpObject.Invoke(cell);
                 _isDragged = true;
             }
@@ -78,7 +79,10 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
         {
             if (_startDragCell != cell && cell != _lastSelectedCell)
             {
+                if (_selectedCell != null) _selectedCell.DeSelectCell();
+
                 _selectedCell = cell;
+                _selectedCell.SelectCell();
                 _lastSelectedCell = cell;
                 OnSelectNewObject.Invoke(_selectedCell);
             }
@@ -109,7 +113,7 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             else if (_selectedCell != null && _selectedCell.IsBusy) OnMouseUp.Invoke();
             else if (_draggedObject != null) _startDragCell.ResetCurrentObject();
 
-            if (_startDragCell&& _selectedCell == null) _startDragCell.ResetCurrentObject();
+            if (_startDragCell && _selectedCell == null) _startDragCell.ResetCurrentObject();
 
             if (_startDragCell != null) _startDragCell.OnReturnObject.RemoveListener(ResetDrag);
 

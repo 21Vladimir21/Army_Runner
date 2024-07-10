@@ -9,11 +9,14 @@ using _Main._Scripts.Soilders;
 using _Main._Scripts.Soilders.Bullets;
 using Kimicu.YandexGames.Utils;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Main._Scripts.CrowdLogic
 {
     public class Crowd
     {
+        public UnityEvent<float, float, float> OnTakeBoost = new();
+        public UnityEvent<int> OnSoldiersCountChanged = new();
         public List<Soldier> Soldiers { get; } = new();
         private readonly List<Transform> _points;
         private readonly Saves _saves;
@@ -60,6 +63,7 @@ namespace _Main._Scripts.CrowdLogic
             _bulletSpeedPercentage = bulletSpeedPercentage;
             _fireRatePercentage = fireRatePercentage;
             _doubleShotIsActive = false;
+            _bulletScalePercentage = 100;
         }
 
         public void UpdateShootingCooldownForAllSoldiers()
@@ -95,6 +99,8 @@ namespace _Main._Scripts.CrowdLogic
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            OnTakeBoost.Invoke(_bulletDamagePercentage, _bulletSpeedPercentage, _fireRatePercentage);
         }
 
         public void SetAnimationForAllSoldiers(SoldierAnimationTriggers trigger)
@@ -111,6 +117,8 @@ namespace _Main._Scripts.CrowdLogic
                 soldier.SetFinishRotation();
                 soldier.EnableFinishShooting();
             }
+
+            _bulletPool.ReturnAllBullets();
         }
 
         //TODO: ВЫнести в отдельный класс
@@ -166,11 +174,12 @@ namespace _Main._Scripts.CrowdLogic
             soldier.onTouchSoldier.AddListener(AddToCrowd);
             soldier.onTouchBoost.AddListener(UpdateBulletBoostPercentages);
             soldier.SetAnimation(_currentTrigger);
+            OnSoldiersCountChanged.Invoke(SoldiersCount);
         }
 
         private void SaveInReserve(Soldier soldier)
         {
-            var capacity = _saves.ReserveSoldiers.Capacity;
+            var capacity = _saves.MaxReserveCapacity;
             for (var i = 0; i < capacity; i++)
             {
                 var indexFound = false;
@@ -219,6 +228,7 @@ namespace _Main._Scripts.CrowdLogic
                 return;
             }
 
+            OnSoldiersCountChanged.Invoke(SoldiersCount);
             Coroutines.StartRoutine(DownGradeSoldier(soldier, configSoldiersLevel));
         }
 

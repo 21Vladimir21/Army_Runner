@@ -39,6 +39,8 @@ namespace _Main._Scripts.Level.StateMachine.States
             _soldiers = soldiers;
             _upgradeConfig = upgradeConfig;
             _levelService = levelService;
+            _player.Crowd.OnTakeBoost.AddListener(_gameView.UpdateStats);
+            _player.Crowd.OnSoldiersCountChanged.AddListener(_gameView.UpdateSoldiersCountText);
         }
 
         public void Enter()
@@ -49,6 +51,7 @@ namespace _Main._Scripts.Level.StateMachine.States
 
             UpdateUpgrades();
 
+            _gameView.SetLevelText(_saves.CurrentLevel);
             _player.gameObject.SetActive(true);
             foreach (var soldiersLevel in _saves.InGameSoldiers)
             {
@@ -58,14 +61,16 @@ namespace _Main._Scripts.Level.StateMachine.States
 
             _saves.InvokeSave();
             _levelService.CurrentLevel.Finish.OnFinished.AddListener(Finished);
+            _gameView.UpdateSoldiersCountText(_player.Crowd.SoldiersCount);
         }
 
         private void UpdateUpgrades()
         {
-            var bulletDamageRatio = _saves.BulletDamagePercentage;
-            var bulletSpeedRatio = _saves.BulletSpeedPercentage;
-            var fireRateRatio = _saves.FireRatePercentage;
-            _player.Crowd.ResetBoostsPercentages(bulletDamageRatio, bulletSpeedRatio, fireRateRatio);
+            var bulletDamagePercentage = _saves.BulletDamagePercentage;
+            var bulletSpeedPercentage = _saves.BulletSpeedPercentage;
+            var fireRatePercentage = _saves.FireRatePercentage;
+            _gameView.UpdateStats(bulletDamagePercentage, bulletSpeedPercentage, bulletSpeedPercentage);
+            _player.Crowd.ResetBoostsPercentages(bulletDamagePercentage, bulletSpeedPercentage, fireRatePercentage);
         }
 
         public void Exit()
@@ -75,6 +80,13 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         public void Update()
         {
+
+            var start =_levelService.CurrentLevel.PlayerSpawnPoint.position;
+            var end =_levelService.CurrentLevel.Finish.transform.position;
+            var levelLength = Vector3.Distance(start, end);
+            var playerDistance = Vector3.Distance(_player.transform.position, start);
+            var progress = playerDistance / levelLength;
+            _gameView.UpdateProgressBar(progress);
             if (_player.Crowd.SoldiersCount <= 0) _stateSwitcher.SwitchState<GameOverState>();
         }
 
