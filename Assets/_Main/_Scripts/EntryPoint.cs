@@ -34,7 +34,7 @@ namespace _Main._Scripts
 
         private void Awake()
         {
-            SavesService savesService;
+             SavesService savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
 #if UNITY_EDITOR
             savesService = InitSaves();
 #else

@@ -2,6 +2,7 @@ using System;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services;
 using DG.Tweening;
+using LocalizationSystem.Components;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,7 +13,7 @@ namespace _Main._Scripts.UI.SkillCheckAD
     public class AdWheel : MonoBehaviour
     {
         [SerializeField] private Transform arrowTransform;
-        [SerializeField] private TMP_Text currentX;
+        [SerializeField] private FormattableLocalizationTextTMP currentX;
         [SerializeField] private TMP_Text currentCountReward;
         [SerializeField] private Button claimButton;
         [SerializeField] private float cycleDuration;
@@ -43,7 +44,7 @@ namespace _Main._Scripts.UI.SkillCheckAD
             {
                 if (rotateValue >= values.minValue && rotateValue < values.maxValue)
                 {
-                    currentX.text = $"Claim X{values.xValue}";
+                    currentX.SetValue(values.xValue);
                     currentCountReward.text = (_currentReward * values.xValue).ToString();
                 }
             }
