@@ -180,34 +180,17 @@ namespace _Main._Scripts.CrowdLogic
         }
 
         private void AddToListForSave(Soldier soldier) => _soldiersForSave.Add(soldier);
-
-        private void SaveInReserve(Soldier soldier)
-        {
-            var capacity = _saves.MaxReserveCapacity;
-            for (var i = 0; i < capacity; i++)
-            {
-                var indexFound = false;
-                foreach (var reserveSoldier in _saves.ReserveSoldiers)
-                {
-                    if (reserveSoldier.Index == i)
-                    {
-                        indexFound = true;
-                        break;
-                    }
-                }
-
-                if (indexFound) continue;
-                _saves.ReserveSoldiers.Add(new Saves.Soldier(soldier.Config.SoldiersLevel, i));
-                break;
-            }
-
-        }
+        
 
         public void ResetCrowd()
         {
             if (_wasDamage == false)
             {
-                foreach (var soldier in _soldiersForSave) SaveInReserve(soldier);
+                foreach (var soldier in _soldiersForSave)
+                {
+                    _saves.TrySaveInReserve(soldier.Config.SoldiersLevel);
+
+                }
                 _soldiersForSave.Clear();
             }
 

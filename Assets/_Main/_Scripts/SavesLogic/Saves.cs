@@ -152,6 +152,30 @@ namespace _Main._Scripts.SavesLogic
 
         #endregion
 
+
+        public int TrySaveInReserve(SoldiersLevels level)
+        {
+            for (var i = 0; i < MaxReserveCapacity; i++)
+            {
+                var indexFound = false;
+                foreach (var reserveSoldier in ReserveSoldiers)
+                {
+                    if (reserveSoldier.Index == i)
+                    {
+                        indexFound = true;
+                        break;
+                    }
+                }
+
+                if (indexFound) continue;
+                ReserveSoldiers.Add(new Saves.Soldier(level, i));
+                return i;
+            }
+
+            InvokeSave();
+            return default;
+        }
+
         [Serializable]
         public struct Soldier
         {

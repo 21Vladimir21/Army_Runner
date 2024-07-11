@@ -9,6 +9,7 @@ using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
+using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 using IState = _Main._Scripts.PlayerLogic.StateMachine.States.IState;
 
@@ -75,13 +76,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                         _saves.FireRateLevel,
                         _mainConfig.UpgradeConfig.FireRateUpgradeRatios)
                 ));
-        }
-
-        private void UpdateUpgradeView(UpgradePanelCell upgradeCell, int level, List<UpgradeData> upgradeRatios)
-        {
-            upgradeCell.UpdateCellTexts(level, upgradeRatios[level].Cost);
-            if (level + 1 >= upgradeRatios.Count)
-                upgradeCell.SetMaxLevel();
+            _preGameView.RewardSoldier.onClick.AddListener(TryAddedRewardSoldier);
         }
 
         public void Enter()
@@ -115,6 +110,34 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _preGameView.StartGameButton.onClick.RemoveListener(SwitchToPlayState);
         }
 
+        private void TryAddedRewardSoldier()
+        {
+            var index = TryGetFreeIndexInList(_reserveCells);
+            var isReserveCells = true;
+            if (index == null)
+            {
+                index = TryGetFreeIndexInList(_gameCells);
+                isReserveCells = false;
+            }
+
+            if (index == null) return;
+            //TODO: Reward
+            var soldier = GetSoldier(SoldiersLevels.Level10);
+            if (isReserveCells) _reserveCells[(int)index].AddObject(soldier);
+            else _gameCells[(int)index].AddObject(soldier);
+        }
+
+        private int? TryGetFreeIndexInList(List<CellToMerge> list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].IsBusy == false)
+                    return i;
+            }
+
+            return null;
+        }
+
         private void TryMergeObjects()
         {
             if (_cell.IsBusy == false) return;
@@ -136,6 +159,13 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _startDragCell.ReturnObject();
             _cell.AddObject(GetNextObjectLevel(currentObjectLevel));
             _cell.PlaySpawnParticle();
+        }
+
+        private void UpdateUpgradeView(UpgradePanelCell upgradeCell, int level, List<UpgradeData> upgradeRatios)
+        {
+            upgradeCell.UpdateCellTexts(level, upgradeRatios[level].Cost);
+            if (level + 1 >= upgradeRatios.Count)
+                upgradeCell.SetMaxLevel();
         }
 
         private void LoadSoldiersFromSave()

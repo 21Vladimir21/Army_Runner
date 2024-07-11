@@ -7,8 +7,8 @@ namespace _Main._Scripts.UI
     public class PreGameView : AbstractView
     {
         [field: Header("Buttons")]
-        [field: SerializeField]
-        public Button StartGameButton { get; private set; }
+        [field: SerializeField] public Button StartGameButton { get; private set; }
+        [field: SerializeField] public Button RewardSoldier { get; private set; }
 
         [field: SerializeField] public UpgradePanelCell FireRateUpgradeCell { get; private set; }
         [field: SerializeField] public UpgradePanelCell DamageUpgradeCell { get; private set; }
