@@ -15,6 +15,8 @@ namespace _Main._Scripts.Obstacles
         [SerializeField] private Transform objectForDown;
         [SerializeField] private Collider triggerCollider;
         [SerializeField] private ParticleSystem dustParticle;
+        [SerializeField] private bool dontDamagable;
+        
         
 
 
@@ -22,12 +24,14 @@ namespace _Main._Scripts.Obstacles
 
         private void Start()
         {
+            if (dontDamagable) return ;
             _currentHealth = maxHealth;
             healthText.text = _currentHealth.ToString();
         }
 
         public bool TryApplyDamage(int damage)
         {
+            if (dontDamagable) return false;
             if (_currentHealth < 0) return false;
             
             if (_currentHealth < damage) damage = _currentHealth;

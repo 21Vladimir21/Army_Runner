@@ -122,7 +122,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             var currentObjectLevel = _startDragCell.currentObject.Level;
             var selectedCellSoldierLevels = _cell.currentObject.Level;
             if (currentObjectLevel != selectedCellSoldierLevels ||
-                currentObjectLevel == SoldiersLevels.Level10 || selectedCellSoldierLevels == SoldiersLevels.Level10)
+                currentObjectLevel == SoldiersLevels.Level13 || selectedCellSoldierLevels == SoldiersLevels.Level13)
             {
                 _startDragCell.ResetCurrentObject();
                 _cell.DeSelectCell();

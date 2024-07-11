@@ -14,10 +14,11 @@ namespace _Main._Scripts.LevelsLogic
             _spawnPoint = spawnPoint;
             _levelsConfig = levelsConfig;
         }
-        public void SpawnLevel(int levelNumber)
+        public Level SpawnLevel(int levelNumber)
         {
             if (CurrentLevel!=null) Object.Destroy(CurrentLevel.gameObject);
             CurrentLevel = Object.Instantiate(_levelsConfig.Levels[levelNumber].Level, _spawnPoint);
+            return CurrentLevel;
         }
 
         public int GetLevelMoneyReward( int levelNumber) => _levelsConfig.Levels[levelNumber].Money;

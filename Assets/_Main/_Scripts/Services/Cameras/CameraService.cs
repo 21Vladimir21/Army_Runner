@@ -11,17 +11,24 @@ namespace _Main._Scripts.Services.Cameras
 
 
         private CameraDataHolder _currentCamera;
-        
 
-        public void SwitchToFromType(CameraType type, Action blendCompletedCallBack = null, Action closeCallBack = null)
+
+        public void SwitchToFromType(CameraType type, Transform newPosition = null,
+            Action blendCompletedCallBack = null, Action closeCallBack = null)
         {
             var cameraData = Holder.Cameras.FirstOrDefault(x => x.Type == type);
             if (cameraData != null)
             {
                 if (_currentCamera) _currentCamera.Disable();
                 _currentCamera = cameraData;
+                if (newPosition != null)
+                {
+                    _currentCamera.VirtualCamera.transform.position = newPosition.position;
+                    _currentCamera.VirtualCamera.transform.rotation = newPosition.rotation;
+                }
                 _currentCamera.Enable();
-                if (blendCompletedCallBack != null) 
+
+                if (blendCompletedCallBack != null)
                     StartCoroutine(WaitBlendCompleted(blendCompletedCallBack));
             }
             else Debug.LogWarning($"Camera {type} not found");
@@ -33,6 +40,5 @@ namespace _Main._Scripts.Services.Cameras
             yield return new WaitForSeconds(Holder.Brain.ActiveBlend.Duration);
             callback.Invoke();
         }
-        
     }
 }

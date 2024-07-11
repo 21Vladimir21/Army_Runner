@@ -47,7 +47,8 @@ namespace _Main._Scripts.Level.StateMachine.States
         public void Enter()
         {
             _diedEnemiesCount = 0;
-            _cameraService.SwitchToFromType(CameraType.FinishCamera);
+            
+            _cameraService.SwitchToFromType(CameraType.FinishCamera,_levelService.CurrentLevel.FinishCameraPoint);
             _finishView.Open();
             _finishView.ADWheel.SetCurrentReward(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
             _finish = _levelService.CurrentLevel.Finish;

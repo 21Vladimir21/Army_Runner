@@ -69,7 +69,7 @@ namespace _Main._Scripts.Level.StateMachine.States
             var bulletDamagePercentage = _saves.BulletDamagePercentage;
             var bulletSpeedPercentage = _saves.BulletSpeedPercentage;
             var fireRatePercentage = _saves.FireRatePercentage;
-            _gameView.UpdateStats(bulletDamagePercentage, bulletSpeedPercentage, bulletSpeedPercentage);
+            _gameView.UpdateStats(bulletDamagePercentage, bulletSpeedPercentage, fireRatePercentage);
             _player.Crowd.ResetBoostsPercentages(bulletDamagePercentage, bulletSpeedPercentage, fireRatePercentage);
         }
 

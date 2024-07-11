@@ -4,7 +4,6 @@ using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.MergeLogic;
 using _Main._Scripts.Obstacles;
 using _Main._Scripts.Soilders.Bullets;
-using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;

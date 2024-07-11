@@ -33,9 +33,11 @@ namespace _Main._Scripts.CrowdLogic
         private SoldierAnimationTriggers _currentTrigger;
 
         private readonly List<Soldier> _diedSoldiers = new();
+        private readonly List<Soldier> _soldiersForSave = new();
         public int SoldiersCount => Soldiers.Count;
         private int MaxSoldiers => _points.Count;
         private bool _doubleShotIsActive;
+        private bool _wasDamage;
 
         public Crowd(List<Transform> points, PlayerConfig config, BulletPool bulletPool, SoldiersPool soldiersPool,
             Saves saves)
@@ -159,7 +161,7 @@ namespace _Main._Scripts.CrowdLogic
         {
             if (SoldiersCount >= MaxSoldiers) return;
             AddToCrowd(soldier, false, 0);
-            SaveInReserve(soldier);
+            AddToListForSave(soldier);
         }
 
         private void AddToCrowd(Soldier soldier, bool setAtPosition = false, int atPosition = 0)
@@ -176,6 +178,8 @@ namespace _Main._Scripts.CrowdLogic
             soldier.SetAnimation(_currentTrigger);
             OnSoldiersCountChanged.Invoke(SoldiersCount);
         }
+
+        private void AddToListForSave(Soldier soldier) => _soldiersForSave.Add(soldier);
 
         private void SaveInReserve(Soldier soldier)
         {
@@ -197,11 +201,18 @@ namespace _Main._Scripts.CrowdLogic
                 break;
             }
 
-            _saves.InvokeSave(); //TODO: Подумать куда запихнуть сохранение
         }
 
         public void ResetCrowd()
         {
+            if (_wasDamage == false)
+            {
+                foreach (var soldier in _soldiersForSave) SaveInReserve(soldier);
+                _soldiersForSave.Clear();
+            }
+
+            _wasDamage = false;
+
             foreach (var soldier in Soldiers)
             {
                 soldier.onDie.RemoveListener(RemoveFromCrowd);
@@ -213,10 +224,13 @@ namespace _Main._Scripts.CrowdLogic
             foreach (var soldier in _diedSoldiers)
                 _soldiersPool.ReturnSoldier(soldier);
             _diedSoldiers.Clear();
+            
+            _saves.InvokeSave();
         }
 
         private void RemoveFromCrowd(Soldier soldier)
         {
+            _wasDamage = true;
             soldier.onDie.RemoveListener(RemoveFromCrowd);
             var configSoldiersLevel = soldier.Config.SoldiersLevel;
 
