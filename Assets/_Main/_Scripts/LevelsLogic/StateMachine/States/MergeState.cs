@@ -92,7 +92,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         public void Exit()
         {
-            SaveSoldiersInSave();
+            SaveSoldiers();
             _preGameView.Close();
         }
 
@@ -125,6 +125,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             var soldier = GetSoldier(SoldiersLevels.Level10);
             if (isReserveCells) _reserveCells[(int)index].AddObject(soldier);
             else _gameCells[(int)index].AddObject(soldier);
+         SaveSoldiers();   
         }
 
         private int? TryGetFreeIndexInList(List<CellToMerge> list)
@@ -174,10 +175,11 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             MainLoadSoldiers(_reserveCells, _saves.ReserveSoldiers);
         }
 
-        private void SaveSoldiersInSave()
+        private void SaveSoldiers()
         {
             MainSaveSoldiers(_gameCells, _saves.InGameSoldiers);
             MainSaveSoldiers(_reserveCells, _saves.ReserveSoldiers);
+            _saves.InvokeSave();
         }
 
         private void MainLoadSoldiers(List<CellToMerge> cells, List<Saves.Soldier> listFromSave)
