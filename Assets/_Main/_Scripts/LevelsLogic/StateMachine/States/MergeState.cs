@@ -109,7 +109,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             foreach (var cell in _gameCells)
                 if (cell.IsBusy)
                     soldiersCount++;
-            
+
             if (soldiersCount <= 0) return;
             _stateSwitcher.SwitchState<PlayState>();
             _preGameView.StartGameButton.onClick.RemoveListener(SwitchToPlayState);
@@ -119,19 +119,22 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             if (_cell.IsBusy == false) return;
 
-            if (_startDragCell.currentObject.Level != _cell.currentObject.Level)
+            var currentObjectLevel = _startDragCell.currentObject.Level;
+            var selectedCellSoldierLevels = _cell.currentObject.Level;
+            if (currentObjectLevel != selectedCellSoldierLevels ||
+                currentObjectLevel == SoldiersLevels.Level10 || selectedCellSoldierLevels == SoldiersLevels.Level10)
             {
                 _startDragCell.ResetCurrentObject();
+                _cell.DeSelectCell();
                 return;
             }
 
-            var level = _startDragCell.currentObject.Level;
 
             _soldiersPool.ReturnSoldier(_cell.currentObject);
             _soldiersPool.ReturnSoldier(_startDragCell.currentObject);
             _cell.ReturnObject();
             _startDragCell.ReturnObject();
-            _cell.AddObject(GetNextObjectLevel(level));
+            _cell.AddObject(GetNextObjectLevel(currentObjectLevel));
             _cell.PlaySpawnParticle();
         }
 

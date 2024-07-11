@@ -70,7 +70,7 @@ namespace _Main._Scripts.CrowdLogic
             var soldierPrefab = _poolConfig.Soldiers.GetSoldierFromLevel<T>(level);
             if (soldierPrefab == null)
             {
-                Debug.LogError($"Soldier prefab from level:{level} not found");
+                Debug.LogError($"Soldier type {typeof(T)} prefab from level:{level} not found");
                 return null;
             }
 

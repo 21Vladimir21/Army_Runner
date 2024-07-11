@@ -122,6 +122,7 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
 
         private void ClearDragState()
         {
+            _lastSelectedCell = null;
             _startDragCell = null;
             _draggedObject = null;
             _selectedCell = null;

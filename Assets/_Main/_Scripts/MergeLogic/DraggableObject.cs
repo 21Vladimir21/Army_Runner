@@ -1,4 +1,6 @@
+using System;
 using _Main._Scripts.CrowdLogic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,6 +10,7 @@ namespace _Main._Scripts.MergeLogic
     {
         [field: SerializeField] public SoldiersLevels Level { get; private set; }
         [SerializeField] private Animator animator;
+        
         private const string IdleKey = "Idling";
         private const string HangingKey = "Hanging";
         private bool _isHinging;
