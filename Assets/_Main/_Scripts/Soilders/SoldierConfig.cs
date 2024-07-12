@@ -10,7 +10,9 @@ namespace _Main._Scripts.Soilders
         [field:Range(0, 360), SerializeField] public float YFinishRotation { get; private set; }
         
 
-        [Range(0.1f, 10f)] public float fireRate;
+        [Header("Shooting settings")]
+        [Range(0.1f, 10f)] public float fireRate; 
+        public bool secondaryShot;
 
         [Header("Bullet settings")]
         [Range(3f, 20f)] public float bulletLifeTime;

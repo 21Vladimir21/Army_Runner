@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using _Main._Scripts.MergeLogic;
+using Kimicu.YandexGames;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,12 +11,14 @@ namespace _Main._Scripts.SavesLogic
     [Serializable]
     public class Saves
     {
-        [SerializeField] private int _money = 1000;
+        [SerializeField] private int _money;
         [field: SerializeField] public int CurrentLevel { get; private set; }
         [field: SerializeField] public int CurrentLevelText { get; private set; }
 
         [field: SerializeField] public bool SoundEnabled { get; set; } = true;
         [field: SerializeField] public bool AdEnabled { get; set; } = true;
+
+        public bool CanShowAd => CurrentLevel > LastLevelNotShowAd;
 
         [field: SerializeField]
         public List<Soldier> InGameSoldiers { get; set; } = new()
@@ -24,6 +27,7 @@ namespace _Main._Scripts.SavesLogic
             new Soldier(SoldiersLevels.Level2, 2),
         };
 
+        private const int LastLevelNotShowAd = 5;
         public int MaxReserveCapacity = 24;
         [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new(24);
 
@@ -76,11 +80,9 @@ namespace _Main._Scripts.SavesLogic
 
         private void SetCloudSaveData()
         {
-            // var json = JsonUtility.ToJson(this, true);
-
-            // JsonConverter  = (this, true);
-            // Cloud.SetValue(SaveKey, json, true, () => Debug.Log("Save success \n" + json),
-            // (log) => Debug.Log("Save error \n" + log));
+            var json = JsonUtility.ToJson(this, true);
+            Cloud.SetValue(SaveKey, json, true, () => Debug.Log("Save success \n" + json),
+                (log) => Debug.Log("Save error \n" + log));
         }
 
         public static string SaveKey => "saves";
@@ -110,7 +112,7 @@ namespace _Main._Scripts.SavesLogic
             CurrentLevelText++;
             // if (CurrentLevel % 55 == 0)
             //     CurrentLevel = 25;
-
+//TODO:Раскомментировать и правильно указать уровень для зацикливания
             InvokeSave();
         }
 

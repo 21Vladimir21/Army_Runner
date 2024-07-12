@@ -77,7 +77,7 @@ namespace _Main._Scripts.Soilders
             if (other.TryGetComponent(out Boost boost))
             {
                 onTouchBoost.Invoke(boost);
-                _audioService.PlaySound(Sound.Energy);
+                _audioService.PlaySound(Sound.Energy, volumeScale: 1.2f);
                 boost.Take();
             }
 
@@ -108,7 +108,7 @@ namespace _Main._Scripts.Soilders
             UpdateBulletScalePercentage(scalePercentage);
             _doubleShootIsActive = doubleShootIsActive;
             _timeOfLastShot = _fireRate;
-            StartCoroutine(ApplyDamageCooldown());
+            StartCoroutine(WaitCooldown(0.5f, () => _canApplyDamage = true));
             gameObject.layer = LayerMask.NameToLayer(SoldierLayers.NonInteract.ToString());
         }
 
@@ -128,9 +128,8 @@ namespace _Main._Scripts.Soilders
                 _timeOfLastShot = 0f;
                 if (_isFinishShooting)
                     SetAnimation(SoldierAnimationTriggers.Shot, true);
-                
+
                 shootParticle.Play();
-                _audioService.PlaySound(Sound.Shot);
             }
         }
 
@@ -187,20 +186,24 @@ namespace _Main._Scripts.Soilders
             }
 
             PrepareBullet(shootPoint);
+            if (Config.secondaryShot)
+                StartCoroutine(WaitCooldown(0.5f,
+                    () => PrepareBullet(shootPoint)));
         }
 
         private void PrepareBullet(Transform point)
-        {
+        {   
+            _audioService.PlaySound(Sound.Shot, volumeScale: 0.2f);
             var bullet = _bulletPool.GetBullet();
             bullet.transform.position = point.position;
             bullet.transform.rotation = point.rotation;
             bullet.Shot(_bulletLifeTime, _bulletSpeed, _damage, _bulletScalePercentage);
         }
 
-        private IEnumerator ApplyDamageCooldown()
+        private IEnumerator WaitCooldown(float waitTime, Action callback)
         {
-            yield return new WaitForSeconds(0.5f);
-            _canApplyDamage = true;
+            yield return new WaitForSeconds(waitTime);
+            callback.Invoke();
         }
 
 #if UNITY_EDITOR

@@ -1,7 +1,10 @@
 using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
+using _Main._Scripts.SavesLogic;
 using _Main._Scripts.UI;
+using Kimicu.YandexGames;
+using SoundService.Scripts;
 
 namespace _Main._Scripts.LevelsLogic.StateMachine.States
 {
@@ -9,12 +12,14 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
     {
         private readonly IStateSwitcher _stateSwitcher;
+        private readonly Saves _saves;
         private readonly GameOverView _gameOverView;
         private readonly Player _player;
 
-        public GameOverState(IStateSwitcher stateSwitcher,GameOverView gameOverView , Player player)
+        public GameOverState(IStateSwitcher stateSwitcher,Saves saves, GameOverView gameOverView, Player player)
         {
             _stateSwitcher = stateSwitcher;
+            _saves = saves;
             _gameOverView = gameOverView;
             _player = player;
             _gameOverView.BackButton.onClick.AddListener(RestartGame);
@@ -30,7 +35,6 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             _player.GameOver();
             _gameOverView.Close();
-            
         }
 
         public void Update()
@@ -39,8 +43,18 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void RestartGame()
         {
-            _stateSwitcher.SwitchState<InitState>();
-            _player.Restart();
+            if (!_saves.CanShowAd || _saves.AdEnabled == false)
+            {
+                _stateSwitcher.SwitchState<InitState>();
+                _player.Restart();
+                return;
+            }
+            Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
+            {
+                Audio.UnMuteAllAudio();
+                _stateSwitcher.SwitchState<InitState>();
+                _player.Restart();
+            });
         }
     }
 }

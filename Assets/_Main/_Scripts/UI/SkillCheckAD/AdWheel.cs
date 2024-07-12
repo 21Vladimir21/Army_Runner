@@ -1,8 +1,11 @@
 using System;
+using _Main._Scripts.MergeLogic;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services;
 using DG.Tweening;
+using Kimicu.YandexGames;
 using LocalizationSystem.Components;
+using SoundService.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -53,18 +56,20 @@ namespace _Main._Scripts.UI.SkillCheckAD
 
         private void Claim()
         {
+            //TODO: Логика получения отличается от того, что я делал раньше. Наверное надо будет сделать по другому
             var rotateValue = arrowTransform.rotation.eulerAngles.z;
-
-            foreach (var values in adWheelValuesArray)
+            Advertisement.ShowVideoAd(() => Audio.MuteAllAudio(), () =>
             {
-                if (rotateValue >= values.minValue && rotateValue < values.maxValue)
+                foreach (var values in adWheelValuesArray)
                 {
-                    //TODO: Сделать рекламу 
-                    var money = _currentReward * values.xValue;
-                    _save.AddMoney(money);
-                    RewardCallback.Invoke();
+                    if (rotateValue >= values.minValue && rotateValue < values.maxValue)
+                    {
+                        var money = _currentReward * values.xValue;
+                        _save.AddMoney(money);
+                        RewardCallback.Invoke();
+                    }
                 }
-            }
+            }, () => Audio.UnMuteAllAudio());
         }
 
         private void RotateTo(float value = 180)

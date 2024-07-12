@@ -9,6 +9,8 @@ using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.Soilders;
 using _Main._Scripts.UI;
+using Kimicu.YandexGames;
+using SoundService.Scripts;
 using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 
@@ -41,14 +43,13 @@ namespace _Main._Scripts.Level.StateMachine.States
 
             _finishView.NoThanksButton.onClick.AddListener(NextLevel);
             _finishView.ADWheel.RewardCallback.AddListener(NextLevel);
-            
         }
 
         public void Enter()
         {
             _diedEnemiesCount = 0;
-            
-            _cameraService.SwitchToFromType(CameraType.FinishCamera,_levelService.CurrentLevel.FinishCameraPoint);
+
+            _cameraService.SwitchToFromType(CameraType.FinishCamera, _levelService.CurrentLevel.FinishCameraPoint);
             _finishView.Open();
             _finishView.ADWheel.SetCurrentReward(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
             _finish = _levelService.CurrentLevel.Finish;
@@ -116,14 +117,23 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _canShoot = false;
                 _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Dance);
                 _finishView.ShowWinPanel();
+                _saves.SetNextLevel();
             }
         }
 
         private void NextLevel()
         {
-            //TODO: AD И убрать отсюда смену уровня, сделать ее сразу после успешного прохождения 
-            _saves.SetNextLevel();
-            _stateSwitcher.SwitchState<InitState>();
+            
+            if (!_saves.CanShowAd || _saves.AdEnabled == false)
+            {
+                _stateSwitcher.SwitchState<InitState>();
+                return;
+            }
+            Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
+            {
+                Audio.UnMuteAllAudio();
+                _stateSwitcher.SwitchState<InitState>();
+            });
         }
 
         private void GameOver() => _stateSwitcher.SwitchState<GameOverState>();

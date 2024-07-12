@@ -9,6 +9,8 @@ using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
+using Kimicu.YandexGames;
+using SoundService.Scripts;
 using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 using IState = _Main._Scripts.PlayerLogic.StateMachine.States.IState;
@@ -77,6 +79,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                         _mainConfig.UpgradeConfig.FireRateUpgradeRatios)
                 ));
             _preGameView.RewardSoldier.onClick.AddListener(TryAddedRewardSoldier);
+            _preGameView.StartGameButton.onClick.AddListener(SwitchToPlayState);
         }
 
         public void Enter()
@@ -85,7 +88,6 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             ClearCell(_gameCells);
             LoadSoldiersFromSave();
 
-            _preGameView.StartGameButton.onClick.AddListener(SwitchToPlayState);
             _preGameView.Open();
             _cameraService.SwitchToFromType(CameraType.PreGame);
         }
@@ -107,7 +109,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
             if (soldiersCount <= 0) return;
             _stateSwitcher.SwitchState<PlayState>();
-            _preGameView.StartGameButton.onClick.RemoveListener(SwitchToPlayState);
+            // _preGameView.StartGameButton.onClick.RemoveListener(SwitchToPlayState);
         }
 
         private void TryAddedRewardSoldier()
@@ -121,11 +123,14 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             }
 
             if (index == null) return;
-            //TODO: Reward
-            var soldier = GetSoldier(SoldiersLevels.Level10);
-            if (isReserveCells) _reserveCells[(int)index].AddObject(soldier,true);
-            else _gameCells[(int)index].AddObject(soldier,true);
-         SaveSoldiers();   
+            //TODO: Логика получения отличается от того, что я делал раньше. Наверное надо будет сделать по другому
+            Advertisement.ShowVideoAd(() => Audio.MuteAllAudio(), () =>
+            {
+                var soldier = GetSoldier(SoldiersLevels.Level10);
+                if (isReserveCells) _reserveCells[(int)index].AddObject(soldier, true);
+                else _gameCells[(int)index].AddObject(soldier, true);
+                SaveSoldiers();
+            }, () => Audio.UnMuteAllAudio());
         }
 
         private int? TryGetFreeIndexInList(List<CellToMerge> list)

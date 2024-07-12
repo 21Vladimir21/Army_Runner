@@ -51,7 +51,7 @@ namespace _Main._Scripts.Level.StateMachine.States
 
             UpdateUpgrades();
 
-            _gameView.SetLevelText(_saves.CurrentLevel);
+            _gameView.SetLevelText(_saves.CurrentLevelText);
             _player.gameObject.SetActive(true);
             foreach (var soldiersLevel in _saves.InGameSoldiers)
             {
@@ -59,9 +59,9 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _player.Crowd.AddToCrowdAndSetPosition(soldier);
             }
 
-            _saves.InvokeSave();
             _levelService.CurrentLevel.Finish.OnFinished.AddListener(Finished);
             _gameView.UpdateSoldiersCountText(_player.Crowd.SoldiersCount);
+            _saves.InvokeSave();
         }
 
         private void UpdateUpgrades()

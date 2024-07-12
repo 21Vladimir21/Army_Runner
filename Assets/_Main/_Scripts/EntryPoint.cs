@@ -9,6 +9,7 @@ using _Main._Scripts.Services;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.Soilders.Bullets;
 using _Main._Scripts.UI;
+using Kimicu.YandexGames;
 using SoundService.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -53,6 +54,8 @@ namespace _Main._Scripts
             _levelStateMachine =
                 new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
                     cameraService,soldiersPool, player);
+            
+            YandexGamesSdk.GameReady();
 
         }
 

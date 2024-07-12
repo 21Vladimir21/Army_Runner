@@ -12,6 +12,7 @@ namespace _Main._Scripts.UI
 
         [field: SerializeField] public Button RewardSoldier { get; private set; }
         [field: SerializeField] public Button SoundsButton { get; private set; }
+        [field: SerializeField] public NoAdButton NoAdButton { get; private set; }
 
         [field: Header("UpgradePanels")]
         [field: SerializeField] public UpgradePanelCell FireRateUpgradeCell { get; private set; }
@@ -36,6 +37,7 @@ namespace _Main._Scripts.UI
             SoundsButton.onClick.AddListener(SwitchSoundButtonSprite);
             _isSoundButtonEnabled = Saves.SoundEnabled;
             SwitchSoundButtonSprite();
+            NoAdButton.Init(Saves);
             
         }
 

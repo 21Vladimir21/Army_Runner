@@ -30,28 +30,7 @@ namespace _Main._Scripts.PlayerLogic
 
 
         private Vector3 _startPoint;
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.TryGetComponent(out Soldier soldier))
-            {
-                if (soldier.InCrowd) return;
-                Crowd.AddToCrowd(soldier);
-            }
-
-            if (other.TryGetComponent(out Boost boost))
-            {
-                Crowd.UpdateBulletBoostPercentages(boost);
-                boost.Take();
-            }
-            if (other.TryGetComponent(out PickUpMoney pickUpMoney))
-            {
-                _saves.AddMoney(pickUpMoney.Count);
-                pickUpMoney.TakeMoney();
-            }
-        }
         
-
         public void Init(Saves saves,BulletPool bulletPool,SoldiersPool soldiersPool)
         {
             _saves = saves;

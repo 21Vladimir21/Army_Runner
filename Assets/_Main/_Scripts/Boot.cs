@@ -1,15 +1,19 @@
 using System.Collections;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services;
+using Agava.YandexGames;
 using Kimicu.YandexGames;
 using LocalizationSystem.Components;
 using LocalizationSystem.Main;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Billing = Kimicu.YandexGames.Billing;
+using YandexGamesSdk = Kimicu.YandexGames.YandexGamesSdk;
 
 public class Boot : MonoBehaviour
 {
-    private bool _saveInited;
+    private bool _billingSuccses;
+    private SavesService _savesService;
 
     private IEnumerator Start()
     {
@@ -19,14 +23,42 @@ public class Boot : MonoBehaviour
         WebApplication.Initialize(null);
 
         InitSavesService();
+
+        yield return Billing.Initialize();
+        yield return Consume();
+
         SetLanguage();
+        Advertisement.ShowInterstitialAd();
         LoadScene();
     }
 
     private void InitSavesService()
     {
-        var savesService = new SavesService();
-        ServiceLocator.Instance.TryAddService(savesService);
+        _savesService = new SavesService();
+        ServiceLocator.Instance.TryAddService(_savesService);
+    }
+
+    private IEnumerator Consume()
+    {
+        Billing.GetPurchasedProducts(UpdateProductCatalog);
+        yield return new WaitUntil(() => _billingSuccses);
+    }
+    
+    private void UpdateProductCatalog(GetPurchasedProductsResponse response)
+    {
+        _billingSuccses = true;
+        PurchasedProduct[] purchaseProducts = response.purchasedProducts;
+
+        var countProducts = purchaseProducts.Length;
+        for (var i = 0; i < countProducts; i++)
+        {
+            var product = purchaseProducts[i];
+            if (product.productID.Equals(PurchaseIndexes.NoAD.ToString()))
+                _savesService.Saves.BuyNoAd();
+
+
+            Billing.ConsumeProduct(product.purchaseToken);
+        }
     }
 
     private void SetLanguage()
@@ -44,8 +76,11 @@ public class Boot : MonoBehaviour
         }
     }
 
-    private void LoadScene()
+    private void LoadScene() => SceneManager.LoadScene(sceneBuildIndex: 1);
+
+
+    internal enum PurchaseIndexes
     {
-        SceneManager.LoadScene(sceneBuildIndex: 1);
+        NoAD
     }
 }

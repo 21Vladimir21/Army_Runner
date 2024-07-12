@@ -152,7 +152,7 @@ namespace _Main._Scripts.CrowdLogic
 
         public void AddToCrowdAndSetPosition(Soldier soldier)
         {
-            AddToCrowd(soldier, false, 0);
+            AddToCrowd(soldier);
             var index = Soldiers.IndexOf(soldier);
             soldier.transform.position = _points[index].position;
         }
@@ -175,6 +175,7 @@ namespace _Main._Scripts.CrowdLogic
             soldier.onDie.AddListener(RemoveFromCrowd);
             soldier.onTouchSoldier.AddListener(AddToCrowd);
             soldier.onTouchBoost.AddListener(UpdateBulletBoostPercentages);
+            soldier.onTouchMoney.AddListener(_saves.AddMoney);
             soldier.SetAnimation(_currentTrigger);
             OnSoldiersCountChanged.Invoke(SoldiersCount);
         }
@@ -198,7 +199,10 @@ namespace _Main._Scripts.CrowdLogic
 
             foreach (var soldier in Soldiers)
             {
-                soldier.onDie.RemoveListener(RemoveFromCrowd);
+                soldier.onDie.RemoveAllListeners();
+                soldier.onTouchSoldier.RemoveAllListeners();
+                soldier.onTouchBoost.RemoveAllListeners();
+                soldier.onTouchMoney.RemoveAllListeners();
                 _soldiersPool.ReturnSoldier(soldier);
             }
 
@@ -214,7 +218,10 @@ namespace _Main._Scripts.CrowdLogic
         private void RemoveFromCrowd(Soldier soldier)
         {
             _wasDamage = true;
-            soldier.onDie.RemoveListener(RemoveFromCrowd);
+            soldier.onDie.RemoveAllListeners();
+            soldier.onTouchSoldier.RemoveAllListeners();
+            soldier.onTouchBoost.RemoveAllListeners();
+            soldier.onTouchMoney.RemoveAllListeners();
             var configSoldiersLevel = soldier.Config.SoldiersLevel;
 
             if (configSoldiersLevel <= SoldiersLevels.Level1)
