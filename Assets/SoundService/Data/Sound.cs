@@ -1,7 +1,7 @@
 	namespace SoundService.Data
 {
 
-	public enum SoundType
+	public enum Sound
 	{
 		Shot, 
 		Poof, 

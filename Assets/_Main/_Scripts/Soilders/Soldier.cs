@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
 using _Main._Scripts.Boosts;
 using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.MergeLogic;
 using _Main._Scripts.Obstacles;
+using _Main._Scripts.Services;
 using _Main._Scripts.Soilders.Bullets;
+using SoundService.Data;
+using SoundService.Scripts;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -28,6 +32,7 @@ namespace _Main._Scripts.Soilders
         [SerializeField] private ParticleSystem shootParticle;
         [SerializeField] private ParticleSystem damageParticle;
 
+        private AudioService _audioService;
 
         private float _bulletSpeed;
         private int _damage;
@@ -48,12 +53,18 @@ namespace _Main._Scripts.Soilders
         private SoldierAnimationTriggers _currentAnimation = SoldierAnimationTriggers.Idling;
         private bool _isFinishShooting;
 
+        private void Start()
+        {
+            _audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.GetComponent<Obstacle>())
                 if (_canApplyDamage)
                 {
                     damageParticle.Play();
+                    _audioService.PlaySound(Sound.Poof);
                     Die();
                 }
 
@@ -66,6 +77,7 @@ namespace _Main._Scripts.Soilders
             if (other.TryGetComponent(out Boost boost))
             {
                 onTouchBoost.Invoke(boost);
+                _audioService.PlaySound(Sound.Energy);
                 boost.Take();
             }
 
@@ -113,10 +125,12 @@ namespace _Main._Scripts.Soilders
             if (_timeOfLastShot >= _fireRate)
             {
                 Shot();
-                shootParticle.Play();
                 _timeOfLastShot = 0f;
                 if (_isFinishShooting)
                     SetAnimation(SoldierAnimationTriggers.Shot, true);
+                
+                shootParticle.Play();
+                _audioService.PlaySound(Sound.Shot);
             }
         }
 

@@ -5,7 +5,7 @@ using SoundService.Data;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace SoundService.Scripts
 {
@@ -29,36 +29,39 @@ namespace SoundService.Scripts
 
         private void Start() => SetActiveSound(IsCanPlaySound);
 
-        public void PlaySound(SoundType type, bool loop = false, float volumeScale = 1f)
+        public void PlaySound(Sound type, bool loop = false, float volumeScale = 1f, bool random = false)
         {
-            var clip = SoundData.GetSound(type);
-
-            // if (type is SoundType.Music)
-            // {
-            //     music.clip = clip;
-            //     music.loop = true;
-            //     music.Play();
-            //     return;
-            // }
-
-            if (loop)
+            var soundStruct = SoundData.GetSound(type);
+            var clip = soundStruct.AudioClips[0];
+            if (random)
             {
-                sfx.clip = clip;
-                sfx.loop = true;
-                sfx.Play();
+                var index = Random.Range(0, soundStruct.AudioClips.Count);
+                clip = soundStruct.AudioClips[index];
             }
-            else sfx.PlayOneShot(clip, volumeScale);
-        }
 
-        public void SetLoopSound(SoundType type)
-        {
-            var clip = SoundData.GetSound(type);
-            sfx.clip = clip;
-            sfx.loop = true;
-            sfx.Play();
-            sfx.Pause();
+            if (soundStruct.SoundType == SoundType.SFX)
+            {
+                if (loop)
+                {
+                    sfx.clip = clip;
+                    sfx.loop = true;
+                    sfx.Play();
+                }
+                else sfx.PlayOneShot(clip, volumeScale);
+            }
+            else if(soundStruct.SoundType == SoundType.Music)
+            {
+                if (loop)
+                {
+                    music.clip = clip;
+                    music.loop = true;
+                    music.Play();
+                }
+                else music.PlayOneShot(clip, volumeScale);
+            }
+            
         }
-
+        
         public void SetActiveSound(bool soundEnabled)
         {
             mixer.SetFloat("Volume", soundEnabled ? 0 : -80);
@@ -70,7 +73,6 @@ namespace SoundService.Scripts
         public void StopMasterSound() => master.Stop();
         public void StopSfxSound() => sfx.Stop();
 #if UNITY_EDITOR
-    
 
 
         [ContextMenu("Generate enum keys by soundType,and set names")]
@@ -85,8 +87,8 @@ namespace SoundService.Scripts
                 streamWriter.WriteLine("\t{");
                 foreach (var e in soundsData.sounds)
                 {
-                    streamWriter.WriteLine("\t\t" + e.SoundType + ", ");
-                    e.name = $"{e.SoundType}: Clip: {e.Clip.name}";
+                    streamWriter.WriteLine("\t\t" + e.Sound + ", ");
+                    e.name = $"{e.Sound}: Clip: {e.Clip.name}";
                 }
 
                 streamWriter.WriteLine("\t}");
@@ -103,8 +105,15 @@ namespace SoundService.Scripts
         public class SoundsByType
         {
             [HideInInspector] public string name;
-            public string SoundType;
+            public string Sound;
             public AudioClip Clip;
+            public SoundType SoundType;
+        }
+
+        public enum SoundType
+        {
+            SFX,
+            Music
         }
     }
 }

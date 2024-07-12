@@ -40,6 +40,7 @@ namespace _Main._Scripts
              SavesService savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
              
              audioService.Init(savesService.Saves.SoundEnabled);
+             ServiceLocator.Instance.TryAddService(audioService);
 
             var soldiersPool = new SoldiersPool(mainConfig.SoldiersPoolConfig, soldiersPoolParent);
             var levelService = InitLevelService();

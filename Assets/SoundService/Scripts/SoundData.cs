@@ -2,39 +2,46 @@ using System;
 using System.Collections.Generic;
 using SoundService.Data;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace SoundService.Scripts
 {
     public class SoundData
     {
-        private readonly Dictionary<SoundType, List<AudioClip>> _soundDict;
+        private readonly Dictionary<Sound, SoundStruct> _soundDict;
 
         public SoundData(IEnumerable<AudioService.SoundsByType> sounds)
         {
-            _soundDict = new Dictionary<SoundType, List<AudioClip>>();
+            _soundDict = new Dictionary<Sound, SoundStruct>();
 
             foreach (var sound in sounds)
             {
-                var soundType = (SoundType)Enum.Parse(typeof(SoundType), sound.SoundType);
+                var soundType = (Sound)Enum.Parse(typeof(Sound), sound.Sound);
                 if (!_soundDict.ContainsKey(soundType))
-                    _soundDict.Add(soundType, new List<AudioClip> { sound.Clip });
-                else _soundDict[soundType].Add(sound.Clip);
+                    _soundDict.Add(soundType, new SoundStruct(new List<AudioClip> { sound.Clip },sound.SoundType));
+                else _soundDict[soundType].AudioClips.Add(sound.Clip);
             }
         }
 
-        public AudioClip GetSound(SoundType type, bool random = false)
+        public SoundStruct GetSound(Sound type)
         {
             if (_soundDict.TryGetValue(type, out var value))
-            {
-                if (!random) return value[0];
-
-                var index = Random.Range(0, value.Count);
-                return value[index];
-            }
+                return value;
 
             Debug.Log($"The sound with type {type} not founded!");
-            return null;
+            return default;
+        }
+    }
+
+    [Serializable]
+    public struct SoundStruct
+    {
+        public List<AudioClip> AudioClips;
+        public AudioService.SoundType SoundType;
+
+        public SoundStruct(List<AudioClip> audioClips, AudioService.SoundType soundType)
+        {
+            AudioClips = audioClips;
+            SoundType = soundType;
         }
     }
 }

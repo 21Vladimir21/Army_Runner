@@ -1,3 +1,7 @@
+using System;
+using _Main._Scripts.Services;
+using SoundService.Data;
+using SoundService.Scripts;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,12 +17,18 @@ namespace _Main._Scripts.MergeLogic
         [HideInInspector] public DraggableObject currentObject;
 
         public bool IsBusy { get; private set; }
+        private AudioService _audioService;
+        private void Start() => _audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
 
-        public void PlaySpawnParticle() => particle.Play();
+        public void PlaySpawnParticle()
+        {
+            particle.Play();
+            _audioService.PlaySound(Sound.Energy);
+        }
 
         public void AddObject(DraggableObject draggableObject,bool playParticle = false)
         {
-            if (playParticle) particle.Play();
+            if (playParticle) PlaySpawnParticle();
             currentObject = draggableObject;
             draggableObject.transform.position = transform.position;
             IsBusy = true;
