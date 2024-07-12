@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6220020320719805177}
+  - component: {fileID: 2085215458020280613}
+  - component: {fileID: 8737375366686248226}
   m_Layer: 6
   m_Name: Money
   m_TagString: Untagged
@@ -33,6 +35,43 @@ Transform:
   - {fileID: 3309093947690590572}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &2085215458020280613
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4822884683901270161}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8737375366686248226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4822884683901270161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88078f048dd548eb94ee47a5f1cedadc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerCollider: {fileID: 2085215458020280613}
+  <Count>k__BackingField: 100
+  particle: {fileID: 3309093947704833556}
+  moneyModel: {fileID: 6938237444453376346}
 --- !u!1 &6938237444453376346
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,8 +132,6 @@ GameObject:
   - component: {fileID: 7862230249832899262}
   - component: {fileID: 8328733018332247452}
   - component: {fileID: 8455482245467369291}
-  - component: {fileID: 4803880112710478878}
-  - component: {fileID: 7490731269207394788}
   m_Layer: 6
   m_Name: Money
   m_TagString: Untagged
@@ -167,41 +204,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4803880112710478878
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7422333286957092748}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.001050815, y: 0.0020237989, z: 0.00042975805}
-  m_Center: {x: 0.000008512143, y: -0.0000031368104, z: 0.00021918319}
---- !u!114 &7490731269207394788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7422333286957092748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88078f048dd548eb94ee47a5f1cedadc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Count>k__BackingField: 100
-  particle: {fileID: 3309093947704833556}
 --- !u!1001 &3309093947690205608
 PrefabInstance:
   m_ObjectHideFlags: 0

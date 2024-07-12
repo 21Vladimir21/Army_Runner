@@ -12,7 +12,7 @@ namespace _Main._Scripts.Obstacles
         [SerializeField] private int maxHealth;
         [SerializeField] private TMP_Text healthText;
         [SerializeField] private Transform obstacle;
-        [SerializeField] private Transform objectForDown;
+        [SerializeField] private DescendingObject objectForDown;
         [SerializeField] private Collider triggerCollider;
         [SerializeField] private ParticleSystem dustParticle;
         [SerializeField] private bool dontDamagable;
@@ -24,9 +24,12 @@ namespace _Main._Scripts.Obstacles
 
         private void Start()
         {
-            if (dontDamagable) return ;
+
+
+            if (dontDamagable) return;
             _currentHealth = maxHealth;
             healthText.text = _currentHealth.ToString();
+            if (objectForDown != null) objectForDown.DeactivateTrigger();
         }
 
         public bool TryApplyDamage(int damage)
@@ -53,7 +56,11 @@ namespace _Main._Scripts.Obstacles
             triggerCollider.enabled = false;
             obstacle.DORotate(new Vector3(90, 0, 0), 0.5f).SetEase(Ease.InOutBack)
                 .OnComplete(() => obstacle.gameObject.SetActive(false));
-            if (objectForDown != null) objectForDown.DOMoveY(transform.position.y, 0.5f).SetEase(Ease.OutBounce);
+            if (objectForDown != null)
+            {
+                objectForDown.ActivateTrigger();
+                objectForDown.transform.DOMoveY(transform.position.y, 0.5f).SetEase(Ease.OutBounce);
+            }
         }
 #if UNITY_EDITOR
         private void OnValidate()
