@@ -9,7 +9,9 @@ using _Main._Scripts.Services;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.Soilders.Bullets;
 using _Main._Scripts.UI;
+using SoundService.Scripts;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Main._Scripts
 {
@@ -22,6 +24,7 @@ namespace _Main._Scripts
 
         [SerializeField] private UIViewsHolder views;
         [SerializeField] private CameraService cameraService;
+        [SerializeField] private AudioService audioService;
 
         [SerializeField] private Transform levelSpawnPoint;
         [SerializeField] private Transform bulletPoolParent;
@@ -35,15 +38,14 @@ namespace _Main._Scripts
         private void Awake()
         {
              SavesService savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
-#if UNITY_EDITOR
-            savesService = InitSaves();
-#else
-            savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
-#endif
+             
+             audioService.Init(savesService.Saves.SoundEnabled);
 
             var soldiersPool = new SoldiersPool(mainConfig.SoldiersPoolConfig, soldiersPoolParent);
             var levelService = InitLevelService();
             var uiLocator = InitUILocator(savesService);
+            var preGameView = uiLocator.GetViewByType<PreGameView>();
+            var soundController = new SoundController(preGameView.SoundsButton, audioService, savesService.Saves);
             var bulletPool = new BulletPool(mainConfig.BulletPoolConfig, bulletPoolParent);
             player.Init(savesService.Saves,bulletPool,soldiersPool);
             

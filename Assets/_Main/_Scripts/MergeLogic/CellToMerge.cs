@@ -16,8 +16,9 @@ namespace _Main._Scripts.MergeLogic
 
         public void PlaySpawnParticle() => particle.Play();
 
-        public void AddObject(DraggableObject draggableObject)
+        public void AddObject(DraggableObject draggableObject,bool playParticle = false)
         {
+            if (playParticle) particle.Play();
             currentObject = draggableObject;
             draggableObject.transform.position = transform.position;
             IsBusy = true;

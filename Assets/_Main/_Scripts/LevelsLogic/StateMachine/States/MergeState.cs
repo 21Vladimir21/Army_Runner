@@ -123,8 +123,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             if (index == null) return;
             //TODO: Reward
             var soldier = GetSoldier(SoldiersLevels.Level10);
-            if (isReserveCells) _reserveCells[(int)index].AddObject(soldier);
-            else _gameCells[(int)index].AddObject(soldier);
+            if (isReserveCells) _reserveCells[(int)index].AddObject(soldier,true);
+            else _gameCells[(int)index].AddObject(soldier,true);
          SaveSoldiers();   
         }
 
