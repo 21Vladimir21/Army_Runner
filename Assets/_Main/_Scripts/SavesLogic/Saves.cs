@@ -23,8 +23,7 @@ namespace _Main._Scripts.SavesLogic
         [field: SerializeField]
         public List<Soldier> InGameSoldiers { get; set; } = new()
         {
-            new Soldier(SoldiersLevels.Level2, 1),
-            new Soldier(SoldiersLevels.Level2, 2),
+            new Soldier(SoldiersLevels.Level1, 1),
         };
 
         private const int LastLevelNotShowAd = 5;
