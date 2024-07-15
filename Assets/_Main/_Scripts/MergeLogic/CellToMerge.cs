@@ -1,10 +1,8 @@
-using System;
 using _Main._Scripts.Services;
 using SoundService.Data;
 using SoundService.Scripts;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace _Main._Scripts.MergeLogic
 {
@@ -13,14 +11,13 @@ namespace _Main._Scripts.MergeLogic
         [SerializeField] private ParticleSystem particle;
         [SerializeField] private GameObject SelectOutLine;
 
-        [HideInInspector] public UnityEvent OnReturnObject = new();
         [HideInInspector] public DraggableObject currentObject;
 
         public bool IsBusy { get; private set; }
         private AudioService _audioService;
         private void Start() => _audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
 
-        public void PlaySpawnParticle()
+        private void PlayEffects()
         {
             particle.Play();
             _audioService.PlaySound(Sound.Energy);
@@ -28,41 +25,38 @@ namespace _Main._Scripts.MergeLogic
 
         public void AddObject(DraggableObject draggableObject,bool playParticle = false)
         {
-            if (playParticle) PlaySpawnParticle();
+            if (playParticle) PlayEffects();
             currentObject = draggableObject;
             draggableObject.transform.position = transform.position;
             IsBusy = true;
         }
 
-        public void RemoveObject()
+        public void RemoveObjectData()
         {
             currentObject = null;
             IsBusy = false;
             DeSelectCell(); 
         }
-
-        public void SelectCell() => SelectOutLine.SetActive(true);
-        public void DeSelectCell() => SelectOutLine.SetActive(false);
-
-        public void StartDragObject()
+        
+        public void ResetSoldierPosition()
         {
-            currentObject.UpSoldier();
-        }
-
-        public void ResetCurrentObject()
-        {
+            _audioService.PlaySound(Sound.PickDown);
             currentObject.DownSoldier();
             IsBusy = true;
             currentObject.transform.position = transform.position;
             DeSelectCell();
         }
 
-        public void ReturnObject()
+        public void SelectCell() => SelectOutLine.SetActive(true);
+
+        public void DeSelectCell() => SelectOutLine.SetActive(false);
+
+        public void StartDragObject()
         {
-            OnReturnObject.Invoke();
-            RemoveObject();
-            DeSelectCell();
+            _audioService.PlaySound(Sound.PickUp);
+            currentObject.UpSoldier();
         }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {

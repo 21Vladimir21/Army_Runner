@@ -1,5 +1,4 @@
 using System;
-using _Main._Scripts.MergeLogic;
 using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services;
 using DG.Tweening;
@@ -16,28 +15,32 @@ namespace _Main._Scripts.UI.SkillCheckAD
     public class AdWheel : MonoBehaviour
     {
         [SerializeField] private Transform arrowTransform;
+        [SerializeField] private ParticleSystem particle;
         [SerializeField] private FormattableLocalizationTextTMP currentX;
         [SerializeField] private TMP_Text currentCountReward;
         [SerializeField] private Button claimButton;
         [SerializeField] private float cycleDuration;
         [SerializeField] private RewardMultiplierRanges[] adWheelValuesArray;
+
         private int _currentReward;
         private Saves _save;
-        private bool _onLeft;
+        private Sequence _sequence;
         public UnityEvent RewardCallback { get; } = new();
 
+        private void Start() => claimButton.onClick.AddListener(Claim);
 
-        private void Start()
+        private void OnEnable()
         {
+            arrowTransform.rotation = Quaternion.Euler(Vector3.zero);
+            claimButton.interactable = true;
+
+            _sequence = DOTween.Sequence();
             _save = ServiceLocator.Instance.GetServiceByType<SavesService>().Saves;
-            claimButton.onClick.AddListener(Claim);
-            RotateTo();
+            StartRotate();
         }
 
-        public void SetCurrentReward(int currentReward)
-        {
-            _currentReward = currentReward;
-        }
+        private void OnDisable() => _sequence.Kill();
+        public void SetCurrentReward(int currentReward) => _currentReward = currentReward;
 
         private void Update()
         {
@@ -58,7 +61,8 @@ namespace _Main._Scripts.UI.SkillCheckAD
         {
             //TODO: Логика получения отличается от того, что я делал раньше. Наверное надо будет сделать по другому
             var rotateValue = arrowTransform.rotation.eulerAngles.z;
-            Advertisement.ShowVideoAd(() => Audio.MuteAllAudio(), () =>
+            claimButton.interactable = false;
+            Advertisement.ShowVideoAd(Audio.MuteAllAudio, () =>
             {
                 foreach (var values in adWheelValuesArray)
                 {
@@ -66,21 +70,20 @@ namespace _Main._Scripts.UI.SkillCheckAD
                     {
                         var money = _currentReward * values.xValue;
                         _save.AddMoney(money);
+                        particle.Play();
+                        _sequence.Kill();
                         RewardCallback.Invoke();
                     }
                 }
             }, () => Audio.UnMuteAllAudio());
         }
 
-        private void RotateTo(float value = 180)
+        private void StartRotate()
         {
-            arrowTransform.DOLocalRotate(new Vector3(0, 0, value), cycleDuration / 2, RotateMode.WorldAxisAdd)
+            _sequence.Append(arrowTransform
+                .DOLocalRotate(new Vector3(0, 0, 180), cycleDuration / 2, RotateMode.LocalAxisAdd)
                 .SetEase(Ease.Linear)
-                .OnComplete(() =>
-                {
-                    RotateTo(_onLeft ? 180 : -180);
-                    _onLeft = !_onLeft;
-                });
+                .SetLoops(-1, LoopType.Yoyo));
         }
     }
 

@@ -123,12 +123,15 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         private void NextLevel()
         {
-            
+#if !UNITY_EDITOR
             if (!_saves.CanShowAd || _saves.AdEnabled == false)
             {
+#endif
                 _stateSwitcher.SwitchState<InitState>();
+#if !UNITY_EDITOR
                 return;
             }
+#endif
             Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
             {
                 Audio.UnMuteAllAudio();

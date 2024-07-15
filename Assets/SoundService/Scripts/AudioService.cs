@@ -78,8 +78,8 @@ namespace SoundService.Scripts
         [ContextMenu("Generate enum keys by soundType,and set names")]
         public void GenerateEnumKeys()
         {
-            var fileName = "SoundType";
-            var path = "Assets/SoundService/Data/SoundType.cs";
+            var fileName = "Sound";
+            var path = "Assets/SoundService/Data/Sound.cs";
             using (var streamWriter = new StreamWriter(path))
             {
                 streamWriter.WriteLine("\tnamespace SoundService.Data\n{\n");

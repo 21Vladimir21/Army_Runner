@@ -6,5 +6,7 @@
 		Shot, 
 		Poof, 
 		Energy, 
+		PickUp, 
+		PickDown, 
 	}
 }

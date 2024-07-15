@@ -11,7 +11,6 @@ using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
 using Kimicu.YandexGames;
 using SoundService.Scripts;
-using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 using IState = _Main._Scripts.PlayerLogic.StateMachine.States.IState;
 
@@ -31,7 +30,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private DragAndDrop _dragAndDrop;
         private CellToMerge _startDragCell;
-        private CellToMerge _cell;
+        private CellToMerge _selectedCell;
+        private RepresentativeOfTheSoldiers _representativeOfTheSoldiers;
 
         public MergeState(IStateSwitcher stateSwitcher, MainConfig mainConfig, SoldiersPool soldiersPool,
             List<CellToMerge> reserveCells,
@@ -45,11 +45,10 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _preGameView = preGameView;
             _cameraService = cameraService;
             _saves = saves;
+            _representativeOfTheSoldiers = new RepresentativeOfTheSoldiers(soldiersPool);
 
-            _dragAndDrop = new DragAndDrop(mainConfig.DragConfig, _cameraService.Holder.MainCamera);
-            _dragAndDrop.OnUpObject.AddListener(SetCurrentDragObject);
-            _dragAndDrop.OnSelectNewObject.AddListener(SetCurrentCell);
-            _dragAndDrop.OnMouseUp.AddListener(ResetDragData);
+            _dragAndDrop = new DragAndDrop(mainConfig.DragConfig, _cameraService.Holder.MainCamera,
+                _representativeOfTheSoldiers, soldiersPool);
 
             UpdateUpgradeView(_preGameView.DamageUpgradeCell, _saves.BulletDamageLevel,
                 _mainConfig.UpgradeConfig.DamageUpgradeRatios);
@@ -84,8 +83,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         public void Enter()
         {
-            ClearCell(_reserveCells);
-            ClearCell(_gameCells);
+            ClearCells(_reserveCells);
+            ClearCells(_gameCells);
             LoadSoldiersFromSave();
 
             _preGameView.Open();
@@ -109,7 +108,6 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
             if (soldiersCount <= 0) return;
             _stateSwitcher.SwitchState<PlayState>();
-            // _preGameView.StartGameButton.onClick.RemoveListener(SwitchToPlayState);
         }
 
         private void TryAddedRewardSoldier()
@@ -126,7 +124,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             //TODO: Логика получения отличается от того, что я делал раньше. Наверное надо будет сделать по другому
             Advertisement.ShowVideoAd(() => Audio.MuteAllAudio(), () =>
             {
-                var soldier = GetSoldier(SoldiersLevels.Level10);
+                var soldier = _representativeOfTheSoldiers.GetSoldier(SoldiersLevels.Level10);
                 if (isReserveCells) _reserveCells[(int)index].AddObject(soldier, true);
                 else _gameCells[(int)index].AddObject(soldier, true);
                 SaveSoldiers();
@@ -136,35 +134,10 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private int? TryGetFreeIndexInList(List<CellToMerge> list)
         {
             for (int i = 0; i < list.Count; i++)
-            {
                 if (list[i].IsBusy == false)
                     return i;
-            }
 
             return null;
-        }
-
-        private void TryMergeObjects()
-        {
-            if (_cell.IsBusy == false) return;
-
-            var currentObjectLevel = _startDragCell.currentObject.Level;
-            var selectedCellSoldierLevels = _cell.currentObject.Level;
-            if (currentObjectLevel != selectedCellSoldierLevels ||
-                currentObjectLevel == SoldiersLevels.Level13 || selectedCellSoldierLevels == SoldiersLevels.Level13)
-            {
-                _startDragCell.ResetCurrentObject();
-                _cell.DeSelectCell();
-                return;
-            }
-
-
-            _soldiersPool.ReturnSoldier(_cell.currentObject);
-            _soldiersPool.ReturnSoldier(_startDragCell.currentObject);
-            _cell.ReturnObject();
-            _startDragCell.ReturnObject();
-            _cell.AddObject(GetNextObjectLevel(currentObjectLevel));
-            _cell.PlaySpawnParticle();
         }
 
         private void UpdateUpgradeView(UpgradePanelCell upgradeCell, int level, List<UpgradeData> upgradeRatios)
@@ -173,7 +146,15 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             if (level + 1 >= upgradeRatios.Count)
                 upgradeCell.SetMaxLevel();
         }
-
+        private void ClearCells(List<CellToMerge> cells)
+        {
+            foreach (var cell in cells)
+                if (cell.IsBusy)
+                {
+                    _soldiersPool.ReturnSoldier(cell.currentObject);
+                    cell.RemoveObjectData();
+                }
+        }
         private void LoadSoldiersFromSave()
         {
             MainLoadSoldiers(_gameCells, _saves.InGameSoldiers);
@@ -191,7 +172,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             foreach (var soldier in listFromSave)
             {
-                var instSoldier = GetSoldier(soldier.Level);
+                var instSoldier = _representativeOfTheSoldiers.GetSoldier(soldier.Level);
                 cells[soldier.Index].AddObject(instSoldier);
             }
         }
@@ -207,36 +188,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             listFromSave.Clear();
             listFromSave.AddRange(soldierForAdd);
         }
-
-        private void ClearCell(List<CellToMerge> cells)
-        {
-            foreach (var cell in cells)
-                if (cell.IsBusy)
-                {
-                    _soldiersPool.ReturnSoldier(cell.currentObject);
-                    cell.ReturnObject();
-                }
-        }
-
-        private DraggableObject GetNextObjectLevel(SoldiersLevels level) => GetSoldier(level + 1);
-
-        private DraggableObject GetSoldier(SoldiersLevels level) =>
-            _soldiersPool.GetSoldierFromLevel<DraggableObject>(level);
-
-        private void ResetDragData()
-        {
-            if (_cell)
-            {
-                TryMergeObjects();
-                _cell = null;
-            }
-
-            _startDragCell = null;
-        }
-
-        private void SetCurrentCell(CellToMerge cell) => _cell = cell;
-        private void SetCurrentDragObject(CellToMerge startDragCell) => _startDragCell = startDragCell;
-
+        
         private void UpgradePlayer(IReadOnlyList<UpgradeData> upgradeData, ref int upgradeLevel,
             ref float upgradePercentage,
             Action successCallback = null)

@@ -1,5 +1,5 @@
+using _Main._Scripts.CrowdLogic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace _Main._Scripts.MergeLogic.DragAndDropLogic
 {
@@ -11,17 +11,17 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
         private readonly float _maxZPosition;
         private readonly float _minZPosition;
         private readonly Camera _camera;
+        private readonly RepresentativeOfTheSoldiers _representativeOfTheSoldiers;
+        private readonly SoldiersPool _soldiersPool;
         private bool _isDragged;
         private Transform _draggedObject;
         private CellToMerge _startDragCell;
         private CellToMerge _selectedCell;
         private CellToMerge _lastSelectedCell;
 
-        public UnityEvent<CellToMerge> OnUpObject { get; } = new();
-        public UnityEvent<CellToMerge> OnSelectNewObject { get; } = new();
-        public UnityEvent OnMouseUp { get; } = new();
 
-        public DragAndDrop(DragConfig config, Camera camera)
+        public DragAndDrop(DragConfig config, Camera camera, RepresentativeOfTheSoldiers representativeOfTheSoldiers,
+            SoldiersPool soldiersPool)
         {
             _heightWhenLifting = config.heightWhenLifting;
 
@@ -30,6 +30,8 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             _maxZPosition = config.maxZPosition;
             _minZPosition = config.minZPosition;
             _camera = camera;
+            _representativeOfTheSoldiers = representativeOfTheSoldiers;
+            _soldiersPool = soldiersPool;
         }
 
         public void UpdateDrag()
@@ -63,16 +65,12 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
 
         private void StartDrag(CellToMerge cell)
         {
-            if (_isDragged == false && cell.IsBusy)
-            {
-                _startDragCell = cell;
-                _startDragCell.StartDragObject();
-                _draggedObject = cell.currentObject.transform;
-                _startDragCell.OnReturnObject.AddListener(ResetDrag);
-                _startDragCell.SelectCell();
-                OnUpObject.Invoke(cell);
-                _isDragged = true;
-            }
+            if (_isDragged || cell.IsBusy == false) return;
+            _startDragCell = cell;
+            _startDragCell.StartDragObject();
+            _draggedObject = cell.currentObject.transform;
+            _startDragCell.SelectCell();
+            _isDragged = true;
         }
 
         private void SelectNewCell(CellToMerge cell)
@@ -84,8 +82,51 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
                 _selectedCell = cell;
                 _selectedCell.SelectCell();
                 _lastSelectedCell = cell;
-                OnSelectNewObject.Invoke(_selectedCell);
             }
+        }
+
+        private void ResetDrag()
+        {
+            if (_selectedCell != null && _selectedCell.IsBusy == false) RearrangeSoldier();
+            else if (_selectedCell != null && _selectedCell.IsBusy) MergeSoldiers();
+            else if (_draggedObject != null) _startDragCell.ResetSoldierPosition();
+            ClearDragState();
+        }
+
+        private void RearrangeSoldier()
+        {
+            _selectedCell.AddObject(_startDragCell.currentObject);
+            _startDragCell.RemoveObjectData();
+            _selectedCell.ResetSoldierPosition();
+        }
+
+        private void MergeSoldiers()
+        {
+            if (_selectedCell.IsBusy == false) return;
+
+            var currentObjectLevel = _startDragCell.currentObject.Level;
+            var selectedCellSoldierLevels = _selectedCell.currentObject.Level;
+            if (currentObjectLevel != selectedCellSoldierLevels ||
+                currentObjectLevel == SoldiersLevels.Level13 || selectedCellSoldierLevels == SoldiersLevels.Level13)
+            {
+                _startDragCell.ResetSoldierPosition();
+                _selectedCell.DeSelectCell();
+                return;
+            }
+            _soldiersPool.ReturnSoldier(_selectedCell.currentObject);
+            _soldiersPool.ReturnSoldier(_startDragCell.currentObject);
+            _selectedCell.RemoveObjectData();
+            _startDragCell.RemoveObjectData();
+            _selectedCell.AddObject(_representativeOfTheSoldiers.GetNextObjectLevel(currentObjectLevel), true);
+        }
+
+        private void ClearDragState()
+        {
+            _lastSelectedCell = null;
+            _startDragCell = null;
+            _draggedObject = null;
+            _selectedCell = null;
+            _isDragged = false;
         }
 
         private void MoveDraggedObject()
@@ -100,33 +141,6 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             var clampZ = Mathf.Clamp(worldPoint.z, _minZPosition, _maxZPosition);
             var clampPoint = new Vector3(clampX, _heightWhenLifting, clampZ);
             _draggedObject.position = clampPoint;
-        }
-
-        private void ResetDrag()
-        {
-            if (_selectedCell != null && _selectedCell.IsBusy == false)
-            {
-                _selectedCell.AddObject(_startDragCell.currentObject);
-                _startDragCell.RemoveObject();
-                _selectedCell.ResetCurrentObject();
-            }
-            else if (_selectedCell != null && _selectedCell.IsBusy) OnMouseUp.Invoke();
-            else if (_draggedObject != null) _startDragCell.ResetCurrentObject();
-
-            if (_startDragCell && _selectedCell == null) _startDragCell.ResetCurrentObject();
-
-            if (_startDragCell != null) _startDragCell.OnReturnObject.RemoveListener(ResetDrag);
-
-            ClearDragState();
-        }
-
-        private void ClearDragState()
-        {
-            _lastSelectedCell = null;
-            _startDragCell = null;
-            _draggedObject = null;
-            _selectedCell = null;
-            _isDragged = false;
         }
 
         private RaycastHit CastRay()
