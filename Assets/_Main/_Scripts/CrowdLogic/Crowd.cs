@@ -74,7 +74,7 @@ namespace _Main._Scripts.CrowdLogic
                 soldier.UpdateShootingCooldown();
         }
 
-        public void UpdateBulletBoostPercentages(Boost boost)
+        private void UpdateBulletBoostPercentages(Boost boost)
         {
             switch (boost.Type)
             {
@@ -152,12 +152,12 @@ namespace _Main._Scripts.CrowdLogic
 
         public void AddToCrowdAndSetPosition(Soldier soldier)
         {
-            AddToCrowd(soldier);
+            AddToCrowd(soldier, false);
             var index = Soldiers.IndexOf(soldier);
             soldier.transform.position = _points[index].position;
         }
 
-        public void AddToCrowd(Soldier soldier)
+        private void AddToCrowd(Soldier soldier)
         {
             if (SoldiersCount >= MaxSoldiers) return;
             AddToCrowd(soldier, false, 0);
@@ -181,7 +181,7 @@ namespace _Main._Scripts.CrowdLogic
         }
 
         private void AddToListForSave(Soldier soldier) => _soldiersForSave.Add(soldier);
-        
+
 
         public void ResetCrowd()
         {
@@ -190,10 +190,10 @@ namespace _Main._Scripts.CrowdLogic
                 foreach (var soldier in _soldiersForSave)
                 {
                     _saves.TrySaveInReserve(soldier.Config.SoldiersLevel);
-
                 }
-                _soldiersForSave.Clear();
             }
+
+            _soldiersForSave.Clear();
 
             _wasDamage = false;
 
@@ -211,7 +211,7 @@ namespace _Main._Scripts.CrowdLogic
             foreach (var soldier in _diedSoldiers)
                 _soldiersPool.ReturnSoldier(soldier);
             _diedSoldiers.Clear();
-            
+
             _saves.InvokeSave();
         }
 

@@ -16,7 +16,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private readonly GameOverView _gameOverView;
         private readonly Player _player;
 
-        public GameOverState(IStateSwitcher stateSwitcher,Saves saves, GameOverView gameOverView, Player player)
+        public GameOverState(IStateSwitcher stateSwitcher, Saves saves, GameOverView gameOverView, Player player)
         {
             _stateSwitcher = stateSwitcher;
             _saves = saves;
@@ -43,12 +43,18 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void RestartGame()
         {
+#if !UNITY_EDITOR
             if (!_saves.CanShowAd || _saves.AdEnabled == false)
             {
-                _stateSwitcher.SwitchState<InitState>();
-                _player.Restart();
+#endif
+
+            _stateSwitcher.SwitchState<InitState>();
+            _player.Restart();
+#if !UNITY_EDITOR
                 return;
             }
+#endif
+
             Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
             {
                 Audio.UnMuteAllAudio();

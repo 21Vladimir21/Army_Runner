@@ -82,6 +82,12 @@ namespace _Main._Scripts
         private void Update()
         {
             _levelStateMachine.Update(); //TODO: Надо придумать куда запихнуть это
+            
+            if (Input.GetKey(KeyCode.P) && Input.GetKeyDown(KeyCode.O))
+            {
+                Cloud.ClearCloudData();
+            }
+          
         }
     }
 }
