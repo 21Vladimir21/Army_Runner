@@ -28,6 +28,9 @@ namespace _Main._Scripts.Level.StateMachine.States
         private int _enemyCount;
         private int _diedEnemiesCount;
 
+        private int _collectedMoneyCount;
+        private int _collectedSoldiersCount;
+
         private bool _canShoot;
         private Finish _finish;
 
@@ -41,14 +44,15 @@ namespace _Main._Scripts.Level.StateMachine.States
             _levelService = levelService;
             _player = player;
 
+            _player.Crowd.OnTakeMoney.AddListener(value => _collectedMoneyCount += value);
+            _player.Crowd.OnTakeSoldier.AddListener(() => _collectedSoldiersCount++);
+
             _finishView.NoThanksButton.onClick.AddListener(NextLevel);
             _finishView.ADWheel.RewardCallback.AddListener(NextLevel);
         }
 
         public void Enter()
         {
-            _diedEnemiesCount = 0;
-
             _cameraService.SwitchToFromType(CameraType.FinishCamera, _levelService.CurrentLevel.FinishCameraPoint);
             _finishView.Open();
             _finishView.ADWheel.SetCurrentReward(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
@@ -58,7 +62,10 @@ namespace _Main._Scripts.Level.StateMachine.States
             _finishView.UpdateEnemyCountText(_enemyCount);
 
             foreach (var enemy in _finish.Enemies)
+            {
                 enemy.OnDie.AddListener(TryEndLevel);
+                enemy.OnHit.AddListener(() => _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Dying));
+            }
 
             _finish.SetSoldiersNewPosition(_player.Crowd.Soldiers, () =>
             {
@@ -72,6 +79,9 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         public void Exit()
         {
+            _collectedMoneyCount = 0;
+            _collectedSoldiersCount = 0;
+            _diedEnemiesCount = 0;
             _finish.StopEnemiesAttach();
             _finishView.Close();
         }
@@ -116,27 +126,24 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _finishView.NoThanksButton.gameObject.SetActive(true);
                 _canShoot = false;
                 _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Dance);
-                _finishView.ShowWinPanel();
+                _player.Crowd.SaveCurrentSoldiers();
+                _finishView.ShowWinPanel(_collectedMoneyCount, _collectedSoldiersCount);
                 _saves.SetNextLevel();
             }
         }
 
         private void NextLevel()
         {
-#if !UNITY_EDITOR
-            if (!_saves.CanShowAd || _saves.AdEnabled == false)
+            if (_saves.CanShowAd && _saves.AdEnabled && Advertisement.AdvertisementIsAvailable)
             {
-#endif
-                _stateSwitcher.SwitchState<InitState>();
-#if !UNITY_EDITOR
-                return;
+                Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
+                {
+                    Audio.UnMuteAllAudio();
+                    _stateSwitcher.SwitchState<InitState>();
+                });
             }
-#endif
-            Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
-            {
-                Audio.UnMuteAllAudio();
+            else
                 _stateSwitcher.SwitchState<InitState>();
-            });
         }
 
         private void GameOver() => _stateSwitcher.SwitchState<GameOverState>();

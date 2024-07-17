@@ -53,10 +53,10 @@ namespace _Main._Scripts.Level.StateMachine.States
 
             _gameView.SetLevelText(_saves.CurrentLevelText);
             _player.gameObject.SetActive(true);
-            foreach (var soldiersLevel in _saves.InGameSoldiers)
+            foreach (var soldierFromSave in _saves.InGameSoldiers)
             {
-                var soldier = _soldiersPool.GetSoldierFromLevel<Soldier>(soldiersLevel.Level);
-                _player.Crowd.AddToCrowdAndSetPosition(soldier);
+                var soldier = _soldiersPool.GetSoldierFromLevel<Soldier>(soldierFromSave.Level);
+                _player.Crowd.AddToCrowdAndSetPosition(soldier,soldierFromSave.Index);
             }
 
             _levelService.CurrentLevel.Finish.OnFinished.AddListener(Finished);

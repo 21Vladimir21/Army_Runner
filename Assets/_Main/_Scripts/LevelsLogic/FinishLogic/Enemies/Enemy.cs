@@ -1,3 +1,4 @@
+using System.Collections;
 using _Main._Scripts.Soilders.Bullets;
 using TMPro;
 using UnityEngine;
@@ -14,11 +15,14 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
         [SerializeField] private Collider enemyCollider;
         [SerializeField] private Slider progressBar;
         [SerializeField] private TMP_Text healthText;
+        [SerializeField] private ParticleSystem hitParticle;
+        
         
         
 
         private int _currentHealth;
         public UnityEvent<Enemy> OnDie { get; private set; } = new();
+        public UnityEvent OnHit { get; private set; } = new();
 
         private bool _canMove;
 
@@ -49,6 +53,15 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
         {
             _canMove = false;
             animator.SetTrigger(EnemyAnimationKeys.Attach.ToString());
+            StartCoroutine(PlayParticleWithDelay());
+
+        }
+
+        private IEnumerator PlayParticleWithDelay()
+        {
+            yield return new WaitForSeconds(1.5f);
+            hitParticle.Play();
+            OnHit.Invoke();
         }
 
 

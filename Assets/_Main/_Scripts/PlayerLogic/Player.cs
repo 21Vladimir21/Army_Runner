@@ -1,12 +1,9 @@
 using System.Collections.Generic;
-using _Main._Scripts.Boosts;
 using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.LevelsLogic.StateMachine.States;
-using _Main._Scripts.Obstacles;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
-using _Main._Scripts.Soilders;
 using _Main._Scripts.Soilders.Bullets;
 using UnityEngine;
 using UnityEngine.Events;

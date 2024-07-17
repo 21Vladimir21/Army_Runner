@@ -16,6 +16,8 @@ namespace _Main._Scripts.CrowdLogic
     public class Crowd
     {
         public UnityEvent<float, float, float> OnTakeBoost = new();
+        public UnityEvent<int> OnTakeMoney = new();
+        public UnityEvent OnTakeSoldier = new();
         public UnityEvent<int> OnSoldiersCountChanged = new();
         public List<Soldier> Soldiers { get; } = new();
         private readonly List<Transform> _points;
@@ -33,11 +35,9 @@ namespace _Main._Scripts.CrowdLogic
         private SoldierAnimationTriggers _currentTrigger;
 
         private readonly List<Soldier> _diedSoldiers = new();
-        private readonly List<Soldier> _soldiersForSave = new();
         public int SoldiersCount => Soldiers.Count;
         private int MaxSoldiers => _points.Count;
         private bool _doubleShotIsActive;
-        private bool _wasDamage;
 
         public Crowd(List<Transform> points, PlayerConfig config, BulletPool bulletPool, SoldiersPool soldiersPool,
             Saves saves)
@@ -150,53 +150,22 @@ namespace _Main._Scripts.CrowdLogic
 
         #endregion
 
-        public void AddToCrowdAndSetPosition(Soldier soldier)
+        public void SaveCurrentSoldiers()
         {
-            AddToCrowd(soldier, false);
-            var index = Soldiers.IndexOf(soldier);
-            soldier.transform.position = _points[index].position;
+            var soldierForAdd = new List<Saves.Soldier>();
+            
+            foreach (var soldier in Soldiers)
+            {
+                if (soldier.cellIndex <= _saves.MaxGameCellsCount) soldierForAdd.Add(new Saves.Soldier(soldier.Level, soldier.cellIndex));
+                else _saves.TrySaveInReserve(soldier.Level);
+            }
+            _saves.InGameSoldiers.Clear();
+            _saves.InGameSoldiers.AddRange(soldierForAdd);
         }
-
-        private void AddToCrowd(Soldier soldier)
-        {
-            if (SoldiersCount >= MaxSoldiers) return;
-            AddToCrowd(soldier, false, 0);
-            AddToListForSave(soldier);
-        }
-
-        private void AddToCrowd(Soldier soldier, bool setAtPosition = false, int atPosition = 0)
-        {
-            soldier.InvitedToCrowd(_bulletPool, _bulletDamagePercentage, _bulletSpeedPercentage,
-                _bulletScalePercentage, _fireRatePercentage, _doubleShotIsActive);
-
-            if (setAtPosition) Soldiers.Insert(atPosition, soldier);
-            else Soldiers.Add(soldier);
-
-            soldier.onDie.AddListener(RemoveFromCrowd);
-            soldier.onTouchSoldier.AddListener(AddToCrowd);
-            soldier.onTouchBoost.AddListener(UpdateBulletBoostPercentages);
-            soldier.onTouchMoney.AddListener(_saves.AddMoney);
-            soldier.SetAnimation(_currentTrigger);
-            OnSoldiersCountChanged.Invoke(SoldiersCount);
-        }
-
-        private void AddToListForSave(Soldier soldier) => _soldiersForSave.Add(soldier);
 
 
         public void ResetCrowd()
         {
-            if (_wasDamage == false)
-            {
-                foreach (var soldier in _soldiersForSave)
-                {
-                    _saves.TrySaveInReserve(soldier.Config.SoldiersLevel);
-                }
-            }
-
-            _soldiersForSave.Clear();
-
-            _wasDamage = false;
-
             foreach (var soldier in Soldiers)
             {
                 soldier.onDie.RemoveAllListeners();
@@ -215,9 +184,45 @@ namespace _Main._Scripts.CrowdLogic
             _saves.InvokeSave();
         }
 
+        public void AddToCrowdAndSetPosition(Soldier soldier,int cellIndex)
+        {
+            soldier.cellIndex = cellIndex;
+            AddToCrowd(soldier, false);
+            var index = Soldiers.IndexOf(soldier);
+            soldier.transform.position = _points[index].position;
+        }
+
+        private void AddToCrowd(Soldier soldier)
+        {
+            if (SoldiersCount >= MaxSoldiers) return;
+            AddToCrowd(soldier, false, 0);
+            OnTakeSoldier.Invoke();
+        }
+
+        private void AddToCrowd(Soldier soldier, bool setAtPosition = false, int atPosition = 0)
+        {
+            soldier.InvitedToCrowd(_bulletPool, _bulletDamagePercentage, _bulletSpeedPercentage,
+                _bulletScalePercentage, _fireRatePercentage, _doubleShotIsActive);
+
+            if (setAtPosition) Soldiers.Insert(atPosition, soldier);
+            else Soldiers.Add(soldier);
+
+            soldier.onDie.AddListener(RemoveFromCrowd);
+            soldier.onTouchSoldier.AddListener(AddToCrowd);
+            soldier.onTouchBoost.AddListener(UpdateBulletBoostPercentages);
+            soldier.onTouchMoney.AddListener(value=>
+            {
+                _saves.AddMoney(value);
+                OnTakeMoney.Invoke(value);
+            });
+            soldier.SetAnimation(_currentTrigger);
+            OnSoldiersCountChanged.Invoke(SoldiersCount);
+        }
+
+ 
+
         private void RemoveFromCrowd(Soldier soldier)
         {
-            _wasDamage = true;
             soldier.onDie.RemoveAllListeners();
             soldier.onTouchSoldier.RemoveAllListeners();
             soldier.onTouchBoost.RemoveAllListeners();
@@ -227,19 +232,19 @@ namespace _Main._Scripts.CrowdLogic
             if (configSoldiersLevel <= SoldiersLevels.Level1)
             {
                 Soldiers.Remove(soldier);
-                _soldiersPool.ReturnSoldier(soldier);
+                Coroutines.StartRoutine(WaitToReturnSoldier(soldier, 3f));
                 _diedSoldiers.Add(soldier);
                 return;
             }
 
             OnSoldiersCountChanged.Invoke(SoldiersCount);
-            Coroutines.StartRoutine(DownGradeSoldier(soldier, configSoldiersLevel));
+            DownGradeSoldier(soldier);
         }
 
-        private IEnumerator DownGradeSoldier(Soldier soldier, SoldiersLevels configSoldiersLevel)
+        private void DownGradeSoldier(Soldier soldier)
         {
-            var newSoldier = _soldiersPool.GetSoldierFromLevel<Soldier>(configSoldiersLevel - 1);
-
+            var newSoldier = _soldiersPool.GetSoldierFromLevel<Soldier>(soldier.Level - 1);
+            newSoldier.cellIndex = soldier.cellIndex;
             newSoldier.transform.position = soldier.transform.position;
             newSoldier.transform.rotation = soldier.transform.rotation;
 
@@ -247,7 +252,13 @@ namespace _Main._Scripts.CrowdLogic
             Soldiers.Remove(soldier);
 
             AddToCrowd(newSoldier, true, index);
-            yield return new WaitForSeconds(1f);
+            Coroutines.StartRoutine(WaitToReturnSoldier(soldier, 3f));
+        }
+
+
+        private IEnumerator WaitToReturnSoldier(Soldier soldier, float delay)
+        {
+            yield return new WaitForSeconds(delay);
             _soldiersPool.ReturnSoldier(soldier);
         }
     }

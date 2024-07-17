@@ -3,6 +3,7 @@ using System.Linq;
 using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.Level.StateMachine.States;
 using _Main._Scripts.LevelsLogic;
+using _Main._Scripts.LevelsLogic.FinishLogic;
 using _Main._Scripts.LevelsLogic.StateMachine.States;
 using _Main._Scripts.MergeLogic;
 using _Main._Scripts.PlayerLogic;

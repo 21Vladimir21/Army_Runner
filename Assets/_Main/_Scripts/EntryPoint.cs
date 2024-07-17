@@ -30,7 +30,7 @@ namespace _Main._Scripts
         [SerializeField] private Transform levelSpawnPoint;
         [SerializeField] private Transform bulletPoolParent;
         [SerializeField] private Transform soldiersPoolParent;
-        
+
         [SerializeField] private Player player;
 
         private LevelStateMachine _levelStateMachine;
@@ -38,10 +38,10 @@ namespace _Main._Scripts
 
         private void Awake()
         {
-             SavesService savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
-             
-             audioService.Init(savesService.Saves.SoundEnabled);
-             ServiceLocator.Instance.TryAddService(audioService);
+            SavesService savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
+
+            audioService.Init(savesService.Saves.SoundEnabled);
+            ServiceLocator.Instance.TryAddService(audioService);
 
             var soldiersPool = new SoldiersPool(mainConfig.SoldiersPoolConfig, soldiersPoolParent);
             var levelService = InitLevelService();
@@ -49,14 +49,14 @@ namespace _Main._Scripts
             var preGameView = uiLocator.GetViewByType<PreGameView>();
             var soundController = new SoundController(preGameView.SoundsButton, audioService, savesService.Saves);
             var bulletPool = new BulletPool(mainConfig.BulletPoolConfig, bulletPoolParent);
-            player.Init(savesService.Saves,bulletPool,soldiersPool);
-            
+            player.Init(savesService.Saves, bulletPool, soldiersPool);
+
+            Debug.Log($" CURRENT LEVEL _-_-_-_-{savesService.Saves.CurrentLevel}");
             _levelStateMachine =
                 new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
-                    cameraService,soldiersPool, player);
-            
-            YandexGamesSdk.GameReady();
+                    cameraService, soldiersPool, player);
 
+            YandexGamesSdk.GameReady();
         }
 
         private LevelService InitLevelService()
@@ -81,13 +81,12 @@ namespace _Main._Scripts
 
         private void Update()
         {
-            _levelStateMachine.Update(); //TODO: Надо придумать куда запихнуть это
-            
             if (Input.GetKey(KeyCode.P) && Input.GetKeyDown(KeyCode.O))
             {
                 Cloud.ClearCloudData();
             }
-          
+
+            _levelStateMachine.Update(); //TODO: Надо придумать куда запихнуть это
         }
     }
 }

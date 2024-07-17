@@ -17,6 +17,7 @@ namespace _Main._Scripts.UI.SkillCheckAD
         [SerializeField] private Transform arrowTransform;
         [SerializeField] private ParticleSystem particle;
         [SerializeField] private FormattableLocalizationTextTMP currentX;
+        [SerializeField] private FormattableLocalizationTextTMP levelReward;
         [SerializeField] private TMP_Text currentCountReward;
         [SerializeField] private Button claimButton;
         [SerializeField] private float cycleDuration;
@@ -40,7 +41,11 @@ namespace _Main._Scripts.UI.SkillCheckAD
         }
 
         private void OnDisable() => _sequence.Kill();
-        public void SetCurrentReward(int currentReward) => _currentReward = currentReward;
+        public void SetCurrentReward(int currentReward)
+        {
+            levelReward.SetValue(currentReward);
+            _currentReward = currentReward;
+        }
 
         private void Update()
         {
@@ -62,6 +67,7 @@ namespace _Main._Scripts.UI.SkillCheckAD
             //TODO: Логика получения отличается от того, что я делал раньше. Наверное надо будет сделать по другому
             var rotateValue = arrowTransform.rotation.eulerAngles.z;
             claimButton.interactable = false;
+            _sequence.Kill();
             Advertisement.ShowVideoAd(Audio.MuteAllAudio, () =>
             {
                 foreach (var values in adWheelValuesArray)
@@ -71,7 +77,6 @@ namespace _Main._Scripts.UI.SkillCheckAD
                         var money = _currentReward * values.xValue;
                         _save.AddMoney(money);
                         particle.Play();
-                        _sequence.Kill();
                         RewardCallback.Invoke();
                     }
                 }

@@ -18,5 +18,8 @@ namespace LocalizationSystem.Data.KeyGeneration
 		Win, 
 		BulletScale, 
 		DoubleShot, 
+		RewardForTheLevel, 
+		MoneyCollected, 
+		SoldiersCollected, 
 	}
 }

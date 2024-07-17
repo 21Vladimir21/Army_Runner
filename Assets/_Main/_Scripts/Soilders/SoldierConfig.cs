@@ -12,7 +12,8 @@ namespace _Main._Scripts.Soilders
 
         [Header("Shooting settings")]
         [Range(0.1f, 10f)] public float fireRate; 
-        public bool secondaryShot;
+        [Range(0.1f, 10f)] public float bulletShotDelay; 
+        [Range(1, 10)]public int oneShotBulletCount;
 
         [Header("Bullet settings")]
         [Range(1f, 20f)] public float bulletLifeTime;

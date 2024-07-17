@@ -11,6 +11,7 @@ using SoundService.Scripts;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace _Main._Scripts.Soilders
 {
@@ -32,6 +33,9 @@ namespace _Main._Scripts.Soilders
         [SerializeField] private ParticleSystem shootParticle;
         [SerializeField] private ParticleSystem damageParticle;
 
+
+        [HideInInspector] public int cellIndex = 999;
+
         private AudioService _audioService;
 
         private float _bulletSpeed;
@@ -45,6 +49,7 @@ namespace _Main._Scripts.Soilders
         private bool _doubleShootIsActive;
 
         private bool _canApplyDamage;
+        private bool _canShoot = true;
 
         public bool InCrowd { get; private set; }
 
@@ -52,11 +57,9 @@ namespace _Main._Scripts.Soilders
 
         private SoldierAnimationTriggers _currentAnimation = SoldierAnimationTriggers.Idling;
         private bool _isFinishShooting;
+        private Quaternion _targetRotation;
 
-        private void Start()
-        {
-            _audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
-        }
+        private void Start() => _audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
 
         private void OnTriggerEnter(Collider other)
         {
@@ -115,12 +118,15 @@ namespace _Main._Scripts.Soilders
         private void OnDisable()
         {
             rotatableSoldier.localRotation = Quaternion.Euler(Vector3.zero);
+            cellIndex = 999;
             _bulletScalePercentage = 100;
+            _timeOfLastShot = 0f;
             gameObject.layer = LayerMask.NameToLayer(SoldierLayers.Interact.ToString());
         }
 
         public void UpdateShootingCooldown()
         {
+            if (_canShoot == false) return;
             _timeOfLastShot += Time.deltaTime;
             if (_timeOfLastShot >= _fireRate)
             {
@@ -137,9 +143,8 @@ namespace _Main._Scripts.Soilders
         {
             var direction = (point - transform.position).normalized;
             if (direction == Vector3.zero) return;
-
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.localRotation = targetRotation;
+            _targetRotation = Quaternion.LookRotation(direction);
+            transform.localRotation = _targetRotation;
         }
 
         public void UpdateBulletDamagePercentage(float damageBoostPercentage) =>
@@ -178,21 +183,30 @@ namespace _Main._Scripts.Soilders
 
         private void Shot()
         {
+            _canShoot = false;
             if (_doubleShootIsActive && _isFinishShooting == false)
             {
                 foreach (var point in doubleShootPoints)
-                    PrepareBullet(point);
+                    StartCoroutine(ShootingWithDelay(point));
                 return;
             }
 
-            PrepareBullet(shootPoint);
-            if (Config.secondaryShot)
-                StartCoroutine(WaitCooldown(0.5f,
-                    () => PrepareBullet(shootPoint)));
+            StartCoroutine(ShootingWithDelay(shootPoint));
+        }
+
+        private IEnumerator ShootingWithDelay(Transform point)
+        {
+            for (int i = 0; i < Config.oneShotBulletCount; i++)
+            {
+                PrepareBullet(point);
+                yield return new WaitForSeconds(Config.bulletShotDelay);
+            }
+
+            _canShoot = true;
         }
 
         private void PrepareBullet(Transform point)
-        {   
+        {
             _audioService.PlaySound(Sound.Shot, volumeScale: 0.2f);
             var bullet = _bulletPool.GetBullet();
             bullet.transform.position = point.position;

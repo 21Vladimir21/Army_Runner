@@ -21,6 +21,9 @@ namespace LocalizationSystem.Data.KeyGeneration
 			{LocalizationKey.Win, LocalizationKey.Win.ToString()},
 			{LocalizationKey.BulletScale, LocalizationKey.BulletScale.ToString()},
 			{LocalizationKey.DoubleShot, LocalizationKey.DoubleShot.ToString()},
+			{LocalizationKey.RewardForTheLevel, LocalizationKey.RewardForTheLevel.ToString()},
+			{LocalizationKey.MoneyCollected, LocalizationKey.MoneyCollected.ToString()},
+			{LocalizationKey.SoldiersCollected, LocalizationKey.SoldiersCollected.ToString()},
 		};
 	}
 }

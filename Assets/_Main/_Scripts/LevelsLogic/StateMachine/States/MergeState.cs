@@ -124,7 +124,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             //TODO: Логика получения отличается от того, что я делал раньше. Наверное надо будет сделать по другому
             Advertisement.ShowVideoAd(() => Audio.MuteAllAudio(), () =>
             {
-                var soldier = _representativeOfTheSoldiers.GetSoldier(SoldiersLevels.Level10);
+                var soldier = _representativeOfTheSoldiers.GetSoldier(SoldiersLevels.Level5);
                 if (isReserveCells) _reserveCells[(int)index].AddObject(soldier, true);
                 else _gameCells[(int)index].AddObject(soldier, true);
                 SaveSoldiers();

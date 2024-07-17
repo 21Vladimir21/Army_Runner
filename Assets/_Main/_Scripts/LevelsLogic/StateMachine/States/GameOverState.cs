@@ -1,3 +1,4 @@
+using _Main._Scripts.LevelsLogic.FinishLogic;
 using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
@@ -43,24 +44,20 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void RestartGame()
         {
-#if !UNITY_EDITOR
-            if (!_saves.CanShowAd || _saves.AdEnabled == false)
+            if (_saves.CanShowAd && _saves.AdEnabled && Advertisement.AdvertisementIsAvailable) 
             {
-#endif
-
-            _stateSwitcher.SwitchState<InitState>();
-            _player.Restart();
-#if !UNITY_EDITOR
-                return;
+                Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
+                {
+                    Audio.UnMuteAllAudio();
+                    _stateSwitcher.SwitchState<InitState>();
+                    _player.Restart();
+                });
             }
-#endif
-
-            Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
+            else
             {
-                Audio.UnMuteAllAudio();
                 _stateSwitcher.SwitchState<InitState>();
                 _player.Restart();
-            });
+            }
         }
     }
 }

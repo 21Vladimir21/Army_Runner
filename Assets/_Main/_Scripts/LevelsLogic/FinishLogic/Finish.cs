@@ -18,7 +18,7 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic
 
 
         private const float MoveToPointDuration = 1f;
-        public UnityEvent OnFinished { get; private set; } = new();
+        public UnityEvent OnFinished { get; } = new();
 
         private void OnTriggerEnter(Collider other)
         {

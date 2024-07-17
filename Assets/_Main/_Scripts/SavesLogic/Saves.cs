@@ -12,13 +12,13 @@ namespace _Main._Scripts.SavesLogic
     public class Saves
     {
         [SerializeField] private int _money;
-        [field: SerializeField] public int CurrentLevel { get; private set; }
+        [field: SerializeField] public int CurrentLevel { get; set; }
         [field: SerializeField] public int CurrentLevelText { get; private set; }
 
         [field: SerializeField] public bool SoundEnabled { get; set; } = true;
         [field: SerializeField] public bool AdEnabled { get; set; } = true;
 
-        public bool CanShowAd => CurrentLevel > LastLevelNotShowAd;
+        public bool CanShowAd => CurrentLevelText > LastLevelNotShowAd;
 
         [field: SerializeField]
         public List<Soldier> InGameSoldiers { get; set; } = new()
@@ -28,6 +28,7 @@ namespace _Main._Scripts.SavesLogic
 
         private const int LastLevelNotShowAd = 5;
         public int MaxReserveCapacity = 24;
+        public int MaxGameCellsCount = 11;
         [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new(24);
 
 
@@ -109,8 +110,8 @@ namespace _Main._Scripts.SavesLogic
         {
             CurrentLevel++;
             CurrentLevelText++;
-            // if (CurrentLevel % 55 == 0)
-            //     CurrentLevel = 25;
+            if (CurrentLevel % 9 == 0)
+                CurrentLevel = 0;
 //TODO:Раскомментировать и правильно указать уровень для зацикливания
             InvokeSave();
         }

@@ -27,7 +27,7 @@ namespace _Main._Scripts.UI
         {
             damageStat.text = damage + "%";
             bulletSpeedStat.text = bulletSpeed + "%";
-            fireRateStat.text = fireRate + "%";
+            fireRateStat.text =  fireRate + "%";
         }
     }
 }

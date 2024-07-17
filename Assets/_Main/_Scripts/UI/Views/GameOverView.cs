@@ -6,6 +6,20 @@ namespace _Main._Scripts.UI
     public class GameOverView : AbstractView
     {
         [field: SerializeField] public Button BackButton { get; private set; }
+        [field: SerializeField] public GameObject GameOverPanel{ get; private set; }
+        private const float ShowGameOverPanelDelay = 4f;
+
+        public void Open()
+        {
+            base.Open();
+            StartCoroutine(ShowWithDelay(() => { GameOverPanel.SetActive(true); }, ShowGameOverPanelDelay));
+        }
+
+        public void Close()
+        {
+            base.Close();
+            GameOverPanel.SetActive(false);
+        }
         
     }
 }
