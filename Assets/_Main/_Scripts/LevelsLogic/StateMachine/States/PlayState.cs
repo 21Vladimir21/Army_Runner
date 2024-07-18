@@ -22,13 +22,11 @@ namespace _Main._Scripts.Level.StateMachine.States
         private readonly CameraService _cameraService;
         private readonly Saves _saves;
         private readonly Player _player;
-        private readonly Soldiers _soldiers;
-        private readonly UpgradeConfig _upgradeConfig;
         private readonly LevelService _levelService;
 
         public PlayState(IStateSwitcher stateSwitcher, GameView gameView, SoldiersPool soldiersPool,
             CameraService cameraService, Saves saves,
-            Player player, Soldiers soldiers, UpgradeConfig upgradeConfig, LevelService levelService)
+            Player player, LevelService levelService)
         {
             _stateSwitcher = stateSwitcher;
             _gameView = gameView;
@@ -36,8 +34,6 @@ namespace _Main._Scripts.Level.StateMachine.States
             _cameraService = cameraService;
             _saves = saves;
             _player = player;
-            _soldiers = soldiers;
-            _upgradeConfig = upgradeConfig;
             _levelService = levelService;
             _player.Crowd.OnTakeBoost.AddListener(_gameView.UpdateStats);
             _player.Crowd.OnSoldiersCountChanged.AddListener(_gameView.UpdateSoldiersCountText);
@@ -69,7 +65,7 @@ namespace _Main._Scripts.Level.StateMachine.States
             var bulletDamagePercentage = _saves.BulletDamagePercentage;
             var bulletSpeedPercentage = _saves.BulletSpeedPercentage;
             var fireRatePercentage = _saves.FireRatePercentage;
-            _gameView.UpdateStats(bulletDamagePercentage, bulletSpeedPercentage, fireRatePercentage);
+            _gameView.UpdateStats(bulletDamagePercentage, fireRatePercentage, bulletSpeedPercentage);
             _player.Crowd.ResetBoostsPercentages(bulletDamagePercentage, bulletSpeedPercentage, fireRatePercentage);
         }
 

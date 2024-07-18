@@ -47,8 +47,8 @@ namespace _Main._Scripts.Level.StateMachine.States
             _player.Crowd.OnTakeMoney.AddListener(value => _collectedMoneyCount += value);
             _player.Crowd.OnTakeSoldier.AddListener(() => _collectedSoldiersCount++);
 
-            _finishView.NoThanksButton.onClick.AddListener(NextLevel);
-            _finishView.ADWheel.RewardCallback.AddListener(NextLevel);
+            _finishView.NoThanksButton.onClick.AddListener(ToMerge);
+            _finishView.ADWheel.RewardCallback.AddListener(ToMergeReward);
         }
 
         public void Enter()
@@ -132,7 +132,7 @@ namespace _Main._Scripts.Level.StateMachine.States
             }
         }
 
-        private void NextLevel()
+        private void ToMerge()
         {
             if (_saves.CanShowAd && _saves.AdEnabled && Advertisement.AdvertisementIsAvailable)
             {
@@ -144,7 +144,11 @@ namespace _Main._Scripts.Level.StateMachine.States
             }
             else
                 _stateSwitcher.SwitchState<InitState>();
+
+            _saves.AddMoney(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
         }
+
+        private void ToMergeReward() => _stateSwitcher.SwitchState<InitState>();
 
         private void GameOver() => _stateSwitcher.SwitchState<GameOverState>();
     }

@@ -11,6 +11,7 @@ using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
 using Kimicu.YandexGames;
 using SoundService.Scripts;
+using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 using IState = _Main._Scripts.PlayerLogic.StateMachine.States.IState;
 
@@ -32,6 +33,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private CellToMerge _startDragCell;
         private CellToMerge _selectedCell;
         private RepresentativeOfTheSoldiers _representativeOfTheSoldiers;
+
+        private SoldiersLevels _currentRewardSoldier;
 
         public MergeState(IStateSwitcher stateSwitcher, MainConfig mainConfig, SoldiersPool soldiersPool,
             List<CellToMerge> reserveCells,
@@ -89,6 +92,9 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
             _preGameView.Open();
             _cameraService.SwitchToFromType(CameraType.PreGame);
+            
+
+            SetCurrentRewardSoldier();
         }
 
         public void Exit()
@@ -98,6 +104,17 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         }
 
         public void Update() => _dragAndDrop.UpdateDrag();
+
+        private void SetCurrentRewardSoldier()
+        {
+            if (_saves.CurrentLevelText < 10)
+                _currentRewardSoldier = SoldiersLevels.Level5;
+            else if(_saves.CurrentLevelText < 20)
+                _currentRewardSoldier = SoldiersLevels.Level7;
+            else if(_saves.CurrentLevelText >=20)
+                _currentRewardSoldier = SoldiersLevels.Level10;
+            _preGameView.SoldierRewardText.SetValue((int)_currentRewardSoldier + 1);
+        }
 
         private void SwitchToPlayState()
         {
@@ -124,7 +141,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             //TODO: Логика получения отличается от того, что я делал раньше. Наверное надо будет сделать по другому
             Advertisement.ShowVideoAd(() => Audio.MuteAllAudio(), () =>
             {
-                var soldier = _representativeOfTheSoldiers.GetSoldier(SoldiersLevels.Level5);
+                var soldier = _representativeOfTheSoldiers.GetSoldier(_currentRewardSoldier);
                 if (isReserveCells) _reserveCells[(int)index].AddObject(soldier, true);
                 else _gameCells[(int)index].AddObject(soldier, true);
                 SaveSoldiers();
@@ -142,10 +159,16 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void UpdateUpgradeView(UpgradePanelCell upgradeCell, int level, List<UpgradeData> upgradeRatios)
         {
-            upgradeCell.UpdateCellTexts(level, upgradeRatios[level].Cost);
-            if (level + 1 >= upgradeRatios.Count)
+            if (level >= upgradeRatios.Count)
+            {
                 upgradeCell.SetMaxLevel();
+                upgradeCell.TextAnimation.StartAnimation();
+                return;
+            }
+            upgradeCell.UpdateCellTexts(level, upgradeRatios[level].Cost, upgradeRatios[level].Percentage);
+
         }
+
         private void ClearCells(List<CellToMerge> cells)
         {
             foreach (var cell in cells)
@@ -155,6 +178,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                     cell.RemoveObjectData();
                 }
         }
+
         private void LoadSoldiersFromSave()
         {
             MainLoadSoldiers(_gameCells, _saves.InGameSoldiers);
@@ -188,7 +212,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             listFromSave.Clear();
             listFromSave.AddRange(soldierForAdd);
         }
-        
+
         private void UpgradePlayer(IReadOnlyList<UpgradeData> upgradeData, ref int upgradeLevel,
             ref float upgradePercentage,
             Action successCallback = null)
@@ -197,7 +221,11 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             if (_saves.TrySpendMoney(cost))
             {
                 upgradePercentage += upgradeData[upgradeLevel].Percentage;
-                upgradeLevel++;
+                if (upgradeLevel <= upgradeData.Count - 1)
+                {
+                    upgradeLevel++;
+                }
+
                 successCallback?.Invoke();
             }
         }

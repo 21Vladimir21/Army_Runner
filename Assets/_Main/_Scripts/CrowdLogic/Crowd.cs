@@ -102,7 +102,7 @@ namespace _Main._Scripts.CrowdLogic
                     throw new ArgumentOutOfRangeException();
             }
 
-            OnTakeBoost.Invoke(_bulletDamagePercentage, _bulletSpeedPercentage, _fireRatePercentage);
+            OnTakeBoost.Invoke(_bulletDamagePercentage, _fireRatePercentage, _bulletSpeedPercentage);
         }
 
         public void SetAnimationForAllSoldiers(SoldierAnimationTriggers trigger)

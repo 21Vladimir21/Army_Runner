@@ -110,7 +110,7 @@ namespace _Main._Scripts.SavesLogic
         {
             CurrentLevel++;
             CurrentLevelText++;
-            if (CurrentLevel % 9 == 0)
+            if (CurrentLevel % 10 == 0)
                 CurrentLevel = 0;
 //TODO:Раскомментировать и правильно указать уровень для зацикливания
             InvokeSave();

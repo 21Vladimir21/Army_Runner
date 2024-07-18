@@ -1,3 +1,4 @@
+using _Main._Scripts.UI.Anminations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ namespace _Main._Scripts.UI
         [field: SerializeField] public Button BuyButton { get; private set; }
         [SerializeField] private Image icon;
         [SerializeField] private Sprite maxlevelIcon;
+        [field:SerializeField] public PercentageFadeTextAnimation TextAnimation { get; private set; }
+
 
         public void SetMaxLevel()
         {
@@ -19,7 +22,9 @@ namespace _Main._Scripts.UI
             costText.text = "max";
         }
 
-        public void UpdateCellTexts(int level, int cost) {
+        public void UpdateCellTexts(int level, int cost, float percentage)
+        {
+            TextAnimation.StartAnimation(percentage);
             LevelText.text = (level + 1).ToString();
             costText.text = cost.ToString();
         }

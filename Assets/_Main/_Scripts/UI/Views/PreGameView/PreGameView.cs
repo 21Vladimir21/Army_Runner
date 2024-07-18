@@ -1,3 +1,4 @@
+using LocalizationSystem.Components;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ namespace _Main._Scripts.UI
         [field: SerializeField] public UpgradePanelCell FireRateUpgradeCell { get; private set; }
         [field: SerializeField] public UpgradePanelCell DamageUpgradeCell { get; private set; }
         [field: SerializeField] public UpgradePanelCell BulletSpeedUpgradeCell { get; private set; }
+        [field: SerializeField] public FormattableLocalizationTextTMP SoldierRewardText { get; private set; }
 
 
         [Header("Texts")]
