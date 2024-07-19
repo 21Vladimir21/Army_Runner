@@ -7,7 +7,7 @@ using UnityEngine;
 namespace _Main._Scripts.Obstacles
 {
     [RequireComponent(typeof(Collider))]
-    public class Obstacle : MonoBehaviour,IDamageable
+    public class Obstacle : MonoBehaviour, IDamageable
     {
         [SerializeField] private int maxHealth;
         [SerializeField] private TMP_Text healthText;
@@ -16,16 +16,12 @@ namespace _Main._Scripts.Obstacles
         [SerializeField] private Collider triggerCollider;
         [SerializeField] private ParticleSystem dustParticle;
         [SerializeField] private bool dontDamagable;
-        
-        
 
 
         private float _currentHealth;
 
         private void Start()
         {
-
-
             if (dontDamagable) return;
             _currentHealth = maxHealth;
             healthText.text = _currentHealth.ToString();
@@ -36,7 +32,7 @@ namespace _Main._Scripts.Obstacles
         {
             if (dontDamagable) return false;
             if (_currentHealth < 0) return false;
-            
+
             if (_currentHealth < damage) damage = _currentHealth;
             _currentHealth -= damage;
 
@@ -46,8 +42,10 @@ namespace _Main._Scripts.Obstacles
                 dustParticle.Play();
                 DestroyAnimation();
             }
-            
-            healthText.text = _currentHealth.ToString("F2");
+
+            var currentHealthSting =
+                _currentHealth % 1 == 0 ? _currentHealth.ToString("F0") : _currentHealth.ToString("F2");
+            healthText.text = currentHealthSting;
             return true;
         }
 
@@ -71,7 +69,7 @@ namespace _Main._Scripts.Obstacles
                 EditorUtility.SetDirty(this);
             }
 
-            if(dontDamagable)
+            if (dontDamagable)
                 return;
             healthText.text = maxHealth.ToString();
         }
