@@ -13,7 +13,7 @@ namespace _Main._Scripts.Soilders
         private float _lifeTime;
         private float _bulletSpeed;
         private bool _canMove;
-        private int _damage;
+        private float _damage;
         private Coroutine _deactivateRoutine;
 
         private void OnTriggerEnter(Collider other)
@@ -33,7 +33,7 @@ namespace _Main._Scripts.Soilders
             if (_canMove) MoveBullet();
         }
 
-        public void Shot(float lifeTime, float speed, int damage, float bulletScale)
+        public void Shot(float lifeTime, float speed, float damage, float bulletScale)
         {
             _lifeTime = lifeTime;
             _bulletSpeed = speed;

@@ -20,7 +20,7 @@ namespace _Main._Scripts.Obstacles
         
 
 
-        private int _currentHealth;
+        private float _currentHealth;
 
         private void Start()
         {
@@ -32,7 +32,7 @@ namespace _Main._Scripts.Obstacles
             if (objectForDown != null) objectForDown.DeactivateTrigger();
         }
 
-        public bool TryApplyDamage(int damage)
+        public bool TryApplyDamage(float damage)
         {
             if (dontDamagable) return false;
             if (_currentHealth < 0) return false;
@@ -47,7 +47,7 @@ namespace _Main._Scripts.Obstacles
                 DestroyAnimation();
             }
             
-            healthText.text = _currentHealth.ToString();
+            healthText.text = _currentHealth.ToString("F2");
             return true;
         }
 
@@ -70,6 +70,10 @@ namespace _Main._Scripts.Obstacles
                 triggerCollider = GetComponent<Collider>();
                 EditorUtility.SetDirty(this);
             }
+
+            if(dontDamagable)
+                return;
+            healthText.text = maxHealth.ToString();
         }
 #endif
     }

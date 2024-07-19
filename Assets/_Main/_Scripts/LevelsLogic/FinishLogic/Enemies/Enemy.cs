@@ -16,11 +16,9 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
         [SerializeField] private Slider progressBar;
         [SerializeField] private TMP_Text healthText;
         [SerializeField] private ParticleSystem hitParticle;
-        
-        
-        
 
-        private int _currentHealth;
+
+        private float _currentHealth;
         public UnityEvent<Enemy> OnDie { get; private set; } = new();
         public UnityEvent OnHit { get; private set; } = new();
 
@@ -31,8 +29,6 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
         {
             _currentHealth = health;
             UpdateProgressBar();
-            
-            
         }
 
         public void StartMove()
@@ -54,7 +50,6 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
             _canMove = false;
             animator.SetTrigger(EnemyAnimationKeys.Attach.ToString());
             StartCoroutine(PlayParticleWithDelay());
-
         }
 
         private IEnumerator PlayParticleWithDelay()
@@ -71,7 +66,7 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
                 Move();
         }
 
-        public bool TryApplyDamage(int damage)
+        public bool TryApplyDamage(float damage)
         {
             if (_currentHealth < 0) return false;
 
@@ -102,8 +97,9 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
         {
             var progressBarFillAmount = (float)_currentHealth / health;
             progressBar.value = progressBarFillAmount;
-            healthText.text = $"{_currentHealth}/{health}";
-
+            var currentHealthString =
+                _currentHealth % 1 == 0 ? _currentHealth.ToString("F0") : _currentHealth.ToString("F2");
+            healthText.text = $"{currentHealthString}/{health}";
         }
     }
 

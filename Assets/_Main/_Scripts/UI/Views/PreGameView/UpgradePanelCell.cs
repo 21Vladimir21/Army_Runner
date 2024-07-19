@@ -22,9 +22,11 @@ namespace _Main._Scripts.UI
             costText.text = "max";
         }
 
-        public void UpdateCellTexts(int level, int cost, float percentage)
+        public void UpdateCellTexts(int level, int cost, float percentage,bool onlySetText = false)
         {
-            TextAnimation.StartAnimation(percentage);
+            if (onlySetText) TextAnimation.SetText(percentage);
+            else TextAnimation.StartAnimation(percentage);
+            
             LevelText.text = (level + 1).ToString();
             costText.text = cost.ToString();
         }

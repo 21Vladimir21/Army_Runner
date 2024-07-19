@@ -18,6 +18,6 @@ namespace _Main._Scripts.Soilders
         [Header("Bullet settings")]
         [Range(1f, 20f)] public float bulletLifeTime;
         [Range(0.1f, 10f)] public float bulletSpeed;
-        [Range(1f, 1000)] public int bulletDamage;
+        [Range(1f, 1000)] public float bulletDamage;
     }
 }

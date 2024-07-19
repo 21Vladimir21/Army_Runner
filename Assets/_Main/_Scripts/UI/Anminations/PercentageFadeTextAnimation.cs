@@ -11,7 +11,6 @@ namespace _Main._Scripts.UI.Anminations
         [SerializeField] private float duration;
         [SerializeField] private Ease ease;
 
-
         private Vector3 _defaultPosition;
         private Sequence _sequence;
         private float _currentPercentage;
@@ -23,17 +22,13 @@ namespace _Main._Scripts.UI.Anminations
             _sequence = DOTween.Sequence();
         }
 
-        // public void SetText(float value)
-        // {
-        //     text.text = "+" + value;
-        // }
+        public void SetText(float value) => _currentPercentage = Mathf.Abs(value);
 
-        public void StartAnimation(float value =0)
+        public void StartAnimation(float value = 0)
         {
-            Debug.Log("Start animation");
             _sequence.Kill();
             _sequence = DOTween.Sequence();
-            text.text = "+" + _currentPercentage;
+            text.text = "+" + _currentPercentage + "%";
             _currentPercentage = Mathf.Abs(value);
             text.transform.localPosition = _defaultPosition;
             text.alpha = 1;

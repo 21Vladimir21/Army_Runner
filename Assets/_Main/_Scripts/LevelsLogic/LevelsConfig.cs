@@ -15,7 +15,7 @@ namespace _Main._Scripts.LevelsLogic
             foreach (var level in Levels)
             {
                 var indexOf = Levels.IndexOf(level) + 1;
-                level.name = $"Level: {indexOf}";
+                level.name = $"Level: {indexOf} Money: {level.Money}";
             }
         }
     }

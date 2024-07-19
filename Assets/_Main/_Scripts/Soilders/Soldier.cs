@@ -39,7 +39,7 @@ namespace _Main._Scripts.Soilders
         private AudioService _audioService;
 
         private float _bulletSpeed;
-        private int _damage;
+        private float _damage;
         private float _bulletScalePercentage = 100;
         private float _bulletLifeTime;
         private float _fireRate;
@@ -148,7 +148,7 @@ namespace _Main._Scripts.Soilders
         }
 
         public void UpdateBulletDamagePercentage(float damageBoostPercentage) =>
-            _damage = (int)(_damage * damageBoostPercentage / 100);
+            _damage = _damage * damageBoostPercentage / 100;
 
         public void UpdateBulletSpeedPercentage(float speedBoostPercentage) =>
             _bulletSpeed = _bulletSpeed / 100 * speedBoostPercentage;

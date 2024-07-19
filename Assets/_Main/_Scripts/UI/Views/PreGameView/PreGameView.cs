@@ -16,18 +16,19 @@ namespace _Main._Scripts.UI
         [field: SerializeField] public NoAdButton NoAdButton { get; private set; }
 
         [field: Header("UpgradePanels")]
-        [field: SerializeField] public UpgradePanelCell FireRateUpgradeCell { get; private set; }
+        [field: SerializeField]
+        public UpgradePanelCell FireRateUpgradeCell { get; private set; }
+
         [field: SerializeField] public UpgradePanelCell DamageUpgradeCell { get; private set; }
         [field: SerializeField] public UpgradePanelCell BulletSpeedUpgradeCell { get; private set; }
+
+
+        [Header("Texts")] [SerializeField] private TMP_Text moneyText;
         [field: SerializeField] public FormattableLocalizationTextTMP SoldierRewardText { get; private set; }
-
-
-        [Header("Texts")]
-        [SerializeField] private TMP_Text moneyText;
-        [Header("Sprites")]
-        [SerializeField] private Sprite enableButtonSprite;
+        [field: SerializeField] public FormattableLocalizationTextTMP LevelText { get; private set; }
+        [Header("Sprites")] [SerializeField] private Sprite enableButtonSprite;
         [SerializeField] private Sprite disableButtonSprite;
-        
+
         private bool _isSoundButtonEnabled;
 
 
@@ -40,7 +41,6 @@ namespace _Main._Scripts.UI
             _isSoundButtonEnabled = Saves.SoundEnabled;
             SwitchSoundButtonSprite();
             NoAdButton.Init(Saves);
-            
         }
 
 

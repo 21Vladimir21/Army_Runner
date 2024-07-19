@@ -24,6 +24,7 @@ namespace LocalizationSystem.Data.KeyGeneration
 			{LocalizationKey.RewardForTheLevel, LocalizationKey.RewardForTheLevel.ToString()},
 			{LocalizationKey.MoneyCollected, LocalizationKey.MoneyCollected.ToString()},
 			{LocalizationKey.SoldiersCollected, LocalizationKey.SoldiersCollected.ToString()},
+			{LocalizationKey.Level, LocalizationKey.Level.ToString()},
 		};
 	}
 }

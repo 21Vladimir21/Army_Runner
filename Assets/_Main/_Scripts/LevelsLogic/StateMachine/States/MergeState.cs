@@ -11,7 +11,6 @@ using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
 using Kimicu.YandexGames;
 using SoundService.Scripts;
-using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 using IState = _Main._Scripts.PlayerLogic.StateMachine.States.IState;
 
@@ -54,11 +53,11 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                 _representativeOfTheSoldiers, soldiersPool);
 
             UpdateUpgradeView(_preGameView.DamageUpgradeCell, _saves.BulletDamageLevel,
-                _mainConfig.UpgradeConfig.DamageUpgradeRatios);
+                _mainConfig.UpgradeConfig.DamageUpgradeRatios, true);
             UpdateUpgradeView(_preGameView.FireRateUpgradeCell, _saves.FireRateLevel,
-                _mainConfig.UpgradeConfig.FireRateUpgradeRatios);
+                _mainConfig.UpgradeConfig.FireRateUpgradeRatios, true);
             UpdateUpgradeView(_preGameView.BulletSpeedUpgradeCell, _saves.BulletSpeedLevel,
-                _mainConfig.UpgradeConfig.SpeedUpgradeRatios);
+                _mainConfig.UpgradeConfig.SpeedUpgradeRatios, true);
 
             _preGameView.DamageUpgradeCell.BuyButton.onClick.AddListener(() =>
                 UpgradePlayer(mainConfig.UpgradeConfig.DamageUpgradeRatios,
@@ -90,9 +89,10 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             ClearCells(_gameCells);
             LoadSoldiersFromSave();
 
+            _preGameView.LevelText.SetValue(_saves.CurrentLevelText + 1);
             _preGameView.Open();
             _cameraService.SwitchToFromType(CameraType.PreGame);
-            
+
 
             SetCurrentRewardSoldier();
         }
@@ -109,9 +109,9 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             if (_saves.CurrentLevelText < 10)
                 _currentRewardSoldier = SoldiersLevels.Level5;
-            else if(_saves.CurrentLevelText < 20)
+            else if (_saves.CurrentLevelText < 20)
                 _currentRewardSoldier = SoldiersLevels.Level7;
-            else if(_saves.CurrentLevelText >=20)
+            else if (_saves.CurrentLevelText >= 20)
                 _currentRewardSoldier = SoldiersLevels.Level10;
             _preGameView.SoldierRewardText.SetValue((int)_currentRewardSoldier + 1);
         }
@@ -157,7 +157,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             return null;
         }
 
-        private void UpdateUpgradeView(UpgradePanelCell upgradeCell, int level, List<UpgradeData> upgradeRatios)
+        private void UpdateUpgradeView(UpgradePanelCell upgradeCell, int level, List<UpgradeData> upgradeRatios,
+            bool firstCall = false)
         {
             if (level >= upgradeRatios.Count)
             {
@@ -165,8 +166,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                 upgradeCell.TextAnimation.StartAnimation();
                 return;
             }
-            upgradeCell.UpdateCellTexts(level, upgradeRatios[level].Cost, upgradeRatios[level].Percentage);
 
+            upgradeCell.UpdateCellTexts(level, upgradeRatios[level].Cost, upgradeRatios[level].Percentage, firstCall);
         }
 
         private void ClearCells(List<CellToMerge> cells)

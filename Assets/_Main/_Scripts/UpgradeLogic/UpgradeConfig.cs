@@ -22,7 +22,7 @@ namespace _Main._Scripts.UpgradeLogic
 
         private void SetNames(List<UpgradeData> list)
         {
-            foreach (var data in list) data.name = $"Presetage: {data.Percentage} ___ Cost {data.Cost} ";
+            foreach (var data in list) data.name = $"Percentage: {data.Percentage} ___ Cost {data.Cost} ";
         }
 #endif
     }

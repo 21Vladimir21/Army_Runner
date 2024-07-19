@@ -21,5 +21,6 @@ namespace LocalizationSystem.Data.KeyGeneration
 		RewardForTheLevel, 
 		MoneyCollected, 
 		SoldiersCollected, 
+		Level, 
 	}
 }
