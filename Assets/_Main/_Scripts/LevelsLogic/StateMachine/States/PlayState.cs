@@ -41,8 +41,12 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         public void Enter()
         {
-            _gameView.Open();
-            _cameraService.SwitchToFromType(CameraType.Game);
+            _cameraService.ShowFade(() =>
+            {
+                _cameraService.SwitchToFromType(CameraType.Game);
+                _cameraService.HideFade(() => _gameView.Open());
+            });
+            
             _player.OnStart.Invoke();
 
             UpdateUpgrades();
@@ -52,7 +56,7 @@ namespace _Main._Scripts.Level.StateMachine.States
             foreach (var soldierFromSave in _saves.InGameSoldiers)
             {
                 var soldier = _soldiersPool.GetSoldierFromLevel<Soldier>(soldierFromSave.Level);
-                _player.Crowd.AddToCrowdAndSetPosition(soldier,soldierFromSave.Index);
+                _player.Crowd.AddToCrowdAndSetPosition(soldier, soldierFromSave.Index);
             }
 
             _levelService.CurrentLevel.Finish.OnFinished.AddListener(Finished);
@@ -76,9 +80,8 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         public void Update()
         {
-
-            var start =_levelService.CurrentLevel.PlayerSpawnPoint.position;
-            var end =_levelService.CurrentLevel.Finish.transform.position;
+            var start = _levelService.CurrentLevel.PlayerSpawnPoint.position;
+            var end = _levelService.CurrentLevel.Finish.transform.position;
             var levelLength = Vector3.Distance(start, end);
             var playerDistance = Vector3.Distance(_player.transform.position, start);
             var progress = playerDistance / levelLength;

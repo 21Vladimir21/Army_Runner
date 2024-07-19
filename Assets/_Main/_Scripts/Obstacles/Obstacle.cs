@@ -44,7 +44,7 @@ namespace _Main._Scripts.Obstacles
             }
 
             var currentHealthSting =
-                _currentHealth % 1 == 0 ? _currentHealth.ToString("F0") : _currentHealth.ToString("F2");
+                _currentHealth % 1 == 0 ? _currentHealth.ToString("F0") : _currentHealth.ToString("F1");
             healthText.text = currentHealthSting;
             return true;
         }

@@ -1,21 +1,27 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _Main._Scripts.Services.Cameras
 {
     public class CameraService : MonoBehaviour
     {
+        [SerializeField] private Image fade;
         [field: SerializeField] public CamerasHolder Holder { get; private set; }
+        private bool _isFaded = true;
 
 
         private CameraDataHolder _currentCamera;
+        private Coroutine _currentBlendRoutine;
 
 
-        public void SwitchToFromType(CameraType type, Transform newPosition = null,
-            Action blendCompletedCallBack = null, Action closeCallBack = null)
+        public void SwitchToFromType(CameraType type, Transform newPosition = null)
         {
+            if (_currentBlendRoutine != null) StopCoroutine(_currentBlendRoutine);
             var cameraData = Holder.Cameras.FirstOrDefault(x => x.Type == type);
             if (cameraData != null)
             {
@@ -26,19 +32,44 @@ namespace _Main._Scripts.Services.Cameras
                     _currentCamera.VirtualCamera.transform.position = newPosition.position;
                     _currentCamera.VirtualCamera.transform.rotation = newPosition.rotation;
                 }
-                _currentCamera.Enable();
 
-                if (blendCompletedCallBack != null)
-                    StartCoroutine(WaitBlendCompleted(blendCompletedCallBack));
+                _currentCamera.Enable();
             }
             else Debug.LogWarning($"Camera {type} not found");
         }
+        
 
-        private IEnumerator WaitBlendCompleted(Action callback)
+        public void ShowFade(Action endCallback = null)
         {
-            yield return new WaitUntil(() => Holder.Brain.IsBlending);
-            yield return new WaitForSeconds(Holder.Brain.ActiveBlend.Duration);
-            callback.Invoke();
+            if (_isFaded)
+            {
+                endCallback?.Invoke();
+                return;
+            }
+
+            fade.DOFade(1, 0.5f)
+                .OnComplete(() =>
+                {
+                    _isFaded = true;
+                    endCallback?.Invoke();
+                });
+        }
+
+        public void HideFade(Action endCallback = null, bool forceCallback = false)
+        {
+            if (_isFaded == false || forceCallback)
+            {
+                endCallback?.Invoke();
+                _isFaded = false;
+                return;
+            }
+
+            fade.DOFade(0, 0.5f)
+                .OnComplete(() =>
+                {
+                    _isFaded = false;
+                    endCallback?.Invoke();
+                });
         }
     }
 }

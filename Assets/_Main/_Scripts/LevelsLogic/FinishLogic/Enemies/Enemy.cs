@@ -98,7 +98,7 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
             var progressBarFillAmount = (float)_currentHealth / health;
             progressBar.value = progressBarFillAmount;
             var currentHealthString =
-                _currentHealth % 1 == 0 ? _currentHealth.ToString("F0") : _currentHealth.ToString("F2");
+                _currentHealth % 1 == 0 ? _currentHealth.ToString("F0") : _currentHealth.ToString("F1");
             healthText.text = $"{currentHealthString}/{health}";
         }
     }

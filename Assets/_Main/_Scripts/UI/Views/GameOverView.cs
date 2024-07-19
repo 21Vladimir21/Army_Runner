@@ -7,11 +7,12 @@ namespace _Main._Scripts.UI
     {
         [field: SerializeField] public Button BackButton { get; private set; }
         [field: SerializeField] public GameObject GameOverPanel{ get; private set; }
-        private const float ShowGameOverPanelDelay = 3.5f;
+        private const float ShowGameOverPanelDelay = 2.5f;
 
         public void Open()
         {
             base.Open();
+            
             StartCoroutine(ShowWithDelay(() => { GameOverPanel.SetActive(true); }, ShowGameOverPanelDelay));
         }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using _Main._Scripts.SavesLogic;
 using Kimicu.YandexGames;
+using Kimicu.YandexGames.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -29,7 +30,7 @@ public class NoAdButton : MonoBehaviour
 
         priceText.text = Billing.CatalogProducts[0].priceValue;
         var picture = Billing.CatalogProducts[0].priceCurrencyPicture;
-        StartCoroutine(DownloadImage(picture));
+       Coroutines.StartRoutine(DownloadImage(picture));
     }
 
     private void BuyNoAd()

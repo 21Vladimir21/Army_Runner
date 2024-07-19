@@ -34,6 +34,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private RepresentativeOfTheSoldiers _representativeOfTheSoldiers;
 
         private SoldiersLevels _currentRewardSoldier;
+        private bool _isFirstLaunch = true;
 
         public MergeState(IStateSwitcher stateSwitcher, MainConfig mainConfig, SoldiersPool soldiersPool,
             List<CellToMerge> reserveCells,
@@ -90,11 +91,15 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             LoadSoldiersFromSave();
 
             _preGameView.LevelText.SetValue(_saves.CurrentLevelText + 1);
-            _preGameView.Open();
-            _cameraService.SwitchToFromType(CameraType.PreGame);
 
+            _cameraService.ShowFade(() =>
+            {
+                _cameraService.SwitchToFromType(CameraType.PreGame);
+                _cameraService.HideFade(()=>_preGameView.Open(),_isFirstLaunch);
+            });
 
             SetCurrentRewardSoldier();
+            _isFirstLaunch = false;
         }
 
         public void Exit()
