@@ -15,6 +15,7 @@ Material:
   - _CELPRIMARYMODE_SINGLE
   - _TEXTUREBLENDINGMODE_MULTIPLY
   m_InvalidKeywords:
+  - _ALLOWALPHAOVERFLOW_OFF
   - _EMISSION
   - _GLOSSYREFLECTIONS_OFF
   - _SPECULARHIGHLIGHTS_OFF
@@ -79,14 +80,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AllowAlphaOverflow: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
+    - _CameraDistanceFadeClose: 0
+    - _CameraDistanceFadeFar: 10
     - _CelExtraEnabled: 0
     - _CelNumSteps: 3
     - _CelPrimaryMode: 1
     - _Cull: 2
     - _Cutoff: 0.5
+    - _Depth: 100
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _FlatRimEdgeSmoothness: 0.5
@@ -131,6 +136,8 @@ Material:
     - _UnityShadowMode: 0
     - _UnityShadowPower: 0
     - _UnityShadowSharpness: 1
+    - _UvFadeX: 0.1
+    - _UvFadeY: 0.1
     - _VertexColorsEnabled: 0
     - _ZWrite: 1
     m_Colors:
