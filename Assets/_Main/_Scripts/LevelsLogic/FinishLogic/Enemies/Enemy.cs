@@ -101,6 +101,13 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
                 _currentHealth % 1 == 0 ? _currentHealth.ToString("F0") : _currentHealth.ToString("F1");
             healthText.text = $"{currentHealthString}/{health}";
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            healthText.text = health.ToString();
+        }
+#endif
     }
 
     public enum EnemyAnimationKeys

@@ -71,7 +71,7 @@ namespace _Main._Scripts.Obstacles
 
             if (dontDamagable)
                 return;
-                healthText.text = maxHealth.ToString();
+            healthText.text = maxHealth.ToString();
         }
 #endif
     }
