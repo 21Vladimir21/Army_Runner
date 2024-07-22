@@ -128,6 +128,7 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Dance);
                 _player.Crowd.SaveCurrentSoldiers();
                 _finishView.ShowWinPanel(_collectedMoneyCount, _collectedSoldiersCount);
+                _saves.AddMoney(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
                 _saves.SetNextLevel();
             }
         }
@@ -144,8 +145,6 @@ namespace _Main._Scripts.Level.StateMachine.States
             }
             else
                 _stateSwitcher.SwitchState<InitState>();
-
-            _saves.AddMoney(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
         }
 
         private void ToMergeReward() => _stateSwitcher.SwitchState<InitState>();

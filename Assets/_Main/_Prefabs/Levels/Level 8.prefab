@@ -858,7 +858,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 221605221532740204, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: m_text
-      value: 50
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 1267678909571222581, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: m_Name
@@ -901,6 +901,10 @@ PrefabInstance:
       value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 2562426266513532069, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20.870005
+      objectReference: {fileID: 0}
+    - target: {fileID: 2562426266513532069, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
@@ -922,11 +926,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4532848973306623164, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 17.08
+      value: 21.32
       objectReference: {fileID: 0}
     - target: {fileID: 4532848973306623164, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748094898162796538, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
+      propertyPath: speed
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4748094898162796538, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: health
@@ -973,8 +981,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6668955955999447011, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
+      propertyPath: speed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6668955955999447011, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: health
-      value: 50
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 7429677259243258404, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1061,6 +1073,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1087747627707000858}
     m_Modifications:
     - target: {fileID: 1676083825977858378, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
+      propertyPath: speed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1676083825977858378, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: health
       value: 70
       objectReference: {fileID: 0}
@@ -1102,7 +1118,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8442467438360918549, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 24.65
+      value: 28.890005
       objectReference: {fileID: 0}
     - target: {fileID: 8442467438360918549, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2207,6 +2223,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WooldWallObstacle
       objectReference: {fileID: 0}
+    - target: {fileID: 3482769923692054656, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
+      propertyPath: maxHealth
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4954635801745758772, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.25
@@ -2246,6 +2266,10 @@ PrefabInstance:
     - target: {fileID: 4954635801745758772, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6671653696121699110, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
+      propertyPath: m_text
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6671653696121699110, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
       propertyPath: m_fontSize
@@ -2395,7 +2419,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 542211528371935632, guid: d5b23fb98e62e2c44beb6860eae9569b, type: 3}
       propertyPath: m_text
-      value: 10
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 542211528371935632, guid: d5b23fb98e62e2c44beb6860eae9569b, type: 3}
       propertyPath: m_fontSize
@@ -2403,7 +2427,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4135068794747759063, guid: d5b23fb98e62e2c44beb6860eae9569b, type: 3}
       propertyPath: maxHealth
-      value: 10
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5165460064560817561, guid: d5b23fb98e62e2c44beb6860eae9569b, type: 3}
+      propertyPath: m_text
+      value: 15%
       objectReference: {fileID: 0}
     - target: {fileID: 7419324905654696460, guid: d5b23fb98e62e2c44beb6860eae9569b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2448,6 +2476,10 @@ PrefabInstance:
     - target: {fileID: 9082097205933770459, guid: d5b23fb98e62e2c44beb6860eae9569b, type: 3}
       propertyPath: m_Name
       value: ConcreteBlockWithBarbedWireObstacleWithBulletDamage
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218730770076261659, guid: d5b23fb98e62e2c44beb6860eae9569b, type: 3}
+      propertyPath: <Value>k__BackingField
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2595,6 +2627,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WooldWallObstacle (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3482769923692054656, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
+      propertyPath: maxHealth
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4954635801745758772, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2634,6 +2670,10 @@ PrefabInstance:
     - target: {fileID: 4954635801745758772, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6671653696121699110, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
+      propertyPath: m_text
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6671653696121699110, guid: 7ef796cc3a6eb2f4bab45379060bd8c9, type: 3}
       propertyPath: m_fontSize
@@ -4751,6 +4791,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WooldWallObstacleWithFireRate
       objectReference: {fileID: 0}
+    - target: {fileID: 1864164242184668192, guid: 9327ba5148530be4c97e714052a12448, type: 3}
+      propertyPath: maxHealth
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7875098418535618196, guid: 9327ba5148530be4c97e714052a12448, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.25
@@ -4790,6 +4834,10 @@ PrefabInstance:
     - target: {fileID: 7875098418535618196, guid: 9327ba5148530be4c97e714052a12448, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439155243139348358, guid: 9327ba5148530be4c97e714052a12448, type: 3}
+      propertyPath: m_text
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8439155243139348358, guid: 9327ba5148530be4c97e714052a12448, type: 3}
       propertyPath: m_fontSize
@@ -8920,8 +8968,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 1087747627707000858}
     m_Modifications:
     - target: {fileID: 1676083825977858378, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
+      propertyPath: speed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1676083825977858378, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: health
-      value: 50
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 3230705314451721357, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_AnchorMax.x
@@ -8933,7 +8985,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5250367592127145157, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_text
-      value: 50
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 5421756444088327712, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_Name
@@ -8961,7 +9013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8442467438360918549, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22.629995
+      value: 26.87
       objectReference: {fileID: 0}
     - target: {fileID: 8442467438360918549, guid: c1dd3dd78f3fc5744955f57bdbf4fbb8, type: 3}
       propertyPath: m_LocalRotation.w
