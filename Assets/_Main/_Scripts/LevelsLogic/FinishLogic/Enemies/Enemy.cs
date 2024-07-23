@@ -88,6 +88,8 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 
         private void Die()
         {
+            progressBar.gameObject.SetActive(false);
+            healthText.gameObject.SetActive(false);
             animator.SetTrigger(EnemyAnimationKeys.Die.ToString());
             StopMove();
             OnDie.Invoke(this);
@@ -95,7 +97,7 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 
         private void UpdateProgressBar()
         {
-            var progressBarFillAmount = (float)_currentHealth / health;
+            var progressBarFillAmount = _currentHealth / health;
             progressBar.value = progressBarFillAmount;
             var currentHealthString =
                 _currentHealth % 1 == 0 ? _currentHealth.ToString("F0") : _currentHealth.ToString("F1");

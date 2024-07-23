@@ -67,7 +67,7 @@ namespace _Main._Scripts.Soilders
                 if (_canApplyDamage)
                 {
                     damageParticle.Play();
-                    _audioService.PlaySound(Sound.Poof);
+                    _audioService.PlaySound(Sound.Poof,volumeScale: 0.4f);
                     Die();
                 }
 
@@ -132,10 +132,6 @@ namespace _Main._Scripts.Soilders
             {
                 Shot();
                 _timeOfLastShot = 0f;
-                if (_isFinishShooting)
-                    SetAnimation(SoldierAnimationTriggers.Shot, true);
-
-                shootParticle.Play();
             }
         }
 
@@ -199,6 +195,10 @@ namespace _Main._Scripts.Soilders
             for (int i = 0; i < Config.oneShotBulletCount; i++)
             {
                 PrepareBullet(point);
+                _audioService.PlaySound(Sound.Shot, volumeScale: 0.1f);
+                shootParticle.Play();
+                if (_isFinishShooting)
+                    SetAnimation(SoldierAnimationTriggers.Shot, true);
                 yield return new WaitForSeconds(Config.bulletShotDelay);
             }
 
@@ -207,7 +207,6 @@ namespace _Main._Scripts.Soilders
 
         private void PrepareBullet(Transform point)
         {
-            _audioService.PlaySound(Sound.Shot, volumeScale: 0.2f);
             var bullet = _bulletPool.GetBullet();
             bullet.transform.position = point.position;
             bullet.transform.rotation = point.rotation;

@@ -38,7 +38,7 @@ namespace _Main._Scripts.Soilders
             _lifeTime = lifeTime;
             _bulletSpeed = speed;
             _damage = damage;
-            transform.localScale = Vector3.one *  transform.localScale.x / 100 * bulletScale;
+            transform.localScale = Vector3.one * (transform.localScale.x / 100 * bulletScale);
             _deactivateRoutine = StartCoroutine(DeactivateRoutine());
             _canMove = true;
         }

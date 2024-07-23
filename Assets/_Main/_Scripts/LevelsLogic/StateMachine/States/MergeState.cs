@@ -112,12 +112,14 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void SetCurrentRewardSoldier()
         {
-            if (_saves.CurrentLevelText < 10)
+            if (_saves.CurrentLevelText <10 )
                 _currentRewardSoldier = SoldiersLevels.Level5;
-            else if (_saves.CurrentLevelText < 20)
+            else if (_saves.CurrentLevelText <19)
                 _currentRewardSoldier = SoldiersLevels.Level7;
-            else if (_saves.CurrentLevelText >= 20)
-                _currentRewardSoldier = SoldiersLevels.Level10;
+            else if (_saves.CurrentLevelText < 29)
+                _currentRewardSoldier = SoldiersLevels.Level10; 
+            else if (_saves.CurrentLevelText >= 29)
+                _currentRewardSoldier = SoldiersLevels.Level12;
             _preGameView.SoldierRewardText.SetValue((int)_currentRewardSoldier + 1);
         }
 

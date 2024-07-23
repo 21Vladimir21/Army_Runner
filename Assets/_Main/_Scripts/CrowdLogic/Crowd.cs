@@ -80,19 +80,19 @@ namespace _Main._Scripts.CrowdLogic
             {
                 case BoostType.Damage:
                     _bulletDamagePercentage += boost.Value;
-                    foreach (var soldier in Soldiers) soldier.UpdateBulletDamagePercentage(_bulletDamagePercentage);
+                    foreach (var soldier in Soldiers) soldier.UpdateBulletDamagePercentage(100 + boost.Value);
                     break;
                 case BoostType.BulletScale:
                     _bulletScalePercentage += boost.Value;
-                    foreach (var soldier in Soldiers) soldier.UpdateBulletScalePercentage(_bulletScalePercentage);
+                    foreach (var soldier in Soldiers) soldier.UpdateBulletScalePercentage(100 + boost.Value);
                     break;
                 case BoostType.BulletSpeed:
                     _bulletSpeedPercentage += boost.Value;
-                    foreach (var soldier in Soldiers) soldier.UpdateBulletSpeedPercentage(_bulletSpeedPercentage);
+                    foreach (var soldier in Soldiers) soldier.UpdateBulletSpeedPercentage(100 + boost.Value);
                     break;
                 case BoostType.FireRate:
                     _fireRatePercentage -= boost.Value;
-                    foreach (var soldier in Soldiers) soldier.UpdateFireRatePercentage(_fireRatePercentage);
+                    foreach (var soldier in Soldiers) soldier.UpdateFireRatePercentage(100 - boost.Value);
                     break;
                 case BoostType.DoubleBullet:
                     _doubleShotIsActive = true;
