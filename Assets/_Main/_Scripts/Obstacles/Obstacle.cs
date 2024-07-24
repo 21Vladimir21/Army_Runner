@@ -71,7 +71,14 @@ namespace _Main._Scripts.Obstacles
 
             if (dontDamagable)
                 return;
-            healthText.text = maxHealth.ToString();
+            if (healthText)
+            {
+                healthText.text = maxHealth.ToString();
+            }
+            else
+            {
+                print($"Obstacle name {gameObject.name}");
+            }
         }
 #endif
     }
