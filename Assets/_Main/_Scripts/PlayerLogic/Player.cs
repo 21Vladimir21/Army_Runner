@@ -23,7 +23,11 @@ namespace _Main._Scripts.PlayerLogic
         public UnityEvent OnRestart { get; } = new();
         public UnityEvent OnStart { get; private set; } = new();
         public Transform Transform => transform;
-        public bool MouseInput => _mouseInput;
+        public bool MouseInput
+        {
+            get => _mouseInput;
+            set => _mouseInput = value;
+        }
 
 
         private Vector3 _startPoint;

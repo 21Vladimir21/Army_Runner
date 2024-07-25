@@ -8,6 +8,7 @@ using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.Soilders.Bullets;
+using _Main._Scripts.TutorialLogic;
 using _Main._Scripts.UI;
 using Kimicu.YandexGames;
 using SoundService.Scripts;
@@ -26,6 +27,7 @@ namespace _Main._Scripts
         [SerializeField] private UIViewsHolder views;
         [SerializeField] private CameraService cameraService;
         [SerializeField] private AudioService audioService;
+        [SerializeField] private TutorialService tutorialService;
 
         [SerializeField] private Transform levelSpawnPoint;
         [SerializeField] private Transform bulletPoolParent;
@@ -39,9 +41,11 @@ namespace _Main._Scripts
         private void Awake()
         {
             SavesService savesService = ServiceLocator.Instance.GetServiceByType<SavesService>();
-
-            audioService.Init(savesService.Saves.SoundEnabled);
             ServiceLocator.Instance.TryAddService(audioService);
+            ServiceLocator.Instance.TryAddService(tutorialService);
+            
+            audioService.Init(savesService.Saves.SoundEnabled);
+            tutorialService.Init(savesService.Saves);
 
             var soldiersPool = new SoldiersPool(mainConfig.SoldiersPoolConfig, soldiersPoolParent);
             var levelService = InitLevelService();
@@ -51,7 +55,6 @@ namespace _Main._Scripts
             var bulletPool = new BulletPool(mainConfig.BulletPoolConfig, bulletPoolParent);
             player.Init(savesService.Saves, bulletPool, soldiersPool);
 
-            Debug.Log($" CURRENT LEVEL _-_-_-_-{savesService.Saves.CurrentLevel}");
             _levelStateMachine =
                 new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
                     cameraService, soldiersPool, player);

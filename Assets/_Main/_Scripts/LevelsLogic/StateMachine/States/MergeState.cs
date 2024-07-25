@@ -6,7 +6,9 @@ using _Main._Scripts.MergeLogic;
 using _Main._Scripts.MergeLogic.DragAndDropLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.SavesLogic;
+using _Main._Scripts.Services;
 using _Main._Scripts.Services.Cameras;
+using _Main._Scripts.TutorialLogic;
 using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
 using Kimicu.YandexGames;
@@ -35,6 +37,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private SoldiersLevels _currentRewardSoldier;
         private bool _isFirstLaunch = true;
+        private readonly TutorialService _tutorialService;
 
         public MergeState(IStateSwitcher stateSwitcher, MainConfig mainConfig, SoldiersPool soldiersPool,
             List<CellToMerge> reserveCells,
@@ -82,6 +85,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                 ));
             _preGameView.RewardSoldier.onClick.AddListener(TryAddedRewardSoldier);
             _preGameView.StartGameButton.onClick.AddListener(SwitchToPlayState);
+
+            _tutorialService = ServiceLocator.Instance.GetServiceByType<TutorialService>();
         }
 
         public void Enter()
@@ -95,11 +100,12 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _cameraService.ShowFade(() =>
             {
                 _cameraService.SwitchToFromType(CameraType.PreGame);
-                _cameraService.HideFade(()=>_preGameView.Open(),_isFirstLaunch);
+                _cameraService.HideFade(() => _preGameView.Open(), _isFirstLaunch);
             });
 
             SetCurrentRewardSoldier();
             _isFirstLaunch = false;
+            if (_saves.TutorialStepIndex < 8 && _saves.CurrentLevelText > 0) _tutorialService.TryCallNextStep();
         }
 
         public void Exit()
@@ -112,12 +118,12 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void SetCurrentRewardSoldier()
         {
-            if (_saves.CurrentLevelText <10 )
+            if (_saves.CurrentLevelText < 10)
                 _currentRewardSoldier = SoldiersLevels.Level5;
-            else if (_saves.CurrentLevelText <19)
+            else if (_saves.CurrentLevelText < 19)
                 _currentRewardSoldier = SoldiersLevels.Level7;
             else if (_saves.CurrentLevelText < 29)
-                _currentRewardSoldier = SoldiersLevels.Level10; 
+                _currentRewardSoldier = SoldiersLevels.Level10;
             else if (_saves.CurrentLevelText >= 29)
                 _currentRewardSoldier = SoldiersLevels.Level12;
             _preGameView.SoldierRewardText.SetValue((int)_currentRewardSoldier + 1);

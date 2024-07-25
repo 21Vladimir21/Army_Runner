@@ -23,7 +23,7 @@ namespace _Main._Scripts.SavesLogic
         [field: SerializeField]
         public List<Soldier> InGameSoldiers { get; set; } = new()
         {
-            new Soldier(SoldiersLevels.Level1, 1),
+            new Soldier(SoldiersLevels.Level1, 0),
         };
 
         private const int LastLevelNotShowAd = 5;
@@ -39,6 +39,19 @@ namespace _Main._Scripts.SavesLogic
         [field: SerializeField] public float BulletDamagePercentage = 100;
         [field: SerializeField] public float BulletSpeedPercentage = 100;
         [field: SerializeField] public float FireRatePercentage = 100;
+
+        [SerializeField] private bool _wasShowedTutorial;
+        [field: SerializeField] public int TutorialStepIndex { get; set; }
+
+        public bool WasShowedTutorial
+        {
+            get => _wasShowedTutorial;
+            set
+            {
+                _wasShowedTutorial = value;
+                InvokeSave();
+            }
+        }
 
         private string _filePath;
 

@@ -1,4 +1,6 @@
 using _Main._Scripts.CrowdLogic;
+using _Main._Scripts.Services;
+using _Main._Scripts.TutorialLogic;
 using UnityEngine;
 
 namespace _Main._Scripts.MergeLogic.DragAndDropLogic
@@ -18,6 +20,7 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
         private CellToMerge _startDragCell;
         private CellToMerge _selectedCell;
         private CellToMerge _lastSelectedCell;
+        private readonly TutorialService _tutorialService;
 
 
         public DragAndDrop(DragConfig config, Camera camera, RepresentativeOfTheSoldiers representativeOfTheSoldiers,
@@ -32,6 +35,7 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             _camera = camera;
             _representativeOfTheSoldiers = representativeOfTheSoldiers;
             _soldiersPool = soldiersPool;
+            _tutorialService = ServiceLocator.Instance.GetServiceByType<TutorialService>();
         }
 
         public void UpdateDrag()
@@ -87,7 +91,11 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
 
         private void ResetDrag()
         {
-            if (_selectedCell != null && _selectedCell.IsBusy == false) RearrangeSoldier();
+            if (_selectedCell != null && _selectedCell.IsBusy == false)
+            {
+                RearrangeSoldier();
+                _tutorialService.TryCallNextStep();
+            }
             else if (_selectedCell != null && _selectedCell.IsBusy) MergeSoldiers();
             else if (_draggedObject != null) _startDragCell.ResetSoldierPosition();
             ClearDragState();
@@ -118,6 +126,8 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             _selectedCell.RemoveObjectData();
             _startDragCell.RemoveObjectData();
             _selectedCell.AddObject(_representativeOfTheSoldiers.GetNextObjectLevel(currentObjectLevel), true);
+         
+            _tutorialService.TryCallNextStep();
         }
 
         private void ClearDragState()
