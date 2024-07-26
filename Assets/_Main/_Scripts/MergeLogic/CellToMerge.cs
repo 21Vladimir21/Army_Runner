@@ -12,6 +12,7 @@ namespace _Main._Scripts.MergeLogic
         [SerializeField] private GameObject SelectOutLine;
 
         [HideInInspector] public DraggableObject currentObject;
+        public bool isReserveCell;
 
         public bool IsBusy { get; private set; }
         private AudioService _audioService;
@@ -23,7 +24,7 @@ namespace _Main._Scripts.MergeLogic
             _audioService.PlaySound(Sound.Energy);
         }
 
-        public void AddObject(DraggableObject draggableObject,bool playParticle = false)
+        public void AddObject(DraggableObject draggableObject, bool playParticle = false)
         {
             if (playParticle) PlayEffects();
             currentObject = draggableObject;
@@ -35,9 +36,9 @@ namespace _Main._Scripts.MergeLogic
         {
             currentObject = null;
             IsBusy = false;
-            DeSelectCell(); 
+            DeSelectCell();
         }
-        
+
         public void ResetSoldierPosition()
         {
             _audioService.PlaySound(Sound.PickDown);

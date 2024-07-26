@@ -7,13 +7,18 @@ namespace _Main._Scripts.UI
     {
         [field: SerializeField] public Button BackButton { get; private set; }
         [field: SerializeField] public GameObject GameOverPanel{ get; private set; }
+        [SerializeField] private RandomGeneralPhrase phrases;
         private const float ShowGameOverPanelDelay = 2.5f;
 
         public void Open()
         {
             base.Open();
             
-            StartCoroutine(ShowWithDelay(() => { GameOverPanel.SetActive(true); }, ShowGameOverPanelDelay));
+            StartCoroutine(ShowWithDelay(() =>
+            {
+                GameOverPanel.SetActive(true);
+                phrases.ShowRandomPhrase();
+            }, ShowGameOverPanelDelay));
         }
 
         public void Close()

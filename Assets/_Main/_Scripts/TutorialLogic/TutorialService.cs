@@ -16,9 +16,8 @@ namespace _Main._Scripts.TutorialLogic
             _saves = saves;
             foreach (var step in tutorialSteps)
                 step.ExitCallback += TryCallNextStep;
-            if (_saves.TutorialStepIndex >= 7) 
+            if (_saves.TutorialStepIndex >=8) 
                 _nextStepIndex = _saves.TutorialStepIndex;
-            TryCallNextStep();
         }
 
         public void TryCallNextStep()
@@ -36,6 +35,18 @@ namespace _Main._Scripts.TutorialLogic
             _currentStep = tutorialSteps[_nextStepIndex];
             _currentStep.Enter();
             _nextStepIndex++;
+        }
+
+        public void HideCurrentStep() => _currentStep.Hide();
+
+        public void ResetTutorial()
+        {
+            if (_saves.TutorialStepIndex <= 7)
+            {
+                _currentStep.Exit();
+                _saves.TutorialStepIndex = 0;
+                _nextStepIndex = 0;
+            } 
         }
     }
 }

@@ -30,6 +30,8 @@ namespace _Main._Scripts.TutorialLogic
             gameObject.SetActive(false);
         }
 
+        public void Hide() => gameObject.SetActive(false);
+
         private IEnumerator ShowDelayRoutine(Action callback)
         {
             yield return new WaitForSeconds(showDelay);

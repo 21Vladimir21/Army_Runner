@@ -100,12 +100,29 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _cameraService.ShowFade(() =>
             {
                 _cameraService.SwitchToFromType(CameraType.PreGame);
-                _cameraService.HideFade(() => _preGameView.Open(), _isFirstLaunch);
+                _cameraService.HideFade(() =>
+                {
+                    _preGameView.Open();
+                    _tutorialService.TryCallNextStep();
+                }, _isFirstLaunch);
             });
 
             SetCurrentRewardSoldier();
             _isFirstLaunch = false;
-            if (_saves.TutorialStepIndex < 8 && _saves.CurrentLevelText > 0) _tutorialService.TryCallNextStep();
+            if (_saves.WasShowedTutorial == false && _saves.TutorialStepIndex <= 8 && _saves.CurrentLevelText > 0)
+            {
+                //TODO:здесь можно дюпать солдат если на этапе туториала с мержем не проходиь его ,а перезагружать страницу,так как это маловероятно не буду править 
+                for (int i = 0; i < 2; i++)
+                {
+                    var index = TryGetFreeIndexInList(_reserveCells);
+                    var soldier = _representativeOfTheSoldiers.GetSoldier(SoldiersLevels.Level1);
+                    _reserveCells[(int)index].AddObject(soldier);
+                }
+
+                SaveSoldiers();
+            }
+
+            _saves.InvokeSave();
         }
 
         public void Exit()
@@ -203,7 +220,6 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             MainSaveSoldiers(_gameCells, _saves.InGameSoldiers);
             MainSaveSoldiers(_reserveCells, _saves.ReserveSoldiers);
-            _saves.InvokeSave();
         }
 
         private void MainLoadSoldiers(List<CellToMerge> cells, List<Saves.Soldier> listFromSave)

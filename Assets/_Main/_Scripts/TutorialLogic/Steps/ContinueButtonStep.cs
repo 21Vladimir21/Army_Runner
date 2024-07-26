@@ -16,6 +16,7 @@ namespace _Main._Scripts.TutorialLogic.Steps
 
         public override void Exit()
         {
+            button.onClick.RemoveListener(ExitCallback.Invoke);
             base.Exit();
         }
     }

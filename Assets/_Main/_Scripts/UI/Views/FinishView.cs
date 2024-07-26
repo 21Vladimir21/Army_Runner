@@ -15,6 +15,8 @@ namespace _Main._Scripts.UI
         [SerializeField] private TMP_Text enemyCountText;
         [SerializeField] private FormattableLocalizationTextTMP MoneyCollected;
         [SerializeField] private FormattableLocalizationTextTMP SoldiersCollected;
+        [SerializeField] private RandomGeneralPhrase phrases;
+    
 
         private const float ShowWinPanelDelay = 3f;
 
@@ -32,7 +34,11 @@ namespace _Main._Scripts.UI
         {
             MoneyCollected.SetValue(moneyCount);
             SoldiersCollected.SetValue(soldiersCount);
-            StartCoroutine(ShowWithDelay(() => WinPanel.SetActive(true), ShowWinPanelDelay));
+            StartCoroutine(ShowWithDelay(() =>
+            {
+                WinPanel.SetActive(true);
+                phrases.ShowRandomPhrase();
+            }, ShowWinPanelDelay));
         }
     }
 }

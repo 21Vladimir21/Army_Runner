@@ -5,7 +5,7 @@ namespace _Main._Scripts.TutorialLogic.Steps
 {
     public class CloseClickStep: TutorialStepBase, IPointerDownHandler
     {
-        public void OnPointerDown(PointerEventData eventData) => gameObject.SetActive(false);
+        public void OnPointerDown(PointerEventData eventData) => Hide();
         public override void Enter(Action showCallback = null)
         {
             base.Enter(showCallback);

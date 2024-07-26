@@ -1,7 +1,9 @@
 using _Main._Scripts.CrowdLogic;
+using _Main._Scripts.SavesLogic;
 using _Main._Scripts.Services;
 using _Main._Scripts.TutorialLogic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace _Main._Scripts.MergeLogic.DragAndDropLogic
 {
@@ -21,6 +23,7 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
         private CellToMerge _selectedCell;
         private CellToMerge _lastSelectedCell;
         private readonly TutorialService _tutorialService;
+        private readonly Saves _save;
 
 
         public DragAndDrop(DragConfig config, Camera camera, RepresentativeOfTheSoldiers representativeOfTheSoldiers,
@@ -36,6 +39,7 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             _representativeOfTheSoldiers = representativeOfTheSoldiers;
             _soldiersPool = soldiersPool;
             _tutorialService = ServiceLocator.Instance.GetServiceByType<TutorialService>();
+            _save = ServiceLocator.Instance.GetServiceByType<SavesService>().Saves;
         }
 
         public void UpdateDrag()
@@ -75,6 +79,7 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             _draggedObject = cell.currentObject.transform;
             _startDragCell.SelectCell();
             _isDragged = true;
+            _tutorialService.HideCurrentStep();
         }
 
         private void SelectNewCell(CellToMerge cell)
@@ -94,10 +99,12 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             if (_selectedCell != null && _selectedCell.IsBusy == false)
             {
                 RearrangeSoldier();
-                _tutorialService.TryCallNextStep();
+                if (_save.TutorialStepIndex > 8 && _selectedCell.isReserveCell == false)
+                    _tutorialService.TryCallNextStep();
             }
             else if (_selectedCell != null && _selectedCell.IsBusy) MergeSoldiers();
             else if (_draggedObject != null) _startDragCell.ResetSoldierPosition();
+
             ClearDragState();
         }
 
@@ -121,12 +128,13 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
                 _selectedCell.DeSelectCell();
                 return;
             }
+
             _soldiersPool.ReturnSoldier(_selectedCell.currentObject);
             _soldiersPool.ReturnSoldier(_startDragCell.currentObject);
             _selectedCell.RemoveObjectData();
             _startDragCell.RemoveObjectData();
             _selectedCell.AddObject(_representativeOfTheSoldiers.GetNextObjectLevel(currentObjectLevel), true);
-         
+
             _tutorialService.TryCallNextStep();
         }
 
@@ -156,7 +164,7 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
         private RaycastHit CastRay()
         {
             var ray = _camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
                 return hit;
 
             return default;

@@ -16,7 +16,6 @@ namespace _Main._Scripts.TutorialLogic
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log(other.name);
             if (other.TryGetComponent(out Player player))
             {
                 _tutorialService.TryCallNextStep();
@@ -29,6 +28,7 @@ namespace _Main._Scripts.TutorialLogic
         {
             if (mask == null) return;
             if (other.TryGetComponent(out Player player)) mask.SetActive(false);
+            collider.enabled = false;
         }
 #if UNITY_EDITOR
 

@@ -3,6 +3,8 @@ using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
+using _Main._Scripts.Services;
+using _Main._Scripts.TutorialLogic;
 using _Main._Scripts.UI;
 using Kimicu.YandexGames;
 using SoundService.Scripts;
@@ -16,6 +18,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private readonly Saves _saves;
         private readonly GameOverView _gameOverView;
         private readonly Player _player;
+        private readonly TutorialService _tutorialService;
 
         public GameOverState(IStateSwitcher stateSwitcher, Saves saves, GameOverView gameOverView, Player player)
         {
@@ -24,12 +27,14 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _gameOverView = gameOverView;
             _player = player;
             _gameOverView.BackButton.onClick.AddListener(RestartGame);
+            _tutorialService = ServiceLocator.Instance.GetServiceByType<TutorialService>();
         }
 
         public void Enter()
         {
             _gameOverView.Open();
             _player.gameObject.SetActive(false);
+            if (_saves.WasShowedTutorial == false) _tutorialService.ResetTutorial();
         }
 
         public void Exit()

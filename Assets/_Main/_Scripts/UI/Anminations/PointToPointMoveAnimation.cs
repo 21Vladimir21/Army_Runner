@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PointToPointMoveAnimation : MonoBehaviour
 {
     [SerializeField] private List<Transform> points;
     [SerializeField] private Transform moveObject;
-    
+    private Sequence _sequence;
+
 
     private void OnEnable()
     {
@@ -17,8 +17,13 @@ public class PointToPointMoveAnimation : MonoBehaviour
         for (var i = 0; i < points.Count; i++)
             path[i] = points[i].localPosition;
         
-        var seq = DOTween.Sequence();
-        seq.Append(moveObject.DOLocalPath(path, 3, PathType.CatmullRom).SetEase(Ease.Linear));
-        seq.SetLoops(-1);
+        _sequence = DOTween.Sequence();
+        _sequence.Append(moveObject.DOLocalPath(path, 3, PathType.CatmullRom).SetEase(Ease.Linear));
+        _sequence.SetLoops(-1);
     }
+    private void OnDisable()
+    {
+        _sequence.Kill();
+    }
+    
 }
