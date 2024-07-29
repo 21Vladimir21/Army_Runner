@@ -23,6 +23,7 @@ namespace _Main._Scripts.PlayerLogic
         public UnityEvent OnRestart { get; } = new();
         public UnityEvent OnStart { get; private set; } = new();
         public Transform Transform => transform;
+
         public bool MouseInput
         {
             get => _mouseInput;
@@ -31,11 +32,11 @@ namespace _Main._Scripts.PlayerLogic
 
 
         private Vector3 _startPoint;
-        
-        public void Init(Saves saves,BulletPool bulletPool,SoldiersPool soldiersPool)
+
+        public void Init(Saves saves, BulletPool bulletPool, SoldiersPool soldiersPool)
         {
             _saves = saves;
-            Crowd = new Crowd(crowdPoints,Config, bulletPool, soldiersPool,saves);
+            Crowd = new Crowd(crowdPoints, Config, bulletPool, soldiersPool, saves);
             _stateMachine = new PlayerStateMachine(this);
             _startPoint = transform.position;
         }
@@ -58,13 +59,14 @@ namespace _Main._Scripts.PlayerLogic
         public void FinishedShooting() // TODO:Однозначно надо сделать это отдельным состоянием 
         {
             _stateMachine.SwitchState<WaitingState>();
-            
         }
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0)) _mouseInput = true;
-            if (Input.GetMouseButtonUp(0)) _mouseInput = false;
+            if (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.W)|| Input.GetKey(KeyCode.LeftArrow) ||
+                Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) _mouseInput = true;
+            if (Input.GetMouseButtonUp(0)|| Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.W)|| Input.GetKeyUp(KeyCode.LeftArrow) ||
+                Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))_mouseInput = false;
 
             _stateMachine.Update();
         }

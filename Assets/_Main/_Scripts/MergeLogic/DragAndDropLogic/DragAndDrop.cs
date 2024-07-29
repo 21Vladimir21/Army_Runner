@@ -79,7 +79,6 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             _draggedObject = cell.currentObject.transform;
             _startDragCell.SelectCell();
             _isDragged = true;
-            _tutorialService.HideCurrentStep();
         }
 
         private void SelectNewCell(CellToMerge cell)

@@ -37,7 +37,6 @@ namespace _Main._Scripts.TutorialLogic
             _nextStepIndex++;
         }
 
-        public void HideCurrentStep() => _currentStep.Hide();
 
         public void ResetTutorial()
         {

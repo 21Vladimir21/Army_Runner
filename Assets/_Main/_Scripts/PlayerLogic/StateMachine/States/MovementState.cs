@@ -11,6 +11,7 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
         private readonly float _maxRightPosition;
         private readonly float _maxXDelta;
         private readonly float _sensitivity;
+        private readonly float _keySensitivity;
         private readonly float _xDamping;
 
         private readonly Player _player;
@@ -27,6 +28,7 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
             _maxRightPosition = player.Config.maxLeftRightPosition;
             _maxXDelta = player.Config.maxXDragDelta;
             _sensitivity = player.Config.xSensitivity;
+            _keySensitivity = player.Config.xKeySensitivity;
             _xDamping = player.Config.xDampingRatio;
             _player = player;
             _crowd = player.Crowd;
@@ -36,12 +38,10 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
         {
             _startDragPosition = Input.mousePosition;
             _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.IsRunning);
-
         }
 
         public void Exit()
         {
-      
         }
 
         public void Update()
@@ -63,6 +63,7 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
 
             playerTransform.position = position;
             SetXDirection(playerTransform, deltaTime);
+            SetKeyboardDirection(playerTransform, deltaTime);
         }
 
         private Vector3 GetMoveDirection(float deltaTime)
@@ -82,6 +83,17 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
             position = new Vector3(position.x + direction, position.y, position.z);
             xPosition.position = Vector3.Lerp(xPosition.position, position, deltaTime * _sensitivity);
             _startDragPosition = Vector3.Lerp(_startDragPosition, Input.mousePosition, deltaTime * _xDamping);
+        }
+
+        private void SetKeyboardDirection(Transform xPosition, float deltaTime)
+        {
+            var direction = 0f;
+            if (Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.LeftArrow)) direction = -_keySensitivity;
+            else if (Input.GetKey(KeyCode.D)||Input.GetKey(KeyCode.RightArrow)) direction = _keySensitivity;
+
+            var position = xPosition.position;
+            position = new Vector3(position.x + direction * deltaTime, position.y, position.z);
+            xPosition.position = Vector3.Lerp(xPosition.position, position, deltaTime * _sensitivity);
         }
     }
 }
