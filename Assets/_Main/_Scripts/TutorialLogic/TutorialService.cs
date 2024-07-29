@@ -16,15 +16,15 @@ namespace _Main._Scripts.TutorialLogic
             _saves = saves;
             foreach (var step in tutorialSteps)
                 step.ExitCallback += TryCallNextStep;
-            if (_saves.TutorialStepIndex >=8) 
-                _nextStepIndex = _saves.TutorialStepIndex;
+
+            if (_saves.TutorialStepIndex == 7 && _saves.CurrentLevelText == 1) _nextStepIndex = 8;
+            else if (_saves.TutorialStepIndex >= 8) _nextStepIndex = _saves.TutorialStepIndex;
         }
 
         public void TryCallNextStep()
         {
             if (_saves.WasShowedTutorial) return;
 
-            _saves.TutorialStepIndex = _nextStepIndex;
             if (_currentStep != null) _currentStep.Exit();
             if (_nextStepIndex >= tutorialSteps.Length)
             {
@@ -34,6 +34,7 @@ namespace _Main._Scripts.TutorialLogic
 
             _currentStep = tutorialSteps[_nextStepIndex];
             _currentStep.Enter();
+            _saves.TutorialStepIndex = _nextStepIndex;
             _nextStepIndex++;
         }
 
@@ -45,7 +46,7 @@ namespace _Main._Scripts.TutorialLogic
                 _currentStep.Exit();
                 _saves.TutorialStepIndex = 0;
                 _nextStepIndex = 0;
-            } 
+            }
         }
     }
 }

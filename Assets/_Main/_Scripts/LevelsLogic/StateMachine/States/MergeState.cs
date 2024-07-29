@@ -108,8 +108,13 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             });
 
             SetCurrentRewardSoldier();
-            _isFirstLaunch = false;
-            if (_saves.WasShowedTutorial == false && _saves.TutorialStepIndex <= 8 && _saves.CurrentLevelText > 0)
+
+            _saves.InvokeSave();
+        }
+
+        public void Exit()
+        {
+            if (_saves.WasShowedTutorial == false && _isFirstLaunch && _saves.CurrentLevelText == 0)
             {
                 //TODO:здесь можно дюпать солдат если на этапе туториала с мержем не проходиь его ,а перезагружать страницу,так как это маловероятно не буду править 
                 for (int i = 0; i < 2; i++)
@@ -121,14 +126,11 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
                 SaveSoldiers();
             }
+            else
+                SaveSoldiers();
 
-            _saves.InvokeSave();
-        }
-
-        public void Exit()
-        {
-            SaveSoldiers();
             _preGameView.Close();
+            _isFirstLaunch = false;
         }
 
         public void Update() => _dragAndDrop.UpdateDrag();

@@ -5,8 +5,10 @@ using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
+using _Main._Scripts.Services;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.Soilders;
+using _Main._Scripts.TutorialLogic;
 using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
 using UnityEngine;
@@ -23,6 +25,7 @@ namespace _Main._Scripts.Level.StateMachine.States
         private readonly Saves _saves;
         private readonly Player _player;
         private readonly LevelService _levelService;
+        private readonly TutorialService _tutorialService;
 
         public PlayState(IStateSwitcher stateSwitcher, GameView gameView, SoldiersPool soldiersPool,
             CameraService cameraService, Saves saves,
@@ -37,6 +40,9 @@ namespace _Main._Scripts.Level.StateMachine.States
             _levelService = levelService;
             _player.Crowd.OnTakeBoost.AddListener(_gameView.UpdateStats);
             _player.Crowd.OnSoldiersCountChanged.AddListener(_gameView.UpdateSoldiersCountText);
+
+            _gameView.RestartButton.onClick.AddListener(RestartGame);
+            _tutorialService = ServiceLocator.Instance.GetServiceByType<TutorialService>();
         }
 
         public void Enter()
@@ -46,7 +52,7 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _cameraService.SwitchToFromType(CameraType.Game);
                 _cameraService.HideFade(() => _gameView.Open());
             });
-            
+
             _player.OnStart.Invoke();
 
             UpdateUpgrades();
@@ -91,7 +97,13 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         private void Finished()
         {
-            _stateSwitcher.SwitchState<FinishState>();
+                _stateSwitcher.SwitchState<FinishState>();
+        }
+
+        private void RestartGame()
+        {
+            if (_saves.WasShowedTutorial == false) _tutorialService.ResetTutorial();
+            _stateSwitcher.SwitchState<InitState>();
         }
     }
 }
