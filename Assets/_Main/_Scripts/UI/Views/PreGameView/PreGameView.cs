@@ -13,6 +13,7 @@ namespace _Main._Scripts.UI
 
         [field: SerializeField] public Button RewardSoldier { get; private set; }
         [field: SerializeField] public Button SoundsButton { get; private set; }
+        [SerializeField] private Button hideRewardProposalButton;
         [field: SerializeField] public NoAdButton NoAdButton { get; private set; }
 
         [field: Header("UpgradePanels")]
@@ -29,6 +30,9 @@ namespace _Main._Scripts.UI
         [Header("Sprites")] [SerializeField] private Sprite enableButtonSprite;
         [SerializeField] private Sprite disableButtonSprite;
 
+        [SerializeField] private GameObject rewardProposal;
+
+
         private bool _isSoundButtonEnabled;
 
 
@@ -41,8 +45,20 @@ namespace _Main._Scripts.UI
             _isSoundButtonEnabled = Saves.SoundEnabled;
             SwitchSoundButtonSprite();
             NoAdButton.Init(Saves);
+            hideRewardProposalButton.onClick.AddListener(HideRewardProposal);
         }
 
+        public void ShowRewardProposal()
+        {
+            RewardSoldier.onClick.AddListener(HideRewardProposal);
+            rewardProposal.SetActive(true);
+        }
+
+        private void HideRewardProposal()
+        {
+            RewardSoldier.onClick.RemoveListener(HideRewardProposal);
+            rewardProposal.SetActive(false);
+        }
 
         private void SetMoneyText() => moneyText.text = $"{Saves.Money}";
 

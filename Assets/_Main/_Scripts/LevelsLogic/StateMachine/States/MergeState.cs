@@ -39,6 +39,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private bool _isFirstLaunch = true;
         private readonly TutorialService _tutorialService;
 
+        private const int MaxLoseStreakCountForShowPopUp = 5;
+
         public MergeState(IStateSwitcher stateSwitcher, MainConfig mainConfig, SoldiersPool soldiersPool,
             List<CellToMerge> reserveCells,
             List<CellToMerge> gameCells, PreGameView preGameView, CameraService cameraService, Saves saves)
@@ -94,6 +96,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             ClearCells(_reserveCells);
             ClearCells(_gameCells);
             LoadSoldiersFromSave();
+
+            if (_saves.LoseStreak >= MaxLoseStreakCountForShowPopUp) _preGameView.ShowRewardProposal();
 
             _preGameView.LevelText.SetValue(_saves.CurrentLevelText + 1);
 

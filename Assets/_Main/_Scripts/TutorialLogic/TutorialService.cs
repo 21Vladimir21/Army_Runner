@@ -17,8 +17,8 @@ namespace _Main._Scripts.TutorialLogic
             foreach (var step in tutorialSteps)
                 step.ExitCallback += TryCallNextStep;
 
-            if (_saves.TutorialStepIndex == 7 && _saves.CurrentLevelText == 1) _nextStepIndex = 8;
-            else if (_saves.TutorialStepIndex >= 8) _nextStepIndex = _saves.TutorialStepIndex;
+            if (_saves.TutorialStepIndex == 8 && _saves.CurrentLevelText == 1) _nextStepIndex = 9;
+            else if (_saves.TutorialStepIndex >= 9) _nextStepIndex = _saves.TutorialStepIndex;
         }
 
         public void TryCallNextStep()

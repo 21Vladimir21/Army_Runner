@@ -35,10 +35,12 @@ namespace LocalizationSystem.Data.KeyGeneration
 		TutorialBoost, 
 		TutorialObstacls, 
 		TutorialMoney, 
+		TutorialRestartButton, 
 		TutorialFinish, 
 		TutorialMerge, 
 		TutorialGameZone, 
 		TutorialUpgrade, 
+		TutorialRewardButton, 
 		TutorialEnd, 
 	}
 }

@@ -97,6 +97,7 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         private void Finished()
         {
+            _saves.LoseStreak = 0;
                 _stateSwitcher.SwitchState<FinishState>();
         }
 

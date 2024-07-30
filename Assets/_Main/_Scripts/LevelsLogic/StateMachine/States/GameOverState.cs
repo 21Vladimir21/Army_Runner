@@ -32,6 +32,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         public void Enter()
         {
+            _saves.LoseStreak++;
             _gameOverView.Open();
             _player.gameObject.SetActive(false);
             if (_saves.WasShowedTutorial == false) _tutorialService.ResetTutorial();

@@ -14,24 +14,9 @@ namespace _Main._Scripts.SavesLogic
         [SerializeField] private int _money;
         [field: SerializeField] public int CurrentLevel { get; set; }
         [field: SerializeField] public int CurrentLevelText { get; private set; }
-
         [field: SerializeField] public bool SoundEnabled { get; set; } = true;
         [field: SerializeField] public bool AdEnabled { get; set; } = true;
-
-        public bool CanShowAd => CurrentLevelText > LastLevelNotShowAd;
-
-        [field: SerializeField]
-        public List<Soldier> InGameSoldiers { get; set; } = new()
-        {
-            new Soldier(SoldiersLevels.Level1, 0),
-        };
-
-        private const int LastLevelNotShowAd = 5;
-        public int MaxReserveCapacity = 24;
-        public int MaxGameCellsCount = 11;
-        [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new(24);
-
-
+        
         [field: SerializeField] public int BulletDamageLevel;
         [field: SerializeField] public int BulletSpeedLevel;
         [field: SerializeField] public int FireRateLevel;
@@ -42,6 +27,19 @@ namespace _Main._Scripts.SavesLogic
 
         [SerializeField] private bool _wasShowedTutorial;
         [field: SerializeField] public int TutorialStepIndex { get; set; }
+
+        [field: SerializeField]
+        public List<Soldier> InGameSoldiers { get; set; }
+            = new() { new Soldier(SoldiersLevels.Level1, 0), };
+
+        [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new(24);
+
+        public bool CanShowAd => CurrentLevelText > LastLevelNotShowAd;
+
+        private const int LastLevelNotShowAd = 5;
+        [NonSerialized] public int MaxReserveCapacity = 24;
+        [NonSerialized] public int MaxGameCellsCount = 11;
+        [NonSerialized] public int LoseStreak;
 
         public bool WasShowedTutorial
         {

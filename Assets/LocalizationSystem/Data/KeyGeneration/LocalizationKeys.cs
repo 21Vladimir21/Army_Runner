@@ -38,10 +38,12 @@ namespace LocalizationSystem.Data.KeyGeneration
 			{LocalizationKey.TutorialBoost, LocalizationKey.TutorialBoost.ToString()},
 			{LocalizationKey.TutorialObstacls, LocalizationKey.TutorialObstacls.ToString()},
 			{LocalizationKey.TutorialMoney, LocalizationKey.TutorialMoney.ToString()},
+			{LocalizationKey.TutorialRestartButton, LocalizationKey.TutorialRestartButton.ToString()},
 			{LocalizationKey.TutorialFinish, LocalizationKey.TutorialFinish.ToString()},
 			{LocalizationKey.TutorialMerge, LocalizationKey.TutorialMerge.ToString()},
 			{LocalizationKey.TutorialGameZone, LocalizationKey.TutorialGameZone.ToString()},
 			{LocalizationKey.TutorialUpgrade, LocalizationKey.TutorialUpgrade.ToString()},
+			{LocalizationKey.TutorialRewardButton, LocalizationKey.TutorialRewardButton.ToString()},
 			{LocalizationKey.TutorialEnd, LocalizationKey.TutorialEnd.ToString()},
 		};
 	}

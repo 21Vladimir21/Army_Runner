@@ -20,7 +20,7 @@ namespace _Main._Scripts.TutorialLogic
             {
                 _tutorialService.TryCallNextStep();
                 player.MouseInput = false;
-                mask.SetActive(true);
+                if (mask) mask.SetActive(true);
             }
         }
 
