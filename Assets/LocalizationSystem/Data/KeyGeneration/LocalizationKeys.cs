@@ -45,6 +45,8 @@ namespace LocalizationSystem.Data.KeyGeneration
 			{LocalizationKey.TutorialUpgrade, LocalizationKey.TutorialUpgrade.ToString()},
 			{LocalizationKey.TutorialRewardButton, LocalizationKey.TutorialRewardButton.ToString()},
 			{LocalizationKey.TutorialEnd, LocalizationKey.TutorialEnd.ToString()},
+			{LocalizationKey.YesSer, LocalizationKey.YesSer.ToString()},
+			{LocalizationKey.ProposalReward, LocalizationKey.ProposalReward.ToString()},
 		};
 	}
 }

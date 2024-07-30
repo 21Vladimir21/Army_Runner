@@ -42,5 +42,7 @@ namespace LocalizationSystem.Data.KeyGeneration
 		TutorialUpgrade, 
 		TutorialRewardButton, 
 		TutorialEnd, 
+		YesSer, 
+		ProposalReward, 
 	}
 }
