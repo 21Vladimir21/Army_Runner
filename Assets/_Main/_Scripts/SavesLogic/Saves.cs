@@ -30,7 +30,7 @@ namespace _Main._Scripts.SavesLogic
 
         [field: SerializeField]
         public List<Soldier> InGameSoldiers { get; set; }
-            = new() { new Soldier(SoldiersLevels.Level1, 0), };
+            = new() { new Soldier(SoldiersLevels.Level3, 0), };
 
         [field: SerializeField] public List<Soldier> ReserveSoldiers { get; set; } = new(24);
 
