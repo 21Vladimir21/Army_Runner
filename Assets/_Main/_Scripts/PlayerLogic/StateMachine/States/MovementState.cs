@@ -1,6 +1,8 @@
 using _Main._Scripts.CrowdLogic;
 using _Main._Scripts.Soilders;
+using Kimicu.YandexGames;
 using UnityEngine;
+using Device = Agava.WebUtility.Device;
 
 namespace _Main._Scripts.PlayerLogic.StateMachine.States
 {
@@ -22,12 +24,14 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
 
         public MovementState(IStateSwitcher switcher, Player player)
         {
+
+            var test = true;
             _switcher = switcher;
             _speedRatio = player.Config.speed;
             _maxLeftPosition = -player.Config.maxLeftRightPosition;
             _maxRightPosition = player.Config.maxLeftRightPosition;
             _maxXDelta = player.Config.maxXDragDelta;
-            _sensitivity = player.Config.xSensitivity;
+            _sensitivity = test ? player.Config.xSensitivityMobile : player.Config.xSensitivity;
             _keySensitivity = player.Config.xKeySensitivity;
             _xDamping = player.Config.xDampingRatio;
             _player = player;
@@ -88,8 +92,8 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
         private void SetKeyboardDirection(Transform xPosition, float deltaTime)
         {
             var direction = 0f;
-            if (Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.LeftArrow)) direction = -_keySensitivity;
-            else if (Input.GetKey(KeyCode.D)||Input.GetKey(KeyCode.RightArrow)) direction = _keySensitivity;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) direction = -_keySensitivity;
+            else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) direction = _keySensitivity;
 
             var position = xPosition.position;
             position = new Vector3(position.x + direction * deltaTime, position.y, position.z);
