@@ -66,8 +66,8 @@ GameObject:
   - component: {fileID: 5462342891775231444}
   - component: {fileID: 3957305787416266682}
   - component: {fileID: 2429444358683783007}
-  - component: {fileID: 6060556763570040781}
   - component: {fileID: 2085908524000615182}
+  - component: {fileID: 1641212427827199935}
   m_Layer: 0
   m_Name: small moving grinder
   m_TagString: Untagged
@@ -142,29 +142,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &6060556763570040781
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3665047670491945344}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.65
-  m_Height: 1.41
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.13, z: 0}
 --- !u!114 &2085908524000615182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,9 +158,31 @@ MonoBehaviour:
   healthText: {fileID: 0}
   obstacle: {fileID: 0}
   objectForDown: {fileID: 0}
-  triggerCollider: {fileID: 6060556763570040781}
+  triggerCollider: {fileID: 1641212427827199935}
   dustParticle: {fileID: 0}
   dontDamagable: 1
+--- !u!64 &1641212427827199935
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3665047670491945344}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7184614735326980516, guid: e17dace9f31b1424c9bde686409905c8, type: 3}
 --- !u!1 &4271969077462318356
 GameObject:
   m_ObjectHideFlags: 0
