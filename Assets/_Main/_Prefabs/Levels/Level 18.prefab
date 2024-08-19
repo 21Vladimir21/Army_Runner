@@ -1876,36 +1876,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2081524947360847028, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: <Enemies>k__BackingField.Array.size
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2081524947360847028, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: <Enemies>k__BackingField.Array.data[0]
       value: 
-      objectReference: {fileID: 5470594673096231414}
+      objectReference: {fileID: 5937892078606665757}
     - target: {fileID: 2081524947360847028, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: <Enemies>k__BackingField.Array.data[1]
       value: 
-      objectReference: {fileID: 5937892078606665757}
+      objectReference: {fileID: 1175233489125616124}
     - target: {fileID: 2081524947360847028, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: <Enemies>k__BackingField.Array.data[2]
       value: 
-      objectReference: {fileID: 1175233489125616124}
+      objectReference: {fileID: 54219735261078744}
     - target: {fileID: 2081524947360847028, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: <Enemies>k__BackingField.Array.data[3]
       value: 
-      objectReference: {fileID: 54219735261078744}
+      objectReference: {fileID: 7085573549477665463}
     - target: {fileID: 2081524947360847028, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: <Enemies>k__BackingField.Array.data[4]
       value: 
-      objectReference: {fileID: 7085573549477665463}
+      objectReference: {fileID: 5872772046753940208}
     - target: {fileID: 2081524947360847028, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: <Enemies>k__BackingField.Array.data[5]
       value: 
-      objectReference: {fileID: 5872772046753940208}
+      objectReference: {fileID: 4014162135607389792}
     - target: {fileID: 2081524947360847028, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: <Enemies>k__BackingField.Array.data[6]
       value: 
-      objectReference: {fileID: 4014162135607389792}
+      objectReference: {fileID: 5043646943036090907}
     - target: {fileID: 2081524947360847028, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       propertyPath: <Enemies>k__BackingField.Array.data[7]
       value: 
@@ -2010,6 +2010,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 6940428302779467250, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
     - {fileID: 68595803785220233, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
+    - {fileID: 2133519549100146832, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 366937051580524054, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
       insertIndex: -1
@@ -2055,17 +2056,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1501990030481416645, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
   m_PrefabInstance: {fileID: 725057522609491468}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5470594673096231414 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4748094898162796538, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
-  m_PrefabInstance: {fileID: 725057522609491468}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38b1768bae184762a36a7305a195934e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &6352620752058810330 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5919666232950288854, guid: 07c6fcfa4640384448263757ed4783aa, type: 3}
@@ -8019,7 +8009,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 12670139562845705, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: maxHealth
-      value: 1555
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 783707599842213533, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8063,11 +8053,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6488082059113257929, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: m_text
-      value: 1555
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 6488082059113257929, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: m_fontSize
-      value: 0.55
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 8575965304274813682, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: m_Name
@@ -9049,15 +9039,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5060132462338529540, guid: 2bb91c5dc87af254d9ddd3de77422662, type: 3}
       propertyPath: maxHealth
-      value: 2000
+      value: 1500
       objectReference: {fileID: 0}
     - target: {fileID: 8709352549944748355, guid: 2bb91c5dc87af254d9ddd3de77422662, type: 3}
       propertyPath: m_text
-      value: 2000
+      value: 1500
       objectReference: {fileID: 0}
     - target: {fileID: 8709352549944748355, guid: 2bb91c5dc87af254d9ddd3de77422662, type: 3}
       propertyPath: m_fontSize
-      value: 0.7
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10725,7 +10715,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 12670139562845705, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: maxHealth
-      value: 1555
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 783707599842213533, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10769,11 +10759,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6488082059113257929, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: m_text
-      value: 1555
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 6488082059113257929, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: m_fontSize
-      value: 0.55
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 8575965304274813682, guid: 598507fa9af99a4428b6da8a550990e9, type: 3}
       propertyPath: m_Name
@@ -15900,7 +15890,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1158197087465156971, guid: 1e951e3875f25cb4189020e2fca73e47, type: 3}
       propertyPath: maxHealth
-      value: 1777
+      value: 1250
       objectReference: {fileID: 0}
     - target: {fileID: 1936535302994340351, guid: 1e951e3875f25cb4189020e2fca73e47, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15944,11 +15934,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5347445321077263531, guid: 1e951e3875f25cb4189020e2fca73e47, type: 3}
       propertyPath: m_text
-      value: 1777
+      value: 1250
       objectReference: {fileID: 0}
     - target: {fileID: 5347445321077263531, guid: 1e951e3875f25cb4189020e2fca73e47, type: 3}
       propertyPath: m_fontSize
-      value: 0.55
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7438906928975402384, guid: 1e951e3875f25cb4189020e2fca73e47, type: 3}
       propertyPath: m_Name
@@ -16649,11 +16639,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2611673502579901394, guid: 975d29d616a3f47498fbfd9067c176d7, type: 3}
       propertyPath: m_text
-      value: 1500
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 2611673502579901394, guid: 975d29d616a3f47498fbfd9067c176d7, type: 3}
       propertyPath: m_fontSize
-      value: 0.7
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 3805725749542365518, guid: 975d29d616a3f47498fbfd9067c176d7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -16697,7 +16687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4469577136606782025, guid: 975d29d616a3f47498fbfd9067c176d7, type: 3}
       propertyPath: maxHealth
-      value: 1500
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 5143784177613576855, guid: 975d29d616a3f47498fbfd9067c176d7, type: 3}
       propertyPath: m_Name
