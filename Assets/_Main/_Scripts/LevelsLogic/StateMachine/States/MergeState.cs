@@ -12,6 +12,7 @@ using _Main._Scripts.TutorialLogic;
 using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
 using Kimicu.YandexGames;
+using SoundService.Data;
 using SoundService.Scripts;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 using IState = _Main._Scripts.PlayerLogic.StateMachine.States.IState;
@@ -38,6 +39,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private SoldiersLevels _currentRewardSoldier;
         private bool _isFirstLaunch = true;
         private readonly TutorialService _tutorialService;
+        private readonly AudioService _audioService;
 
         private const int MaxLoseStreakCountForShowPopUp = 5;
 
@@ -89,10 +91,12 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _preGameView.StartGameButton.onClick.AddListener(SwitchToPlayState);
 
             _tutorialService = ServiceLocator.Instance.GetServiceByType<TutorialService>();
+            _audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
         }
 
         public void Enter()
         {
+            _audioService.PlaySound(Sound.MenuMusic,volumeScale:0.05f,loop:true);
             ClearCells(_reserveCells);
             ClearCells(_gameCells);
             LoadSoldiersFromSave();

@@ -64,9 +64,9 @@ namespace _Main._Scripts.PlayerLogic
         private void Update()
         {
             if (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.W)|| Input.GetKey(KeyCode.LeftArrow) ||
-                Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) _mouseInput = true;
+                Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.UpArrow)) _mouseInput = true;
             if (Input.GetMouseButtonUp(0)|| Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.W)|| Input.GetKeyUp(KeyCode.LeftArrow) ||
-                Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))_mouseInput = false;
+                Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow)||Input.GetKeyUp(KeyCode.UpArrow))_mouseInput = false;
 
             _stateMachine.Update();
         }

@@ -11,6 +11,8 @@ using _Main._Scripts.Soilders;
 using _Main._Scripts.TutorialLogic;
 using _Main._Scripts.UI;
 using _Main._Scripts.UpgradeLogic;
+using SoundService.Data;
+using SoundService.Scripts;
 using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 
@@ -26,6 +28,7 @@ namespace _Main._Scripts.Level.StateMachine.States
         private readonly Player _player;
         private readonly LevelService _levelService;
         private readonly TutorialService _tutorialService;
+        private readonly AudioService _audioService;
 
         public PlayState(IStateSwitcher stateSwitcher, GameView gameView, SoldiersPool soldiersPool,
             CameraService cameraService, Saves saves,
@@ -43,10 +46,12 @@ namespace _Main._Scripts.Level.StateMachine.States
 
             _gameView.RestartButton.onClick.AddListener(RestartGame);
             _tutorialService = ServiceLocator.Instance.GetServiceByType<TutorialService>();
+            _audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
         }
 
         public void Enter()
         {
+            _audioService.PlaySound(Sound.RunMusic, true, 0.05f);
             _cameraService.ShowFade(() =>
             {
                 _cameraService.SwitchToFromType(CameraType.Game);
@@ -98,7 +103,7 @@ namespace _Main._Scripts.Level.StateMachine.States
         private void Finished()
         {
             _saves.LoseStreak = 0;
-                _stateSwitcher.SwitchState<FinishState>();
+            _stateSwitcher.SwitchState<FinishState>();
         }
 
         private void RestartGame()

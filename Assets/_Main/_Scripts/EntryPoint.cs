@@ -51,7 +51,7 @@ namespace _Main._Scripts
             var levelService = InitLevelService();
             var uiLocator = InitUILocator(savesService);
             var preGameView = uiLocator.GetViewByType<PreGameView>();
-            var soundController = new SoundController(preGameView.SoundsButton, audioService, savesService.Saves);
+            var soundController = new SoundController(preGameView.SoundsButton, preGameView.MusicButton,audioService, savesService.Saves);
             var bulletPool = new BulletPool(mainConfig.BulletPoolConfig, bulletPoolParent);
             player.Init(savesService.Saves, bulletPool, soldiersPool);
 
