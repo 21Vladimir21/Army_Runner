@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ namespace _Main._Scripts.UI
         [SerializeField] private RandomGeneralPhrase phrases;
         private const float ShowGameOverPanelDelay = 2.5f;
 
-        public void Open()
+        public void Open(Action callback)
         {
             base.Open();
             
@@ -18,6 +19,7 @@ namespace _Main._Scripts.UI
             {
                 GameOverPanel.SetActive(true);
                 phrases.ShowRandomPhrase();
+                callback?.Invoke();
             }, ShowGameOverPanelDelay));
         }
 

@@ -6,10 +6,12 @@ using _Main._Scripts.PlayerLogic;
 using _Main._Scripts.PlayerLogic.StateMachine;
 using _Main._Scripts.PlayerLogic.StateMachine.States;
 using _Main._Scripts.SavesLogic;
+using _Main._Scripts.Services;
 using _Main._Scripts.Services.Cameras;
 using _Main._Scripts.Soilders;
 using _Main._Scripts.UI;
 using Kimicu.YandexGames;
+using SoundService.Data;
 using SoundService.Scripts;
 using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
@@ -33,6 +35,7 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         private bool _canShoot;
         private Finish _finish;
+        private readonly AudioService _audioService;
 
         public FinishState(IStateSwitcher stateSwitcher, FinishView finishView, CameraService cameraService,
             Saves saves, LevelService levelService, Player player)
@@ -49,6 +52,9 @@ namespace _Main._Scripts.Level.StateMachine.States
 
             _finishView.NoThanksButton.onClick.AddListener(ToMerge);
             _finishView.ADWheel.RewardCallback.AddListener(ToMergeReward);
+            
+            _audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
+
         }
 
         public void Enter()
@@ -128,6 +134,7 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Dance);
                 _player.Crowd.SaveCurrentSoldiers();
                 _finishView.ShowWinPanel(_collectedMoneyCount, _collectedSoldiersCount);
+                _audioService.PlaySound(Sound.WinMusic);
                 _saves.AddMoney(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
                 _saves.SetNextLevel();
             }

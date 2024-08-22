@@ -31,6 +31,7 @@ namespace SoundService.Scripts
 
         public void PlaySound(Sound type, bool loop = false, float volumeScale = 1f, bool random = false)
         {
+            if (type.Equals(Sound.None)) return;
             var soundStruct = SoundData.GetSound(type);
             var clip = soundStruct.AudioClips[0];
             if (random)
@@ -49,22 +50,29 @@ namespace SoundService.Scripts
                 }
                 else sfx.PlayOneShot(clip, volumeScale);
             }
-            else if(soundStruct.SoundType == SoundType.Music)
+            else if (soundStruct.SoundType == SoundType.Music)
             {
+                music.Stop();
                 if (loop)
                 {
                     music.clip = clip;
                     music.loop = true;
                     music.Play();
+                    music.volume = volumeScale;
                 }
                 else music.PlayOneShot(clip, volumeScale);
             }
-            
         }
-        
+
         public void SetActiveSound(bool soundEnabled)
         {
-            mixer.SetFloat("Volume", soundEnabled ? 0 : -80);
+            mixer.SetFloat("SFX", soundEnabled ? 0 : -80);
+            IsCanPlaySound = !soundEnabled;
+        }
+
+        public void SetActiveMusic(bool soundEnabled)
+        {
+            mixer.SetFloat("Music", soundEnabled ? 0 : -80);
             IsCanPlaySound = !soundEnabled;
         }
 
@@ -88,7 +96,10 @@ namespace SoundService.Scripts
                 foreach (var e in soundsData.sounds)
                 {
                     streamWriter.WriteLine("\t\t" + e.Sound + ", ");
-                    e.name = $"{e.Sound}: Clip: {e.Clip.name}";
+                    if (e.Sound.Equals("none", StringComparison.OrdinalIgnoreCase))
+                        e.name = $"{e.Sound}: Clip: None";
+                    else
+                        e.name = $"{e.Sound}: Clip: {e.Clip.name}";
                 }
 
                 streamWriter.WriteLine("\t}");

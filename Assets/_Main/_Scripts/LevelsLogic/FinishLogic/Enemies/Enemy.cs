@@ -1,5 +1,9 @@
+using System;
 using System.Collections;
+using _Main._Scripts.Services;
 using _Main._Scripts.Soilders.Bullets;
+using SoundService.Data;
+using SoundService.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -47,16 +51,19 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 
         public void Attach()
         {
+            var audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
+
             _canMove = false;
             animator.SetTrigger(EnemyAnimationKeys.Attach.ToString());
-            StartCoroutine(PlayParticleWithDelay());
+            StartCoroutine(PlayParticleWithDelay(() => audioService.PlaySound(Sound.EnemyHit, volumeScale: 0.3f)));
         }
 
-        private IEnumerator PlayParticleWithDelay()
+        private IEnumerator PlayParticleWithDelay(Action callback)
         {
             yield return new WaitForSeconds(1.5f);
             hitParticle.Play();
             OnHit.Invoke();
+            callback?.Invoke();
         }
 
 

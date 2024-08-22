@@ -15,6 +15,7 @@ namespace _Main._Scripts.SavesLogic
         [field: SerializeField] public int CurrentLevel { get; set; }
         [field: SerializeField] public int CurrentLevelText { get; private set; }
         [field: SerializeField] public bool SoundEnabled { get; set; } = true;
+        [field: SerializeField] public bool MusicEnabled { get; set; } = true;
         [field: SerializeField] public bool AdEnabled { get; set; } = true;
         
         [field: SerializeField] public int BulletDamageLevel;

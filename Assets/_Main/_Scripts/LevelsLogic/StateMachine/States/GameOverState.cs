@@ -7,6 +7,7 @@ using _Main._Scripts.Services;
 using _Main._Scripts.TutorialLogic;
 using _Main._Scripts.UI;
 using Kimicu.YandexGames;
+using SoundService.Data;
 using SoundService.Scripts;
 
 namespace _Main._Scripts.LevelsLogic.StateMachine.States
@@ -19,6 +20,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private readonly GameOverView _gameOverView;
         private readonly Player _player;
         private readonly TutorialService _tutorialService;
+        private readonly AudioService _audioService;
 
         public GameOverState(IStateSwitcher stateSwitcher, Saves saves, GameOverView gameOverView, Player player)
         {
@@ -28,12 +30,13 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _player = player;
             _gameOverView.BackButton.onClick.AddListener(RestartGame);
             _tutorialService = ServiceLocator.Instance.GetServiceByType<TutorialService>();
+            _audioService = ServiceLocator.Instance.GetServiceByType<AudioService>();
         }
 
         public void Enter()
         {
             _saves.LoseStreak++;
-            _gameOverView.Open();
+            _gameOverView.Open(() => _audioService.PlaySound(Sound.LoseMusic, volumeScale: 0.5f));
             _player.gameObject.SetActive(false);
             if (_saves.WasShowedTutorial == false) _tutorialService.ResetTutorial();
         }
@@ -50,7 +53,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void RestartGame()
         {
-            if (_saves.CanShowAd && _saves.AdEnabled && Advertisement.AdvertisementIsAvailable) 
+            if (_saves.CanShowAd && _saves.AdEnabled && Advertisement.AdvertisementIsAvailable)
             {
                 Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
                 {
