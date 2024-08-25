@@ -67,7 +67,7 @@ namespace _Main._Scripts.Soilders
                 if (_canApplyDamage)
                 {
                     damageParticle.Play();
-                    _audioService.PlaySound(Sound.Poof,volumeScale: 0.4f);
+                    _audioService.PlaySound(Sound.Poof, volumeScale: 0.4f);
                     Die();
                 }
 
@@ -122,6 +122,7 @@ namespace _Main._Scripts.Soilders
             _bulletScalePercentage = 100;
             _timeOfLastShot = 0f;
             gameObject.layer = LayerMask.NameToLayer(SoldierLayers.Interact.ToString());
+            _currentAnimation = SoldierAnimationTriggers.Idling;
         }
 
         public void UpdateShootingCooldown()
@@ -160,7 +161,8 @@ namespace _Main._Scripts.Soilders
         public void SetAnimation(SoldierAnimationTriggers trigger, bool setToForce = false)
         {
             animator.ResetTrigger(_currentAnimation.ToString());
-            if (setToForce == false && _currentAnimation == trigger) return;
+            if ((setToForce == false && _currentAnimation == trigger) ||
+                _currentAnimation == SoldierAnimationTriggers.Dance) return;
             animator.SetTrigger(trigger.ToString());
             _currentAnimation = trigger;
         }
