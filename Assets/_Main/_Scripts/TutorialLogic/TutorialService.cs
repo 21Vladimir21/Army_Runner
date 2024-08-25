@@ -29,6 +29,7 @@ namespace _Main._Scripts.TutorialLogic
             if (_nextStepIndex >= tutorialSteps.Length)
             {
                 _saves.WasShowedTutorial = true;
+                YandexMetrika.Event("TutorialEnded");
                 return;
             }
 

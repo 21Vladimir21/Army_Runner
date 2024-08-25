@@ -59,6 +59,7 @@ namespace _Main._Scripts
                 new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
                     cameraService, soldiersPool, player);
 
+            YandexMetrika.Event("Start");
             YandexGamesSdk.GameReady();
         }
 
