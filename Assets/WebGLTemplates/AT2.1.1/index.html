@@ -328,9 +328,36 @@
       ((g, a, m, e) => { let o = () => { let p = document.createElement("script"); p.src = `${a[0]}?projectId=${m}&publicToken=${e}`, p.onerror = () => { a.shift(), a.length > 0 ? (o(), p.remove()) : "onGPError" in g && g.onGPError() }, document.head.appendChild(p) }; o() })(window, ["https://gs.eponesh.com/sdk/gamepush.js", "https://s3.eponesh.com/files/gs/sdk/gamepush.js", "gp-bundle/gamepush.js"], projectId, publicToken);
     </script>
     #endif
+
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+      ym(98158754, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+      });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/98158754" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    
   </head>
   <body>
-    #if CONNECT_PLUGIN == "YG1.6"
+  
+  <script>
+    function sendEvent(key, value) {
+      ym(98158754, key, value);
+    }
+  </script>
+
+
+  #if CONNECT_PLUGIN == "YG1.6"
     <!-- Additional body modules -->
     #endif
     <canvas id="canvas" class="canvas" tabindex="-1"></canvas>
