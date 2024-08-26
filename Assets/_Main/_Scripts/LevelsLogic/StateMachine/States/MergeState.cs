@@ -145,14 +145,16 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void SetCurrentRewardSoldier()
         {
-            if (_saves.CurrentLevelText < 10)
+            if (_saves.CurrentLevelText < 5)
                 _currentRewardSoldier = SoldiersLevels.Level5;
-            else if (_saves.CurrentLevelText < 19)
+            else if (_saves.CurrentLevelText < 9)
                 _currentRewardSoldier = SoldiersLevels.Level7;
-            else if (_saves.CurrentLevelText < 29)
-                _currentRewardSoldier = SoldiersLevels.Level10;
-            else if (_saves.CurrentLevelText >= 29)
-                _currentRewardSoldier = SoldiersLevels.Level12;
+            else if (_saves.CurrentLevelText < 14)
+                _currentRewardSoldier = SoldiersLevels.Level9;
+            else if (_saves.CurrentLevelText < 19)
+                _currentRewardSoldier = SoldiersLevels.Level11;
+            else if (_saves.CurrentLevelText >= 19)
+                _currentRewardSoldier = SoldiersLevels.Level13;
             _preGameView.SoldierRewardText.SetValue((int)_currentRewardSoldier + 1);
         }
 
@@ -184,6 +186,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                 var soldier = _representativeOfTheSoldiers.GetSoldier(_currentRewardSoldier);
                 if (isReserveCells) _reserveCells[(int)index].AddObject(soldier, true);
                 else _gameCells[(int)index].AddObject(soldier, true);
+                
+                YandexMetrika.Event("RewardSoldier");
                 SaveSoldiers();
             }, () => Audio.UnMuteAllAudio());
         }
