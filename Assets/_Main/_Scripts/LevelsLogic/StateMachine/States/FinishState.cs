@@ -154,7 +154,11 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _stateSwitcher.SwitchState<InitState>();
         }
 
-        private void ToMergeReward() => _stateSwitcher.SwitchState<InitState>();
+        private void ToMergeReward()
+        {
+            _stateSwitcher.SwitchState<InitState>();
+            YandexMetrika.Event("X3Reward");
+        }
 
         private void GameOver() => _stateSwitcher.SwitchState<GameOverState>();
     }

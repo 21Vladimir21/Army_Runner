@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Main._Scripts.MergeLogic;
+using _Main._Scripts.MergeLogic.DragAndDropLogic;
 using _Main._Scripts.Soilders;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -47,10 +48,10 @@ namespace _Main._Scripts.CrowdLogic
             }
 
             var spawnedSoldier = SpawnSoldier<T>(level);
+            spawnedSoldiers.Add(spawnedSoldier);
             var castSpawnSoldier = spawnedSoldier as Component;
             castSpawnSoldier.gameObject.SetActive(true);
             return spawnedSoldier as T;
-            
         }
 
         private void SpawnSoldiers<T>(List<SoldiersPoolConfig.SoldierPoolData> poolDatas) where T : class, ISoldier
@@ -78,5 +79,35 @@ namespace _Main._Scripts.CrowdLogic
             spawnSoldier.GameObject().SetActive(false);
             return spawnSoldier as T;
         }
+#if UNITY_EDITOR
+        
+        public void DebugSoldersLevelCount()
+        {
+            Dictionary<SoldiersLevels, int> soldiers = new();
+            Dictionary<SoldiersLevels, int> mergeSoldiers = new();
+            foreach (var soldier in spawnedSoldiers)
+            {
+                if (soldier.GetType() == typeof(DraggableObject))
+                {
+                    if (mergeSoldiers.ContainsKey(soldier.Level))
+                        mergeSoldiers[soldier.Level]++;
+                    else
+                        mergeSoldiers[soldier.Level] = 1;
+                }
+                else if (soldier.GetType() == typeof(Soldier))
+                {
+                    if (soldiers.ContainsKey(soldier.Level))
+                        soldiers[soldier.Level]++;
+                    else
+                        soldiers[soldier.Level] = 1;
+                }
+            }
+
+            foreach (var soldier in soldiers)
+                Debug.Log($"Солдат уровня{soldier.Key} : {soldier.Value}штук");
+            foreach (var soldier in mergeSoldiers)
+                Debug.Log($"Солдат для слияния уровня{soldier.Key} : {soldier.Value}штук");
+        }
     }
+#endif
 }

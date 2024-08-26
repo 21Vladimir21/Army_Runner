@@ -14,6 +14,7 @@ using _Main._Scripts.UpgradeLogic;
 using Kimicu.YandexGames;
 using SoundService.Data;
 using SoundService.Scripts;
+using UnityEngine;
 using CameraType = _Main._Scripts.Services.Cameras.CameraType;
 using IState = _Main._Scripts.PlayerLogic.StateMachine.States.IState;
 
@@ -96,7 +97,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         public void Enter()
         {
-            _audioService.PlaySound(Sound.MenuMusic,volumeScale:0.05f,loop:true);
+            _audioService.PlaySound(Sound.MenuMusic, volumeScale: 0.05f, loop: true);
             ClearCells(_reserveCells);
             ClearCells(_gameCells);
             LoadSoldiersFromSave();
@@ -137,22 +138,46 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             else
                 SaveSoldiers();
 
+            RetunrSodiers(_reserveCells);
+            RetunrSodiers(_gameCells);
+
             _preGameView.Close();
             _isFirstLaunch = false;
         }
 
-        public void Update() => _dragAndDrop.UpdateDrag();
+        private void RetunrSodiers(List<CellToMerge> cells)
+        {
+            foreach (var cell in cells)
+            {
+                if (cell.IsBusy)
+                {
+                    _soldiersPool.ReturnSoldier(cell.currentObject);
+                }
+            }
+        }
+
+        public void Update()
+        {
+            _dragAndDrop.UpdateDrag();
+
+#if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.D))
+                _soldiersPool.DebugSoldersLevelCount();
+#endif
+        }
 
         private void SetCurrentRewardSoldier()
         {
-            if (_saves.CurrentLevelText < 10)
+            if (_saves.CurrentLevelText < 5)
                 _currentRewardSoldier = SoldiersLevels.Level5;
-            else if (_saves.CurrentLevelText < 19)
+            else if (_saves.CurrentLevelText < 9)
                 _currentRewardSoldier = SoldiersLevels.Level7;
-            else if (_saves.CurrentLevelText < 29)
-                _currentRewardSoldier = SoldiersLevels.Level10;
-            else if (_saves.CurrentLevelText >= 29)
-                _currentRewardSoldier = SoldiersLevels.Level12;
+            else if (_saves.CurrentLevelText < 14)
+                _currentRewardSoldier = SoldiersLevels.Level9;
+            else if (_saves.CurrentLevelText < 19)
+                _currentRewardSoldier = SoldiersLevels.Level11;
+            else if (_saves.CurrentLevelText >= 19)
+                _currentRewardSoldier = SoldiersLevels.Level13;
             _preGameView.SoldierRewardText.SetValue((int)_currentRewardSoldier + 1);
         }
 
@@ -184,6 +209,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                 var soldier = _representativeOfTheSoldiers.GetSoldier(_currentRewardSoldier);
                 if (isReserveCells) _reserveCells[(int)index].AddObject(soldier, true);
                 else _gameCells[(int)index].AddObject(soldier, true);
+
+                YandexMetrika.Event("RewardSoldier");
                 SaveSoldiers();
             }, () => Audio.UnMuteAllAudio());
         }
