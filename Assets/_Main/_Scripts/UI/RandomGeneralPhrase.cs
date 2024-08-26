@@ -7,13 +7,14 @@ namespace _Main._Scripts.UI
     [Serializable]
     public class RandomGeneralPhrase
     {
-        [SerializeField] private GameObject[] phrases;
+        [SerializeField] private PhrasesHolder[] phrases = new PhrasesHolder[]{};
 
         public void ShowRandomPhrase()
         {
-            foreach (var gameObject in phrases) gameObject.SetActive(false);
+            foreach (var phrasesHolder in phrases) phrasesHolder.gameObject.SetActive(false);
             var phrase = phrases[Random.Range(0, phrases.Length)];
-            phrase.SetActive(true);
+            phrase.gameObject.SetActive(true);
+            phrase.RandomPhrase();
         }
     }
 }

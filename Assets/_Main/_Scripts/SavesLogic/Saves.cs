@@ -17,7 +17,7 @@ namespace _Main._Scripts.SavesLogic
         [field: SerializeField] public bool SoundEnabled { get; set; } = true;
         [field: SerializeField] public bool MusicEnabled { get; set; } = true;
         [field: SerializeField] public bool AdEnabled { get; set; } = true;
-        
+
         [field: SerializeField] public int BulletDamageLevel;
         [field: SerializeField] public int BulletSpeedLevel;
         [field: SerializeField] public int FireRateLevel;
@@ -122,8 +122,14 @@ namespace _Main._Scripts.SavesLogic
         {
             CurrentLevel++;
             CurrentLevelText++;
-            if (CurrentLevel % 49 == 0)
-                CurrentLevel = 0;
+            
+            if (CurrentLevel <= 15)
+                YandexMetrika.Event($"Lvl{CurrentLevel}");
+
+
+            if (CurrentLevel % 41 == 0)
+                CurrentLevel = 29;
+
             InvokeSave();
         }
 

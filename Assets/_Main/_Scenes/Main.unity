@@ -2548,6 +2548,7 @@ GameObject:
   m_Component:
   - component: {fileID: 118583583}
   - component: {fileID: 118583584}
+  - component: {fileID: 118583585}
   m_Layer: 5
   m_Name: Phrase
   m_TagString: Untagged
@@ -2591,6 +2592,20 @@ MonoBehaviour:
   moveAxis: 1
   delay: 0.5
   ease: 30
+--- !u!114 &118583585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118583582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e98d3260494b4fb489f7d4a15e763e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phrases: 1400000015000000160000003a0000003b0000003c0000003d0000003e0000003f000000400000004100000042000000430000004400000045000000460000004700000048000000490000004a0000004b0000004c0000004d0000004e000000
+  text: {fileID: 1781480919}
 --- !u!1 &123860788
 GameObject:
   m_ObjectHideFlags: 0
@@ -2765,6 +2780,7 @@ GameObject:
   m_Component:
   - component: {fileID: 132150996}
   - component: {fileID: 132150997}
+  - component: {fileID: 132150998}
   m_Layer: 5
   m_Name: Phrase (1)
   m_TagString: Untagged
@@ -2808,6 +2824,20 @@ MonoBehaviour:
   moveAxis: 0
   delay: 0.5
   ease: 30
+--- !u!114 &132150998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132150995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e98d3260494b4fb489f7d4a15e763e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phrases: 1100000012000000130000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f00000030000000310000003200000033000000340000003500000036000000370000003800000039000000
+  text: {fileID: 1754136851}
 --- !u!1 &141961761
 GameObject:
   m_ObjectHideFlags: 0
@@ -7794,6 +7824,7 @@ GameObject:
   m_Component:
   - component: {fileID: 486553335}
   - component: {fileID: 486553336}
+  - component: {fileID: 486553337}
   m_Layer: 5
   m_Name: Phrase (2)
   m_TagString: Untagged
@@ -7837,6 +7868,20 @@ MonoBehaviour:
   moveAxis: 0
   delay: 0.5
   ease: 30
+--- !u!114 &486553337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486553334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e98d3260494b4fb489f7d4a15e763e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phrases: 
+  text: {fileID: 0}
 --- !u!1 &487889741
 GameObject:
   m_ObjectHideFlags: 0
@@ -10328,7 +10373,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 7.83e-43, y: -8.962834e-27, z: 7.82e-43, w: 1.070471e-37}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: NaN, z: 2.3406e-41, w: -1.0443781e-18}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -11361,8 +11406,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 409.58, y: 159}
-  m_SizeDelta: {x: 526.63, y: 321.95}
+  m_AnchoredPosition: {x: 380, y: 170.24}
+  m_SizeDelta: {x: 526.63, y: 411.55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &818361246
 MonoBehaviour:
@@ -16167,9 +16212,9 @@ MonoBehaviour:
   SoldiersCollected: {fileID: 1024333159}
   phrases:
     phrases:
-    - {fileID: 118583582}
-    - {fileID: 1472611720}
-    - {fileID: 1265973162}
+    - {fileID: 118583585}
+    - {fileID: 1472611723}
+    - {fileID: 1265973165}
 --- !u!1 &1147307895
 GameObject:
   m_ObjectHideFlags: 0
@@ -17596,6 +17641,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1265973163}
   - component: {fileID: 1265973164}
+  - component: {fileID: 1265973165}
   m_Layer: 5
   m_Name: Phrase (2)
   m_TagString: Untagged
@@ -17639,6 +17685,20 @@ MonoBehaviour:
   moveAxis: 1
   delay: 0.5
   ease: 30
+--- !u!114 &1265973165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265973162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e98d3260494b4fb489f7d4a15e763e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phrases: 1400000015000000160000003a0000003b0000003c0000003d0000003e0000003f000000400000004100000042000000430000004400000045000000460000004700000048000000490000004a0000004b0000004c0000004d0000004e000000
+  text: {fileID: 395883366}
 --- !u!1 &1273508074
 GameObject:
   m_ObjectHideFlags: 0
@@ -19903,9 +19963,9 @@ MonoBehaviour:
   <GameOverPanel>k__BackingField: {fileID: 1838893263}
   phrases:
     phrases:
-    - {fileID: 1478110873}
-    - {fileID: 132150995}
-    - {fileID: 486553334}
+    - {fileID: 1478110876}
+    - {fileID: 132150998}
+    - {fileID: 486553337}
 --- !u!1 &1383743437
 GameObject:
   m_ObjectHideFlags: 0
@@ -20765,6 +20825,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1472611721}
   - component: {fileID: 1472611722}
+  - component: {fileID: 1472611723}
   m_Layer: 5
   m_Name: Phrase (1)
   m_TagString: Untagged
@@ -20808,6 +20869,20 @@ MonoBehaviour:
   moveAxis: 1
   delay: 0.5
   ease: 30
+--- !u!114 &1472611723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472611720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e98d3260494b4fb489f7d4a15e763e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phrases: 1400000015000000160000003a0000003b0000003c0000003d0000003e0000003f000000400000004100000042000000430000004400000045000000460000004700000048000000490000004a0000004b0000004c0000004d0000004e000000
+  text: {fileID: 430214665}
 --- !u!1001 &1474580978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20892,6 +20967,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1478110874}
   - component: {fileID: 1478110875}
+  - component: {fileID: 1478110876}
   m_Layer: 5
   m_Name: Phrase
   m_TagString: Untagged
@@ -20935,6 +21011,20 @@ MonoBehaviour:
   moveAxis: 0
   delay: 0.5
   ease: 30
+--- !u!114 &1478110876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1478110873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e98d3260494b4fb489f7d4a15e763e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phrases: 1100000012000000130000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f00000030000000310000003200000033000000340000003500000036000000370000003800000039000000
+  text: {fileID: 536775005}
 --- !u!1001 &1478378586
 PrefabInstance:
   m_ObjectHideFlags: 0
