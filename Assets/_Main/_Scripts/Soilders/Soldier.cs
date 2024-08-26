@@ -121,6 +121,7 @@ namespace _Main._Scripts.Soilders
             cellIndex = 999;
             _bulletScalePercentage = 100;
             _timeOfLastShot = 0f;
+            _canShoot = true;
             gameObject.layer = LayerMask.NameToLayer(SoldierLayers.Interact.ToString());
             _currentAnimation = SoldierAnimationTriggers.Idling;
         }
