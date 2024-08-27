@@ -25,14 +25,14 @@ namespace _Main._Scripts.TutorialLogic
                 Coroutines.StartRoutine(ShowDelayRoutine(() =>
                 {
                     gameObject.SetActive(true);
-                    audioService.PlaySound(sound, volumeScale: 1);
+                    audioService.PlaySound(sound, volumeScale: 1.5f);
                     showCallback?.Invoke();
                 }));
                 return;
             }
 
             gameObject.SetActive(true);
-            audioService.PlaySound(sound, volumeScale: 1);
+            audioService.PlaySound(sound, volumeScale: 1.5f);
         }
 
         public virtual void Exit()

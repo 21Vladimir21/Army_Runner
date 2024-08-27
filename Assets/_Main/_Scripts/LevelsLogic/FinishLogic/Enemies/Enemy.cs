@@ -55,7 +55,7 @@ namespace _Main._Scripts.LevelsLogic.FinishLogic.Enemies
 
             _canMove = false;
             animator.SetTrigger(EnemyAnimationKeys.Attach.ToString());
-            StartCoroutine(PlayParticleWithDelay(() => audioService.PlaySound(Sound.EnemyHit, volumeScale: 1.5f)));
+            StartCoroutine(PlayParticleWithDelay(() => audioService.PlaySound(Sound.EnemyHit, volumeScale: 2f)));
         }
 
         private IEnumerator PlayParticleWithDelay(Action callback)

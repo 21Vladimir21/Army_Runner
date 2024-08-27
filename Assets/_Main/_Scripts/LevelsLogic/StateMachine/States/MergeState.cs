@@ -97,7 +97,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         public void Enter()
         {
-            _audioService.PlaySound(Sound.MenuMusic, volumeScale: 0.25f, loop: true);
+            _audioService.PlaySound(Sound.MenuMusic, volumeScale: 0.3f, loop: true);
             ClearCells(_reserveCells);
             ClearCells(_gameCells);
             LoadSoldiersFromSave();
