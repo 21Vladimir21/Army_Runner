@@ -11,7 +11,6 @@ using SoundService.Scripts;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace _Main._Scripts.Soilders
 {
@@ -67,7 +66,7 @@ namespace _Main._Scripts.Soilders
                 if (_canApplyDamage)
                 {
                     damageParticle.Play();
-                    _audioService.PlaySound(Sound.Poof, volumeScale: 0.4f);
+                    _audioService.PlaySound(Sound.Poof, volumeScale: 0.25f);
                     Die();
                 }
 
@@ -80,7 +79,7 @@ namespace _Main._Scripts.Soilders
             if (other.TryGetComponent(out Boost boost))
             {
                 onTouchBoost.Invoke(boost);
-                _audioService.PlaySound(Sound.Energy, volumeScale: 1.2f);
+                _audioService.PlaySound(Sound.Energy, volumeScale: 0.8f);
                 boost.Take();
             }
 
