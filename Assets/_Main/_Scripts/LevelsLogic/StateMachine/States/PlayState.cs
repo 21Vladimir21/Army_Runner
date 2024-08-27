@@ -51,7 +51,7 @@ namespace _Main._Scripts.Level.StateMachine.States
 
         public void Enter()
         {
-            _audioService.PlaySound(Sound.RunMusic, true, 0.05f);
+            _audioService.PlaySound(Sound.RunMusic, true, 0.2f);
             _cameraService.ShowFade(() =>
             {
                 _cameraService.SwitchToFromType(CameraType.Game);
