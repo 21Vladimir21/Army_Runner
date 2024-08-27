@@ -79,7 +79,7 @@ namespace _Main._Scripts.Soilders
             if (other.TryGetComponent(out Boost boost))
             {
                 onTouchBoost.Invoke(boost);
-                _audioService.PlaySound(Sound.Energy, volumeScale: 0.8f);
+                _audioService.PlaySound(Sound.Energy, volumeScale: 0.7f);
                 boost.Take();
             }
 
