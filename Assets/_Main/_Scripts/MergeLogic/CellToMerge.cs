@@ -41,7 +41,7 @@ namespace _Main._Scripts.MergeLogic
 
         public void ResetSoldierPosition()
         {
-            _audioService.PlaySound(Sound.PickDown,volumeScale:0.6f);
+            _audioService.PlaySound(Sound.PickDown,volumeScale:0.4f);
             currentObject.DownSoldier();
             IsBusy = true;
             currentObject.transform.position = transform.position;
@@ -54,7 +54,7 @@ namespace _Main._Scripts.MergeLogic
 
         public void StartDragObject()
         {
-            _audioService.PlaySound(Sound.PickUp,volumeScale:0.6f);
+            _audioService.PlaySound(Sound.PickUp,volumeScale:0.4f);
             currentObject.UpSoldier();
         }
 
