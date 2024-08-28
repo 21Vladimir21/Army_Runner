@@ -62,7 +62,7 @@ namespace _Main._Scripts.Soilders
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<Obstacle>())
+            if (other.GetComponent<Obstacle>() || other.GetComponent<EnemyObstacle>())
                 if (_canApplyDamage)
                 {
                     damageParticle.Play();

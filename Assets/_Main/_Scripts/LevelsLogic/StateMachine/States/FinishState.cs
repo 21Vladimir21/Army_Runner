@@ -134,7 +134,7 @@ namespace _Main._Scripts.Level.StateMachine.States
                 _player.Crowd.SetAnimationForAllSoldiers(SoldierAnimationTriggers.Dance);
                 _player.Crowd.SaveCurrentSoldiers();
                 _finishView.ShowWinPanel(_collectedMoneyCount, _collectedSoldiersCount);
-                _audioService.PlaySound(Sound.WinMusic,volumeScale:1.7f);
+                _audioService.PlaySound(Sound.WinMusic,volumeScale:1.4f);
                 _saves.AddMoney(_levelService.GetLevelMoneyReward(_saves.CurrentLevel));
                 _saves.SetNextLevel();
             }
