@@ -83,6 +83,5 @@ namespace LocalizationSystem.Data.KeyGeneration
 		WinPhrase20, 
 		WinPhrase21, 
 		WinPhrase22, 
-		WinPhrase23, 
 	}
 }
