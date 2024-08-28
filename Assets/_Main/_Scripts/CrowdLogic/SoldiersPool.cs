@@ -80,7 +80,7 @@ namespace _Main._Scripts.CrowdLogic
             return spawnSoldier as T;
         }
 #if UNITY_EDITOR
-        
+
         public void DebugSoldersLevelCount()
         {
             Dictionary<SoldiersLevels, int> soldiers = new();
@@ -108,6 +108,6 @@ namespace _Main._Scripts.CrowdLogic
             foreach (var soldier in mergeSoldiers)
                 Debug.Log($"Солдат для слияния уровня{soldier.Key} : {soldier.Value}штук");
         }
-    }
 #endif
+    }
 }
