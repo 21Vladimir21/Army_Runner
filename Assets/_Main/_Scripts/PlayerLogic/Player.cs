@@ -20,7 +20,6 @@ namespace _Main._Scripts.PlayerLogic
         public Crowd Crowd { get; private set; }
         private bool _mouseInput;
         private Saves _saves;
-        public UnityEvent OnRestart { get; } = new();
         public UnityEvent OnStart { get; private set; } = new();
         public Transform Transform => transform;
 
@@ -45,16 +44,20 @@ namespace _Main._Scripts.PlayerLogic
         {
             transform.position = playerStartPoint.position;
             Crowd.ResetCrowd();
+            _stateMachine.SwitchState<WaitingState>();
         }
 
         public void GameOver()
         {
             transform.position = _startPoint;
             _mouseInput = false;
-            _stateMachine.SwitchState<PlayerGameOverState>();
+            _stateMachine.SwitchState<WaitingState>();
         }
 
-        public void Restart() => OnRestart.Invoke();
+        public void Restart()
+        {
+            _stateMachine.SwitchState<WaitingState>();
+        }
 
         public void FinishedShooting() // TODO:Однозначно надо сделать это отдельным состоянием 
         {

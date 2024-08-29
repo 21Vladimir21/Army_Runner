@@ -85,7 +85,7 @@ namespace _Main._Scripts
 
         private void Update()
         {
-            if (Input.GetKey(KeyCode.P) && Input.GetKeyDown(KeyCode.O))
+            if (Input.GetKey(KeyCode.P) && Input.GetKeyDown(KeyCode.Z))
             {
                 Cloud.ClearCloudData();
             }

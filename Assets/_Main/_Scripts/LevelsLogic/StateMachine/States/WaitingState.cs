@@ -13,11 +13,11 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             _switcher = switcher;
             _player = player;
+            _player.OnStart.AddListener(StartGame);
         }
 
         public void Enter()
         {
-            _player.OnStart.AddListener(StartGame);
         }
 
         public void Exit()

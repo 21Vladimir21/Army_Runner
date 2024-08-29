@@ -11,7 +11,6 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
         {
             _switcher = switcher;
             _player = player;
-            _player.OnRestart.AddListener(Restart);
         }
 
         public void Enter()
@@ -24,11 +23,6 @@ namespace _Main._Scripts.PlayerLogic.StateMachine.States
 
         public void Update()
         {
-        }
-
-        private void Restart()
-        {
-            _switcher.SwitchState<WaitingState>();
         }
     }
 }
