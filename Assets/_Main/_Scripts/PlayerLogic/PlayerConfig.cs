@@ -11,7 +11,7 @@ namespace _Main._Scripts.PlayerLogic
         [Range(1f, 10f)] public float maxXDragDelta;
 
         [Range(1f, 100f)] public float xSensitivity;
-        [Range(1f, 150f)] public float xSensitivityMobile;
+        [Range(1f, 200f)] public float xSensitivityMobile;
         [Range(1f, 50f)] public float xKeySensitivity;
         [Range(0.1f, 10f)] public float xDampingRatio;
         

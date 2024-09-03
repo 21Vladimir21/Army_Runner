@@ -64,12 +64,17 @@ namespace _Main._Scripts.PlayerLogic
             _stateMachine.SwitchState<WaitingState>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.W)|| Input.GetKey(KeyCode.LeftArrow) ||
+            if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.W)|| Input.GetKey(KeyCode.LeftArrow) ||
                 Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.UpArrow)) _mouseInput = true;
             if (Input.GetMouseButtonUp(0)|| Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.W)|| Input.GetKeyUp(KeyCode.LeftArrow) ||
                 Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow)||Input.GetKeyUp(KeyCode.UpArrow))_mouseInput = false;
+
+            if (_mouseInput && Input.GetMouseButton(0) == false)
+            {
+                _mouseInput = false;
+            }
 
             _stateMachine.Update();
         }

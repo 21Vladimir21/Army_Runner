@@ -63,10 +63,10 @@ public class Boot : MonoBehaviour
 
     private void SetLanguage()
     {
-#if UNITY_WEBGL && UNITY_EDITOR
+#if   UNITY_EDITOR
         string lang = "ru";
 #endif
-#if UNITY_WEBGL && !UNITY_EDITOR
+#if   !UNITY_EDITOR
              string lang = YandexGamesSdk.Environment.i18n.lang;
 #endif
 
