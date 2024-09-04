@@ -31,6 +31,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private readonly PreGameView _preGameView;
         private readonly CameraService _cameraService;
         private readonly Saves _saves;
+        private readonly AutoMergeTimer _autoMergeTimer;
 
 
         private DragAndDrop _dragAndDrop;
@@ -42,12 +43,13 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         private bool _isFirstLaunch = true;
         private readonly TutorialService _tutorialService;
         private readonly AudioService _audioService;
+        private AutoMerger _autoMerger;
 
         private const int MaxLoseStreakCountForShowPopUp = 5;
 
         public MergeState(IStateSwitcher stateSwitcher, MainConfig mainConfig, SoldiersPool soldiersPool,
             List<CellToMerge> reserveCells,
-            List<CellToMerge> gameCells, PreGameView preGameView, CameraService cameraService, Saves saves)
+            List<CellToMerge> gameCells, PreGameView preGameView, CameraService cameraService, Saves saves,AutoMergeTimer autoMergeTimer)
         {
             _stateSwitcher = stateSwitcher;
             _mainConfig = mainConfig;
@@ -57,10 +59,12 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             _preGameView = preGameView;
             _cameraService = cameraService;
             _saves = saves;
+            _autoMergeTimer = autoMergeTimer;
             _representativeOfTheSoldiers = new RepresentativeOfTheSoldiers(soldiersPool);
 
             _dragAndDrop = new DragAndDrop(mainConfig.DragConfig, _cameraService.Holder.MainCamera,
                 _representativeOfTheSoldiers, soldiersPool);
+            _autoMerger = new AutoMerger(_gameCells, _reserveCells, _representativeOfTheSoldiers, soldiersPool);
 
             UpdateUpgradeView(_preGameView.DamageUpgradeCell, _saves.BulletDamageLevel,
                 _mainConfig.UpgradeConfig.DamageUpgradeRatios, true);
@@ -119,6 +123,9 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             });
 
             SetCurrentRewardSoldier();
+            
+            if(_autoMergeTimer.AutoMergeEnabled)
+                _autoMerger.AutoMergeAndMoveToGameCells();
 
             _saves.InvokeSave();
         }
@@ -304,93 +311,11 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             Advertisement.ShowVideoAd(() => Audio.MuteAllAudio(), () =>
             {
-                AutoMerge();
-                MoveSoldierToGameCells();
-
-                List<DraggableObject> solders = new();
-                foreach (var cell in _gameCells)
-                {
-                    if (!cell.IsBusy) continue;
-                    solders.Add(cell.currentObject);
-                    cell.RemoveObjectData();
-                }
-
-                for (int i = 0; i < solders.Count; i++) _gameCells[i].AddObject(solders[i]);
-
+                _autoMerger.AutoMergeAndMoveToGameCells();
+                _autoMergeTimer.ClaimReward();
                 YandexMetrika.Event("AutoMergeSoldiers");
                 SaveSoldiers();
             }, () => Audio.UnMuteAllAudio());
-        }
-
-        private void MoveSoldierToGameCells()
-        {
-            foreach (var cell in _reserveCells)
-            {
-                if (cell.IsBusy == false) continue;
-
-                var index = TryGetFreeIndexInList(_gameCells);
-                if (index == null)
-                    break;
-                var soldier = cell.currentObject;
-                cell.RemoveObjectData();
-                _gameCells[(int)index].AddObject(soldier);
-            }
-        }
-
-        private void AutoMerge()
-        {
-            List<CellToMerge> allCells = new();
-            allCells.AddRange(_gameCells);
-            allCells.AddRange(_reserveCells);
-            while (true)
-            {
-                var groups = allCells
-                    .Where(cell =>
-                        cell.currentObject != null && !cell.currentObject.Level.Equals(SoldiersLevels.Level13))
-                    .GroupBy(s => s.currentObject.Level)
-                    .ToList();
-
-                bool hasSoldiersForMerge = groups.Any(x => x.Count() > 1);
-                if (hasSoldiersForMerge == false) break;
-
-                foreach (var group in groups)
-                {
-                    var toMerges = group;
-
-                    while (toMerges.Count() >= 2)
-                    {
-                        if (toMerges.Key.Equals(SoldiersLevels.Level13)) break;
-
-                        var firstSoldier = toMerges.First();
-                        _soldiersPool.ReturnSoldier(firstSoldier.currentObject);
-                        allCells.First(cell => cell.currentObject == firstSoldier.currentObject)
-                            .RemoveObjectData();
-
-                        var secondSoldier = toMerges.Skip(1).First();
-                        _soldiersPool.ReturnSoldier(secondSoldier.currentObject);
-                        allCells.First(cell => cell.currentObject == secondSoldier.currentObject)
-                            .RemoveObjectData();
-
-
-                        var index = TryGetFreeIndexInList(allCells);
-                        if (index == null)
-                            return;
-
-                        var nextLevel = _representativeOfTheSoldiers.GetNextObjectLevel(toMerges.Key);
-
-                        allCells[(int)index].AddObject(nextLevel, true);
-
-                        toMerges = allCells
-                            .Where(cell => cell.currentObject != null)
-                            .GroupBy(s => s.currentObject.Level)
-                            .FirstOrDefault(g => g.Key == group.Key);
-
-
-                        if (toMerges == null || toMerges.Count() < 2)
-                            break;
-                    }
-                }
-            }
         }
     }
 }

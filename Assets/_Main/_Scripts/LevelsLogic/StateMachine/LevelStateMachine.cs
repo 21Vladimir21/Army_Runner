@@ -28,7 +28,7 @@ namespace _Main._Scripts.Level.StateMachine
 
         public LevelStateMachine(Saves saves, LevelService levelService, MainConfig mainConfig,
             List<CellToMerge> reserveCells, List<CellToMerge> gameCells, UILocator uiLocator,
-            CameraService cameraService,SoldiersPool soldiersPool,Player player)
+            CameraService cameraService,SoldiersPool soldiersPool,Player player,AutoMergeTimer autoMergeTimer)
         {
             _saves = saves;
             _levelService = levelService;
@@ -43,7 +43,7 @@ namespace _Main._Scripts.Level.StateMachine
             _states = new List<IState>
             {
                 new InitState(this, levelService, saves,player),
-                new MergeState(this, mainConfig,soldiersPool, reserveCells, gameCells, preGameView, _cameraService,saves),
+                new MergeState(this, mainConfig,soldiersPool, reserveCells, gameCells, preGameView, _cameraService,saves,autoMergeTimer),
                 new PlayState(this,gameView,soldiersPool,_cameraService,_saves,player,levelService),
                 new GameOverState(this,saves,gameOverView,player),
                 new FinishState(this,finishView,cameraService,saves,levelService,player)

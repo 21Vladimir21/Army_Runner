@@ -86,6 +86,7 @@ namespace LocalizationSystem.Data.KeyGeneration
 			{LocalizationKey.WinPhrase20, LocalizationKey.WinPhrase20.ToString()},
 			{LocalizationKey.WinPhrase21, LocalizationKey.WinPhrase21.ToString()},
 			{LocalizationKey.WinPhrase22, LocalizationKey.WinPhrase22.ToString()},
+			{LocalizationKey.AutoMerge, LocalizationKey.AutoMerge.ToString()},
 		};
 	}
 }

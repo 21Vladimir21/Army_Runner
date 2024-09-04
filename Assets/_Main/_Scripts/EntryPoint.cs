@@ -32,6 +32,8 @@ namespace _Main._Scripts
         [SerializeField] private Transform levelSpawnPoint;
         [SerializeField] private Transform bulletPoolParent;
         [SerializeField] private Transform soldiersPoolParent;
+        [SerializeField] private AutoMergeTimer autoMergeTimer;
+        
 
         [SerializeField] private Player player;
 
@@ -57,7 +59,7 @@ namespace _Main._Scripts
 
             _levelStateMachine =
                 new LevelStateMachine(savesService.Saves, levelService, mainConfig, reserveCells, gameCells, uiLocator,
-                    cameraService, soldiersPool, player);
+                    cameraService, soldiersPool, player,autoMergeTimer);
 
             YandexMetrika.Event("Start");
             YandexGamesSdk.GameReady();
