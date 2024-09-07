@@ -98,7 +98,8 @@ namespace _Main._Scripts.MergeLogic.DragAndDropLogic
             if (_selectedCell != null && _selectedCell.IsBusy == false)
             {
                 RearrangeSoldier();
-                if (_save.TutorialStepIndex > 8 && _selectedCell.isReserveCell == false)
+                // "6" в данный момент это шаг туториала объеднения 
+                if (_save.TutorialStepIndex > 6 && _selectedCell.isReserveCell == false)
                     _tutorialService.TryCallNextStep();
             }
             else if (_selectedCell != null && _selectedCell.IsBusy) MergeSoldiers();
