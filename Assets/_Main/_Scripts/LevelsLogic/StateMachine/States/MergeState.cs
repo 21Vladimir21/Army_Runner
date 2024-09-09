@@ -309,7 +309,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             {
                 _autoMerger.AutoMergeAndMoveToGameCells();
                 _autoMergeTimer.ClaimReward();
-                YandexMetrika.Event("AutoMergeSoldiers");
+                YandexMetrika.Event("AutoMergeSoldier");
                 SaveSoldiers();
             }, () => Audio.UnMuteAllAudio());
         }
