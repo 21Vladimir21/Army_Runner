@@ -153,12 +153,12 @@ namespace _Main._Scripts.SavesLogic
             InvokeSave();
         }
 
-        public bool TrySpendMoney(int amount)
+        public bool TrySpendMoney(int amount,bool isSave = true)
         {
             if (!CanSpendMoney(amount)) return false;
 
             Money -= amount;
-            InvokeSave();
+            if (isSave) InvokeSave();
 
             return true;
         }

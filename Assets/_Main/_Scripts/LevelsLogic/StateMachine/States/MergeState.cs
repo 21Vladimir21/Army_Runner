@@ -290,7 +290,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
             Action successCallback = null)
         {
             var cost = upgradeData[upgradeLevel].Cost;
-            if (_saves.TrySpendMoney(cost))
+            if (_saves.TrySpendMoney(cost,false))
             {
                 upgradePercentage += upgradeData[upgradeLevel].Percentage;
                 if (upgradeLevel <= upgradeData.Count - 1)
@@ -298,6 +298,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
                     upgradeLevel++;
                 }
 
+                _saves.InvokeSave();
                 successCallback?.Invoke();
             }
         }
