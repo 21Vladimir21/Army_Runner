@@ -127,8 +127,8 @@ namespace _Main._Scripts.SavesLogic
                 YandexMetrika.Event($"Lvl{CurrentLevel}");
 
 
-            if (CurrentLevel % 42 == 0)
-                CurrentLevel = 29;
+            if (CurrentLevel % 30 == 0)
+                CurrentLevel = 24;
 
             InvokeSave();
         }
