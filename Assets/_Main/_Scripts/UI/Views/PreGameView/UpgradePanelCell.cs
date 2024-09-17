@@ -15,11 +15,13 @@ namespace _Main._Scripts.UI
         [field:SerializeField] public PercentageFadeTextAnimation TextAnimation { get; private set; }
 
 
-        public void SetMaxLevel()
+        public void SetMaxLevel(int level)
         {
             icon.sprite = maxlevelIcon;
             BuyButton.interactable = false;
             costText.text = "max";
+            LevelText.text = level.ToString();
+            
         }
 
         public void UpdateCellTexts(int level, int cost, float percentage,bool onlySetText = false)

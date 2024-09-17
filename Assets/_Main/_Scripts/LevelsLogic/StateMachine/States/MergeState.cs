@@ -234,7 +234,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             if (level >= upgradeRatios.Count)
             {
-                upgradeCell.SetMaxLevel();
+                upgradeCell.SetMaxLevel(upgradeRatios.Count);
                 upgradeCell.TextAnimation.StartAnimation();
                 return;
             }
