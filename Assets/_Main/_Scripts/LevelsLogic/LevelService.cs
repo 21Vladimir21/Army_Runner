@@ -1,5 +1,8 @@
+using System;
 using _Main._Scripts.Services;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace _Main._Scripts.LevelsLogic
 {
@@ -8,19 +11,38 @@ namespace _Main._Scripts.LevelsLogic
         private Transform _spawnPoint;
         private LevelsConfig _levelsConfig;
         public Level CurrentLevel { get; private set; }
+        private GameObject _currentLevelGameObject;
+        private AsyncOperationHandle<GameObject> _handle;
+        private AssetReference _reference;
 
-        public LevelService(Transform spawnPoint,LevelsConfig levelsConfig)
+        public LevelService(Transform spawnPoint, LevelsConfig levelsConfig)
         {
             _spawnPoint = spawnPoint;
             _levelsConfig = levelsConfig;
         }
-        public Level SpawnLevel(int levelNumber)
+
+        public void SpawnLevel(int levelNumber, Action callBack)
         {
-            if (CurrentLevel!=null) Object.Destroy(CurrentLevel.gameObject);
-            CurrentLevel = Object.Instantiate(_levelsConfig.Levels[levelNumber].Level, _spawnPoint);
-            return CurrentLevel;
+            if (_currentLevelGameObject != null)
+            {
+                CurrentLevel.gameObject.SetActive(false);
+                Addressables.ReleaseInstance(_currentLevelGameObject);
+                Debug.Log($"Level deactivate and release");
+            }
+
+            var handle = _levelsConfig.Levels[levelNumber].Level.InstantiateAsync(_spawnPoint);
+            handle.Completed += operationHandle =>
+            {
+                if (operationHandle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    _currentLevelGameObject = operationHandle.Result;
+                    CurrentLevel = _currentLevelGameObject.GetComponent<Level>();
+                    callBack.Invoke();
+                    Debug.Log($"Level load and spawned");
+                }
+            };
         }
 
-        public int GetLevelMoneyReward( int levelNumber) => _levelsConfig.Levels[levelNumber].Money;
+        public int GetLevelMoneyReward(int levelNumber) => _levelsConfig.Levels[levelNumber].Money;
     }
 }

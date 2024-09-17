@@ -25,8 +25,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         public void Enter()
         {
             var level = SetCurrentLevel();
-            _levelService.SpawnLevel(level);
-            _player.ResetPlayer(_levelService.CurrentLevel.PlayerSpawnPoint);
+            _levelService.SpawnLevel(level,
+                () => { _player.ResetPlayer(_levelService.CurrentLevel.PlayerSpawnPoint); });
             _inited = true;
         }
 

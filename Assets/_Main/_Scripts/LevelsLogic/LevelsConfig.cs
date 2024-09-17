@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace _Main._Scripts.LevelsLogic
 {
@@ -24,7 +25,7 @@ namespace _Main._Scripts.LevelsLogic
     public class LevelData
     {
         [HideInInspector] public string name;
-        [field: SerializeField] public Level Level { get; private set; }
+        [field: SerializeField] public AssetReference Level { get; private set; }
         [field: SerializeField] public int Money { get; private set; }
     }
 }
