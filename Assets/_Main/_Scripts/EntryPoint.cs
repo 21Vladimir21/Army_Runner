@@ -90,6 +90,8 @@ namespace _Main._Scripts
             if (Input.GetKey(KeyCode.P) && Input.GetKeyDown(KeyCode.Z))
             {
                 Cloud.ClearCloudData();
+                var saves = new Saves();
+                saves.InvokeSave();
             }
 
             _levelStateMachine.Update(); //TODO: Надо придумать куда запихнуть это
