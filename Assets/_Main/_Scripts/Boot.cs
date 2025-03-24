@@ -8,6 +8,7 @@ using LocalizationSystem.Main;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Billing = Kimicu.YandexGames.Billing;
+using WebApplication = Kimicu.YandexGames.WebApplication;
 using YandexGamesSdk = Kimicu.YandexGames.YandexGamesSdk;
 
 public class Boot : MonoBehaviour

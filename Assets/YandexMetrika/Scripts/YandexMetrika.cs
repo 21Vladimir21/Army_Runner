@@ -11,14 +11,14 @@ public static class YandexMetrika
     {
         Debug.Log("AppMetrica Event :"+eventName);
 #if UNITY_WEBGL && !UNITY_EDITOR
-        SendEvent(Default, eventName);
+        // SendEvent(Default, eventName);
 #endif
     }
 
     public static void Event(string key, string eventName)
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
-        SendEvent(key, eventName);
+        // SendEvent(key, eventName); TODO: Заменить ключ в inxed.html
 #endif
     }
 }
