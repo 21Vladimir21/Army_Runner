@@ -209,7 +209,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
             if (index == null) return;
             //TODO: Логика получения отличается от того, что я делал раньше. Наверное надо будет сделать по другому
-            Advertisement.ShowVideoAd(() => Audio.MuteAllAudio(), () =>
+            Advertisement.ShowVideoAd(onRewardedCallback:() =>
             {
                 var soldier = _representativeOfTheSoldiers.GetSoldier(_currentRewardSoldier);
                 if (isReserveCells) _reserveCells[(int)index].AddObject(soldier, true);
@@ -217,7 +217,7 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
                 YandexMetrika.Event("RewardSoldier");
                 SaveSoldiers();
-            }, () => Audio.UnMuteAllAudio());
+            });
         }
 
         private int? TryGetFreeIndexInList(List<CellToMerge> list)
@@ -306,13 +306,13 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
 
         private void AutoMergeAndMoveToGameCells()
         {
-            Advertisement.ShowVideoAd(() => Audio.MuteAllAudio(), () =>
+            Advertisement.ShowVideoAd(onRewardedCallback: () =>
             {
                 _autoMerger.AutoMergeAndMoveToGameCells();
                 _autoMergeTimer.ClaimReward();
                 YandexMetrika.Event("AutoMergeSoldier");
                 SaveSoldiers();
-            }, () => Audio.UnMuteAllAudio());
+            });
         }
     }
 }

@@ -15,7 +15,6 @@ namespace SoundService.Scripts
         [SerializeField] private AudioSource master;
         [SerializeField] private AudioSource music;
         [SerializeField] private AudioSource sfx;
-        [field: SerializeField] public AudioMixer mixer { get; private set; }
         public bool IsCanPlaySound;
 
         public SoundData SoundData { get; private set; }
@@ -66,13 +65,13 @@ namespace SoundService.Scripts
 
         public void SetActiveSound(bool soundEnabled)
         {
-            mixer.SetFloat("SFX", soundEnabled ? 0 : -80);
+            sfx.mute = !soundEnabled;
             IsCanPlaySound = !soundEnabled;
         }
 
         public void SetActiveMusic(bool soundEnabled)
         {
-            mixer.SetFloat("Music", soundEnabled ? 0 : -80);
+            music.mute = !soundEnabled;
             IsCanPlaySound = !soundEnabled;
         }
 

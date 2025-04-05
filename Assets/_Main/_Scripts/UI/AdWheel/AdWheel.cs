@@ -68,7 +68,7 @@ namespace _Main._Scripts.UI.SkillCheckAD
             var rotateValue = arrowTransform.rotation.eulerAngles.z;
             claimButton.interactable = false;
             _sequence.Kill();
-            Advertisement.ShowVideoAd(Audio.MuteAllAudio, () =>
+            Advertisement.ShowVideoAd(onRewardedCallback:() =>
             {
                 foreach (var values in adWheelValuesArray)
                 {
@@ -80,7 +80,7 @@ namespace _Main._Scripts.UI.SkillCheckAD
                         RewardCallback.Invoke();
                     }
                 }
-            }, () => Audio.UnMuteAllAudio());
+            });
         }
 
         private void StartRotate()

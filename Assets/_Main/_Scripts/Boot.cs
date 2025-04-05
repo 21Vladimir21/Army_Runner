@@ -21,7 +21,7 @@ public class Boot : MonoBehaviour
         yield return YandexGamesSdk.Initialize();
         yield return Cloud.Initialize();
         Advertisement.Initialize();
-        WebApplication.Initialize(null);
+        WebApplication.Initialize(OnStopGame);
 
         InitSavesService();
 
@@ -76,6 +76,14 @@ public class Boot : MonoBehaviour
             LocalizationTextBase.ApplyLocalizationDictionary();
         }
     }
+    
+    private static void OnStopGame(bool value)
+    {
+        AudioListener.volume = value ? 1 : 0;
+        AudioListener.pause = !value;
+        Time.timeScale = value ? 1 : 0;
+    }
+
 
     private void LoadScene() => SceneManager.LoadScene(sceneBuildIndex: 1);
 

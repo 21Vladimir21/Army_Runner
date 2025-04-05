@@ -144,9 +144,8 @@ namespace _Main._Scripts.Level.StateMachine.States
         {
             if (_saves.CanShowAd && _saves.AdEnabled && Advertisement.AdvertisementIsAvailable)
             {
-                Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
+                Advertisement.ShowInterstitialAd(onCloseCallback: () =>
                 {
-                    Audio.UnMuteAllAudio();
                     _stateSwitcher.SwitchState<InitState>();
                 });
             }

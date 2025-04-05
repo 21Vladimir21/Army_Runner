@@ -55,9 +55,8 @@ namespace _Main._Scripts.LevelsLogic.StateMachine.States
         {
             if (_saves.CanShowAd && _saves.AdEnabled && Advertisement.AdvertisementIsAvailable)
             {
-                Advertisement.ShowInterstitialAd(Audio.MuteAllAudio, () =>
+                Advertisement.ShowInterstitialAd(onCloseCallback: () =>
                 {
-                    Audio.UnMuteAllAudio();
                     _stateSwitcher.SwitchState<InitState>();
                     _player.Restart();
                 });
