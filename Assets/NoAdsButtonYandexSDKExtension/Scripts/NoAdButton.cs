@@ -39,6 +39,7 @@ public class NoAdButton : MonoBehaviour
         {
             Billing.ConsumeProduct(purchaseProductResponse.purchaseData.purchaseToken);
             YandexMetrika.Event("BuyNoAds");
+            _button.gameObject.SetActive(false);
             _saves.BuyNoAd();
         });
     }
